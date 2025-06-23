@@ -1,4 +1,5 @@
-else if (Term.countDiffBet(compTerm, term) == 1) { // regular minimization step
+package com.github.digilab.tools.core;
+                    // regular minimization step
                     //     int bitIndex = Term.findFirstDiffBet(term,compTerm);
                     //     Term newTerm = Term.cpyTerm(term);
                     //     newTerm.toDontCare(bitIndex);
