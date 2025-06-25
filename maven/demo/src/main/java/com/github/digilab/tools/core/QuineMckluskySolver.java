@@ -271,14 +271,14 @@ class iteration {
                             nextIteration.groups[insertPos].terms.push(newTerm); 
                         }
                         numberOfMinimizations++;
-                        System.out.println(newTerm.minTerm + " Added By " + term.minTerm + " and " + compTerm.minTerm);
+                        // System.out.println(newTerm.minTerm + " Added By " + term.minTerm + " and " + compTerm.minTerm);
                     }
                     else if (term == Term.GetTheMoreCoveringTerm(term, compTerm)) { // if first covers second
                         if (compTerm.isCoveredBy(term)) {
                             compTerm.isChecked = true; //but we wont add it since it's fully covered
                             term.isDontCare = term.isDontCare && compTerm.isDontCare;
                             
-                            System.out.println("Term1 " + term.minTerm + " fully covers " + compTerm.minTerm);
+                            // System.out.println("Term1 " + term.minTerm + " fully covers " + compTerm.minTerm);
                         }else if (term.ContainsTermToOptimize(compTerm)){
                             int bitIndex = Term.findFirstMainBitsDiffBet(term,compTerm);
                             Term newTerm = Term.cpyTerm(compTerm);
@@ -291,7 +291,7 @@ class iteration {
                             compTerm.isChecked = true;
                             numberOfMinimizations++;
                             // System.out.println("Term1 " + term.minTerm + " has a term to optimize " + compTerm.minTerm);
-                            System.out.println(newTerm.minTerm + " Added By " + term.minTerm + " and " + compTerm.minTerm);
+                            // System.out.println(newTerm.minTerm + " Added By " + term.minTerm + " and " + compTerm.minTerm);
                         }
 
                     }
@@ -299,7 +299,7 @@ class iteration {
                         if (term.isCoveredBy(compTerm)) { //if second covers first
                             term.isChecked = true; //but we wont add it since it's fully covered
                             compTerm.isDontCare = compTerm.isDontCare && term.isDontCare;
-                            System.out.println("Term2 " + compTerm.minTerm + " fully covers " + term.minTerm);
+                            // System.out.println("Term2 " + compTerm.minTerm + " fully covers " + term.minTerm);
                         }
                         else if (compTerm.ContainsTermToOptimize(term)){
                             int bitIndex = Term.findFirstMainBitsDiffBet(compTerm,term);
@@ -310,7 +310,7 @@ class iteration {
                             if (!nextIteration.Contains(newTerm)) {
                                 nextIteration.groups[insertPos].terms.push(newTerm);
                             }
-                            System.out.println(newTerm.minTerm + " Added By " + term.minTerm + " and " + compTerm.minTerm);
+                            // System.out.println(newTerm.minTerm + " Added By " + term.minTerm + " and " + compTerm.minTerm);
                             term.isChecked = true;
                             numberOfMinimizations++;
                             // System.out.println("Term2 " + compTerm.minTerm + " has a term to optimize " + term.minTerm);
@@ -620,7 +620,7 @@ public class QuineMckluskySolver {
         // Add minterms to their groups
         currIteration.SetUpGroupsFromArrays(Terms, DontCares);
         while(true){
-            System.out.println("New Iteration\n");
+            // System.out.println("New Iteration\n");
             iteration nextIteration = new iteration(numberOfGroups, currIteration.iterationNumber + 1);
             int numberOfMinimizations = 0;
             for(int GroupItr = 0; GroupItr < numberOfGroups; GroupItr++){
@@ -636,7 +636,7 @@ public class QuineMckluskySolver {
                     Term newTerm = Term.cpyTerm(term);
                     int insertPos = newTerm.numberOfOnes;
                     nextIteration.groups[insertPos].terms.push(newTerm);
-                    System.out.println("\n" + newTerm.minTerm + " was added as it's unchecked\n");
+                    // System.out.println("\n" + newTerm.minTerm + " was added as it's unchecked\n");
                 }
             }
             currIteration = nextIteration;
@@ -736,25 +736,25 @@ public class QuineMckluskySolver {
 
     // Example main method for testing
 
-    public static void main(String [] args){
-        // String[] minTerms= {"0-00","--10","01-0","1-01","0101","1110"};
-        // int[] terms = {0,4,2,6,10,14,4,6,9,5,14};
-        String[] minTerms= {"0010--00-","1000-----","1001-----","1010-0--0","1011-----"};
-        String[] DontCares = {"110------","111------"};
-        // String[] DontCares = {"00--", "011-"};
-        String[] Variables = {"A","B","C","Rb","Reset","D_7","D_711","D_2312","Eq"};
-        SimplificationData simData = getPrimeImplicantsMixedTerms(minTerms,DontCares,9);
-        System.out.println(GetExpression(simData.primeImplicants,Variables));
-        OptimizationResult optRes = getOptimalExpression(termListToStrArr(simData.primeImplicants), minTerms);
-        System.out.println(GetExpression(optRes.terms, Variables));
-        Term term1 = new Term("0011");
-        Term term2 = new Term("--10");
-        // System.out.println(Term.GetTheMoreCoveringTerm(term1,term2 ));
-        // System.out.println(Term.findFirstMainBitsDiffBet(term2,term1));
-        System.out.println(term2.ContainsTermToOptimize(term1));
+    // public static void main(String [] args){
+    //     // String[] minTerms= {"0-00","--10","01-0","1-01","0101","1110"};
+    //     // int[] terms = {0,4,2,6,10,14,4,6,9,5,14};
+    //     String[] minTerms= {"0010--00-","1000-----","1001-----","1010-0--0","1011-----"};
+    //     String[] DontCares = {"110------","111------"};
+    //     // String[] DontCares = {"00--", "011-"};
+    //     String[] Variables = {"A","B","C","Rb","Reset","D_7","D_711","D_2312","Eq"};
+    //     SimplificationData simData = getPrimeImplicantsMixedTerms(minTerms,DontCares,9);
+    //     System.out.println(GetExpression(simData.primeImplicants,Variables));
+    //     OptimizationResult optRes = getOptimalExpression(termListToStrArr(simData.primeImplicants), minTerms);
+    //     // System.out.println(GetExpression(optRes.terms, Variables));
+    //     Term term1 = new Term("0011");
+    //     Term term2 = new Term("--10");
+    //     // System.out.println(Term.GetTheMoreCoveringTerm(term1,term2 ));
+    //     // System.out.println(Term.findFirstMainBitsDiffBet(term2,term1));
+    //     // System.out.println(term2.ContainsTermToOptimize(term1));
         
 
-    }
+    // }
 }
 
 // Minimization is correct

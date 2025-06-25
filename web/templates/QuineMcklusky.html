@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="eng"></html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Quine Mcklusky Solver</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    </head>
+    <body>
+        <h1>Quine Mcklusky Solver</h1>
+        <h2>This Program Intends To Provide The Simplest Boolean Expression Given The MinTerms Defining the Function Using the Widely-Known Method in Digital Logic</h2>
+
+        <form method="post">
+
+            <h3>Enter The Number of Variables</h3>
+            <input type="number" name="VarCount" min = "1" placeholder="Enter The Number Of Variables">
+            
+            <h3>Enter The Variable Names</h3>
+            <input type="text" name="Variables" placeholder="Enter your comma seperated Variable Names">
+            
+
+            <h3>Enter The MinTerms</h3>
+            <input type="text" name="MinTerms" placeholder="Enter your comma seperated MinTerms">
+            
+            <h3>Enter The DontCares</h3>
+            <input type="text" name="DontCares" placeholder="Enter your comma seperated DontCares">
+            
+            <button type="submit">Submit</button>
+        </form>
+
+
+
+        {%for i,itr in enumerate(itr_data)%}
+        <div id = "iteration">
+            <h2>Iteration {{i + 1}}</h2>
+            {%for j,gp in enumerate(itr) %}
+                <h3 id = "group">Group {{j + 1}}</h3>
+                {%for term in gp%}
+                    <p>{{term}}</p><br>
+                {%endfor%}
+            {%endfor%}
+        </div>
+        {%endfor%}
+
+
+        {%if pi_chart%}
+        <div id = "chart">
+
+            <h2>Prime Implicant chart</h2>
+            <table>
+                <tr> 
+                    <th></th>
+                    {% for term in min_terms %}
+                        <th>{{ term }}</th>
+                    {% endfor %}
+                </tr>
+
+                {% for row_label,row in zip(covering_terms,pi_chart) %}
+                <tr>
+                    <th>{{row_label}}</th>
+                    {% for box in row %}
+                    <td class="bitmap-cell">{%if box %}X{%endif%}</td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </table>
+
+        </div>
+        {%endif%}
+        {%if optimized_expr%}
+        <div id = "output">
+            
+            <h2>Minimum Expression</h2>
+
+            <h3 id = "min_expr">{{optimized_expr|safe}}</h2>
+
+        </div>
+        {%endif%}
+        
+    </body>
+</html>

@@ -120,6 +120,8 @@ public class QuineMckluskyWebHandler {
     
     public static JSONObject SimplificationDataToResultJSON(SimplificationData data){
         JSONObject result = new JSONObject();
+        result.put("ItrCount", data.iterationCount);
+        result.put("GroupsPerIteration",data.GetGroupCountPerItr());
         for (iteration itr : data.GetAllIterations()) {
             JSONObject itr_json = new JSONObject();
             for (Group grp : itr.groups) {
