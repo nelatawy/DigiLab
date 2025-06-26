@@ -1,0 +1,175 @@
+:root {
+    --primary_dark : #5409DA;
+    --primary_mid : #4E71FF;
+    --primary_light : #8DD8FF;
+    --secondary : #BBFBFF;
+    --radius-large : 35pt;
+    --radius-small : 20pt;
+    --margin : 5pt;
+
+    --shadow-black :0 2px 8px rgba(0,0,0,0.15),
+        0 8px 24px rgba(0,0,0,0.15),
+        0 16px 56px rgba(0,0,0,0.15);
+}
+
+body {
+    text-align: center;
+    background-color:white;
+    background-position: center;
+    font-family: "Varela Round" ,sans-serif;
+    background-size: cover;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.title {
+    font-size: 37pt;
+    font-family: "Caprasimo", serif;
+    color: var(--secondary);
+    background-color: var(--primary_dark);
+    box-shadow: var(--shadow-black);
+    font-weight: 100;
+    width: 100vw;
+    margin: 0px;
+    padding: 70px;
+
+}
+.about {
+    background-color: var(--primary_light);
+    font-size: 20pt;
+    padding: 20px;
+    color: var(--primary_mid);
+    border-radius: var(--radius-small);
+    box-shadow: var(--shadow-black);
+}
+
+#sol_title {
+    background-color: var(--primary_mid);
+    font-family: "Caprasimo", serif;
+    color: var(--secondary);
+    font-weight: 100;
+    padding: 30px;
+    font-size: 25pt;
+    border-radius: var(--radius-large);
+    box-shadow: var(--shadow-black);
+}
+.input {
+    background-color: var(--primary_mid);
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    padding: 40px;
+    border-radius: var(--radius-large);
+    box-shadow: var(--shadow-black);
+}
+.input h3{
+    font-size: 20pt;
+    color: aliceblue;
+}
+.input input {
+    padding: 20px;
+    font-size: 16px;
+    font-family: "Varela Round",sans-serif;
+    color: var(--primary_dark);
+    background-color: azure;
+    min-width: max-content;
+    border-radius: 25px;
+}
+.input button {
+    margin-block-start: 30px;
+    padding: 20px;
+    font-size: 20pt;
+    color: var(--primary_mid);
+    font-family: "Caprasimo", serif;
+    background-color: var(--primary_light);
+    border-radius: var(--radius-small);
+    
+    transition: background 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+}
+.input button:hover {
+    background-color: var(--primary_dark);
+    color: var(--secondary);
+    border-color: var(--primary_dark);
+    box-shadow: 0 4px 16px rgba(72, 58, 160, 0.2);
+}
+
+#iteration {
+    box-shadow: var(--shadow-black);
+    background-color: var(--secondary);
+    width: max-content;
+    /* padding: 50px; */
+    border-radius: var(--radius-large);
+}
+#iteration h2 {
+    font-size: 30pt;
+    background-color: var(--primary_mid);
+    border-radius: var(--radius-small);
+    color: var(--secondary);
+    margin: 30px;
+    padding-inline: 150px;
+    padding-block: 10px;
+}
+#iteration h3 {
+    font-size: 20pt;
+    color: var(--primary_mid);
+}
+#iteration p {
+    font-size: 20pt;
+    color: var(--primary_mid);
+}
+
+#chart {
+    box-shadow: var(--shadow-black);
+    background-color: var(--secondary);
+    color: var(--primary_mid);
+    width: max-content;
+    padding: 20px;
+    font-size: 20pt;
+    border-radius: var(--radius-large);
+    display: flex;
+    flex-direction: column;
+}
+
+#chart h2 {
+    font-size: 30pt;
+    background-color: var(--primary_mid);
+    border-radius: var(--radius-small);
+    color: var(--secondary);
+    margin: 30px;
+    padding-block: 10px;
+    padding-inline: 30px;
+}
+#chart table {
+    padding: 30px;
+}
+.bitmap_cell {
+    padding: 30px;
+    margin: 0px;
+    border: 1px solid var(--primary_mid); /* <-- Add this line for a border */
+    color: #4E71FF;
+
+}
+
+#output {
+    background-color: var(--secondary);
+    border-radius: var(--radius-large);
+    box-shadow: var(--shadow-black);
+    padding: 10px;
+}
+#output h2 {
+    font-size: 20pt;
+    background-color: var(--primary_mid);
+    border-radius: var(--radius-small);
+    padding-block: 10px;
+    padding-inline: 20px;
+    margin: 20px;
+    color: var(--secondary);
+}
+#output h3 {
+    font-size: 30pt;
+    color: var(--primary_mid);
+    padding: 40px;
+}

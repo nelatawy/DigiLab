@@ -4,14 +4,19 @@
     <head>
         <meta charset="UTF-8">
         <title>Quine Mcklusky Solver</title>
-        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='QuineMcklusky.css') }}">
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Caprasimo&family=Varela+Round&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     </head>
     <body>
-        <h1>Quine Mcklusky Solver</h1>
-        <h2>This Program Intends To Provide The Simplest Boolean Expression Given The MinTerms Defining the Function Using the Widely-Known Method in Digital Logic</h2>
+        <h1 class="title">Quine Mcklusky Solver</h1>
+        <h2 class="about">This Program Intends To Provide The Simplest Boolean Expression Given The MinTerms Defining the Function Using the Widely-Known Method in Digital Logic</h2>
 
-        <form method="post">
+        <form class = "input" method="post">
 
             <h3>Enter The Number of Variables</h3>
             <input type="number" name="VarCount" min = "1" placeholder="Enter The Number Of Variables">
@@ -29,7 +34,9 @@
             <button type="submit">Submit</button>
         </form>
 
-
+        {%if optimized_expr%}
+        <h2 id="sol_title">Solution</h2>
+        {%endif%}
 
         {%for i,itr in enumerate(itr_data)%}
         <div id = "iteration">
@@ -47,7 +54,7 @@
         {%if pi_chart%}
         <div id = "chart">
 
-            <h2>Prime Implicant chart</h2>
+            <h2 >Prime Implicant chart</h2>
             <table>
                 <tr> 
                     <th></th>
@@ -60,7 +67,7 @@
                 <tr>
                     <th>{{row_label}}</th>
                     {% for box in row %}
-                    <td class="bitmap-cell">{%if box %}X{%endif%}</td>
+                    <td class="bitmap_cell">{%if box %}X{%endif%}</td>
                     {% endfor %}
                 </tr>
                 {% endfor %}
