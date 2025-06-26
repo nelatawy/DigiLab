@@ -7,14 +7,14 @@
     --radius-small : 20pt;
     --margin : 5pt;
 
-    --shadow-black :0 2px 8px rgba(0,0,0,0.15),
-        0 8px 24px rgba(0,0,0,0.15),
-        0 16px 56px rgba(0,0,0,0.15);
+    --shadow-black :0 2px 8px rgba(0, 0, 0, 0.1),
+        0 8px 24px rgba(0,0,0,0.1);
+        /* 0 16px 56px rgba(0,0,0,0.1); */
 }
 
 body {
     text-align: center;
-    background-color:white;
+    background-color:rgb(216, 239, 241);
     background-position: center;
     font-family: "Varela Round" ,sans-serif;
     background-size: cover;
@@ -172,4 +172,16 @@ body {
     font-size: 30pt;
     color: var(--primary_mid);
     padding: 40px;
+}
+
+@media (max-width: 700px) {
+    #chart table{
+        padding: 15px;
+    }
+    .bitmap_cell {
+        padding: 15px;
+    }
+    #output h3 {
+        font-size: 25pt;
+    }
 }
