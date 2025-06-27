@@ -636,7 +636,7 @@ public class QuineMckluskySolver {
                     Term newTerm = Term.cpyTerm(term);
                     int insertPos = newTerm.numberOfOnes;
                     nextIteration.groups[insertPos].terms.push(newTerm);
-                    // System.out.println("\n" + newTerm.minTerm + " was added as it's unchecked\n");
+                    
                 }
             }
             currIteration = nextIteration;
@@ -650,7 +650,6 @@ public class QuineMckluskySolver {
             }
         }
         outData.AddResult(result);
-        System.out.println(termListToStrArr(outData.primeImplicants));
         return outData;
     }
     // Finds the optimal cover using the prime implicants and minterms
