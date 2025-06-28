@@ -17,29 +17,29 @@
         <h2 class="about">This Program intends to provide a method to solve a sequential system given by it's link paths <br> (i.e state A goes to state B when input xxxx is given and gives output xxxx)</h2>
     
 
-        <div id="stateCountBlock">
-            <h2>Step 1</h2>
-            <input id = "stateBitsCount" type = "number" min = "1" max="5" placeholder = "Enter The number Of bits assigned for the states" onchange="generateMooreOutputAssignmentBlock()">
+        <h2 id = "VariableSetupTitle" class="stepTitle">Setting Up The Variables' Data</h2>
+        <div id="stateCountBlock" class = "inputCard">
+            <h3 class="inputLabel">Enter Number of State Variables</h2>
+            <input id = "stateBitsCount" class = "inputBar" type = "number" min = "1" max="5" placeholder = "..." onchange="generateMooreOutputAssignmentBlock()">
         </div>
 
 
-        <div id="VariableSetupBlock">
-            <h3>Enter The Number of Variables (Excluding State Variables)</h3>
-            <input type="number" name="VarCount" min = "1" placeholder="Enter The Number Of Variables">
+        <div id="VariableSetupBlock" class = "inputCard">
+            <h3 class="inputLabel">Enter The Number of Variables (Excluding State Variables)</h3>
+            <input type="number" class = "inputBar" name="VarCount" min = "1" placeholder="Enter The Number Of Variables">
             
-            <h3>Enter Their Names</h3>
-            <input type="text" name="Variables" placeholder="Enter your comma seperated Variable Names">
+            <h3 class="inputLabel">Enter Their Names</h3>
+            <input type="text" class = "inputBar" name="Variables" placeholder="Enter your comma seperated Variable Names">
         </div>
 
-
+        <h2 id = "MooreAssignmentTitle" class="stepTitle">Setting Up The Moore Outputs</h2>
         <div id = "mooreAssignmentBlock">
-            <h2>Assign Moore Outputs to States</h2>
             <div id = "mooreAssignmentInputs">
-                <h2>Enter The Number Of Bits First</h2>
+                <p>Enter The Number Of Bits First ⚠️</p>
             </div>
         </div>
 
-        
+
         <script>
             function generateOptions() {
             const num = parseInt(document.getElementById("stateBitsCount").value);

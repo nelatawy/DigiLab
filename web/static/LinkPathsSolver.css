@@ -1,0 +1,118 @@
+:root {
+    --primary_dark : #5409DA;
+    --primary_mid : #4E71FF;
+    --primary_light : #8DD8FF;
+    --secondary : #BBFBFF;
+    --radius-large : 35pt;
+    --radius-small : 20pt;
+    --margin : 5pt;
+
+    --shadow-black :0 2px 8px rgba(0, 0, 0, 0.1),
+        0 8px 24px rgba(0,0,0,0.1);
+        /* 0 16px 56px rgba(0,0,0,0.1); */
+}
+
+body {
+    text-align: center;
+    background-color:rgb(216, 239, 241);
+    background-position: center;
+    font-family: "Varela Round" ,sans-serif;
+    background-size: cover;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+}
+
+.title {
+    font-size: 37pt;
+    font-family: "Caprasimo", serif;
+    color: var(--secondary);
+    background-color: var(--primary_dark);
+    box-shadow: var(--shadow-black);
+    font-weight: 100;
+    width: 100vw;
+    margin: 0px;
+    padding: 70px;
+
+}
+.about {
+    background-color: var(--primary_light);
+    font-size: 20pt;
+    padding: 20px;
+    color: var(--primary_mid);
+    border-radius: var(--radius-small);
+    box-shadow: var(--shadow-black);
+}
+
+
+.stepTitle{
+    font-family:"Caprasimo", serif;
+    background-color: var(--primary_dark);
+    color: var(--primary_light);
+    font-weight: 100;
+    font-size: 30pt;
+    padding: 30px;
+    border-radius: var(--radius-large);
+}
+.inputCard {
+    background-color: var(--primary_mid);
+    font-family: "Varela Round", serif;
+    color: var(--secondary);
+    padding: 10px;
+    width: 400px;
+    border-radius: var(--radius-large);
+    box-shadow: var(--shadow-black);
+}
+
+.inputBar{
+    padding: 10px;
+    font-family: "Varela Round", serif;
+    text-align: center;
+    color: var(--primary_mid);
+    background-color: azure;
+    font-size: 20pt;
+    border-radius: var(--radius-small);
+    margin: 10px;
+}
+.inputLabel {
+    margin: 20px;
+    font-size: 20pt;
+
+}
+
+#mooreAssignmentBlock {
+    background-color: var(--primary_mid);
+    font-family: "Varela Round", serif;
+    color: var(--secondary);
+    padding: 10px;
+    width: 400px;
+    border-radius: var(--radius-large);
+    box-shadow: var(--shadow-black);
+}
+
+#mooreAssignmentBlock p {
+    font-size: 20pt;
+}
+
+#mooreAssignmentInputs{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+
+#mooreAssignmentInputs input{
+    padding: 10px;
+    font-family: "Varela Round", serif;
+    text-align: center;
+    color: var(--primary_mid);
+    background-color: azure;
+    font-size: 20pt;
+    border-radius: var(--radius-small);
+    margin: 20px;
+}
+#mooreAssignmentInputs label {
+    font-size: 20pt;
+}
