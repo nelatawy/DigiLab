@@ -76,6 +76,7 @@ public class StateGraph {
         return table;
     }
 
+
     private Coordinate[] GetCircularPositionsOfStates(double radius){
         float angleBetStates = (float)(2*Math.PI)/this.numberOfStates; // angle in Radians
         Coordinate[] positions = new Coordinate[numberOfStates];
@@ -106,17 +107,21 @@ public class StateGraph {
             // Format to 2 decimal places
             String xStr = String.format("%.3f", statePosX);
             String yStr = String.format("%.3f", statePosY);
-
-            stateDeclaration += "\\node[state]" + "\t(S" + state.stateID + ")" + "\t at (" + xStr  + "," + yStr + ")" + "\t{$" + "S_" + state.stateID + "$/" + state.stateOutput + "};\n";
+            String stateOutStr = QuineMckluskySolver.ReplaceByVariables(new Term(state.stateOutput), outVars);
+            stateDeclaration += "\\node[state]" + "\t(S" + state.stateID + ")" + "\t at (" + xStr  + "," + yStr + ")" + "\t{$" + "S_" + state.stateID + "$/" + stateOutStr + "};\n";
             for (Link link : state.links) {
-                pathDeclaration +=  "\\path[->] " +"(S" + state.stateID + ")" + "\t edge node [pos=0.2]" + "{" + link.inputStr + "/" + link.outputStr + "}" + "\t(S" + link.toState.stateID + ");\n";
+                String pathInStr = QuineMckluskySolver.ReplaceByVariables(new Term(link.inputStr), inVars);
+                String pathOutStr = QuineMckluskySolver.ReplaceByVariables(new Term(link.outputStr), outVars);
+                pathDeclaration +=  "\\path[->] " +"(S" + state.stateID + ")" + "\t edge node [pos=0.2]" + "{" + pathInStr + "/" + pathOutStr + "}" + "\t(S" + link.toState.stateID + ");\n";
             }
         }
         body += "\\begin{document}\r\n" + //
                 "\r\n" + //
-                "\\begin{tikzpicture}[shorten >=1pt, on grid, auto]";
+                "\\begin{center}\n" +
+                "\\begin{tikzpicture}[shorten >=1pt, on grid, auto]\n";
         body +=  "\n" + stateDeclaration + "\n" + pathDeclaration + "\n";
         body += "\\end{tikzpicture}\r\n" + //
+                "\\end{center}\n" +
                 "\r\n" + //
                 "\\end{document}";
         return headerData + body;
@@ -146,6 +151,6 @@ public class StateGraph {
         sg.AddState(state4);
         sg.AddState(state5);
 
-        System.out.println(sg.ToLaTexCircularGraph(5));
+        System.out.println(sg.ToLaTexCircularGraph(7));
     }
 }

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="eng"></html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Link Paths Solver</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='LinkPathsSolver.css') }}">
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Caprasimo&family=Varela+Round&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    </head>
+    <body>
+        <h1 class="title">Link Paths Solver</h1>
+        <h2 class="about">This Program intends to provide a method to solve a sequential system given by it's link paths <br> (i.e state A goes to state B when input xxxx is given and gives output xxxx)</h2>
+    
+
+        <div id="stateCountBlock">
+            <h2>Step 1</h2>
+            <input id = "stateBitsCount" type = "number" min = "1" max="5" placeholder = "Enter The number Of bits assigned for the states" onchange="generateMooreOutputAssignmentBlock()">
+        </div>
+
+
+        <div id="VariableSetupBlock">
+            <h3>Enter The Number of Variables</h3>
+            <input type="number" name="VarCount" min = "1" placeholder="Enter The Number Of Variables">
+            
+            <h3>Enter The Variable Names</h3>
+            <input type="text" name="Variables" placeholder="Enter your comma seperated Variable Names">
+        </div>
+
+
+        <div id = "mooreAssignmentBlock">
+            <h2>Assign Moore Outputs to States</h2>
+            <div id = "mooreAssignmentInputs">
+                <h2>Enter The Number Of Bits First</h2>
+            </div>
+        </div>
+
+
+        <script>
+            function generateOptions() {
+            const num = parseInt(document.getElementById("stateBitsCount").value);
+            const select = document.getElementById("choices");
+
+            // Clear previous options
+            select.innerHTML = "";
+
+            if (!isNaN(num) && num > 0) {
+                for (let i = 0; i <= Math.pow(2,num) - 1; i++) {
+                const option = document.createElement("option");
+                option.value = i;
+                option.text = "S" + i;
+                select.appendChild(option);
+                }
+            } else {
+                const option = document.createElement("option");
+                option.text = "-- Invalid number --";
+                select.appendChild(option);
+            }
+            }
+
+            function generateMooreOutputAssignmentBlock(){
+                const num = parseInt(document.getElementById("stateBitsCount").value);
+                const container = document.getElementById("mooreAssignmentInputs");
+                container.innerHTML = "";
+                container.appendChild(document.createElement("h2"))
+                if (!isNaN(num) && num > 0) {
+                    for (let i = 0; i <= Math.pow(2,num) - 1; i++) {
+                    const label = document.createElement("label");
+                    label.htmlFor = "S" + i;
+                    label.textContent = "S" + i;
+
+                    const input = document.createElement("input");
+                    input.id = "S" + i;
+                    input.type = "text";
+                    input.className = "mooreAssignmentInput";
+                    input.placeholder = "Enter output";
+                    container.appendChild(label);
+                    container.appendChild(input);
+                    }
+                    
+                } else {
+                    container.innerHTML = "<h2>-- Invalid number --</h2>";
+                }
+
+            }
+        </script>
+
+    </body>
+</html>

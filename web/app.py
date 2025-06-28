@@ -109,4 +109,8 @@ def QuineMcklusky():
             zip = zip)
 
 
+@app.route('/LinkPathsSolver',methods = ['GET','POST'])
+def LinkPathSolver():
+    return render_template("LinkPathsSolver.html")
+
 app.run(port=8080,debug=True)
