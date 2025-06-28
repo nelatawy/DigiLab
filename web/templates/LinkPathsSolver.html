@@ -24,10 +24,10 @@
 
 
         <div id="VariableSetupBlock">
-            <h3>Enter The Number of Variables</h3>
+            <h3>Enter The Number of Variables (Excluding State Variables)</h3>
             <input type="number" name="VarCount" min = "1" placeholder="Enter The Number Of Variables">
             
-            <h3>Enter The Variable Names</h3>
+            <h3>Enter Their Names</h3>
             <input type="text" name="Variables" placeholder="Enter your comma seperated Variable Names">
         </div>
 
@@ -39,7 +39,7 @@
             </div>
         </div>
 
-
+        
         <script>
             function generateOptions() {
             const num = parseInt(document.getElementById("stateBitsCount").value);
