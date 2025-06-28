@@ -34,55 +34,63 @@
             <button type="submit">Submit</button>
         </form>
 
-        {%if optimized_expr%}
-        <h2 id="sol_title">Solution</h2>
-        {%endif%}
+        {%if solutionPhase%}
+            {%if not problem %}
+                <h2 id="sol_title">Solution</h2>
 
-        {%for i,itr in enumerate(itr_data)%}
-        <div id = "iteration">
-            <h2>Iteration {{i + 1}}</h2>
-            {%for j,gp in enumerate(itr) %}
-                <h3 id = "group">Group {{j + 1}}</h3>
-                {%for term in gp%}
-                    <p>{{term}}</p><br>
+                {%for i,itr in enumerate(itr_data)%}
+                <div id = "iteration">
+                    <h2>Iteration {{i + 1}}</h2>
+                    {%for j,gp in enumerate(itr) %}
+                        <h3 id = "group">Group {{j + 1}}</h3>
+                        {%for term in gp%}
+                            <p>{{term}}</p><br>
+                        {%endfor%}
+                    {%endfor%}
+                </div>
                 {%endfor%}
-            {%endfor%}
-        </div>
-        {%endfor%}
 
 
-        {%if pi_chart%}
-        <div id = "chart">
+                {%if pi_chart%}
+                <div id = "chart">
 
-            <h2 >Prime Implicant chart</h2>
-            <table>
-                <tr> 
-                    <th></th>
-                    {% for term in min_terms %}
-                        <th>{{ term }}</th>
-                    {% endfor %}
-                </tr>
+                    <h2 >Prime Implicant chart</h2>
+                    <table>
+                        <tr> 
+                            <th></th>
+                            {% for term in min_terms %}
+                                <th>{{ term }}</th>
+                            {% endfor %}
+                        </tr>
 
-                {% for row_label,row in zip(covering_terms,pi_chart) %}
-                <tr>
-                    <th>{{row_label}}</th>
-                    {% for box in row %}
-                    <td class="bitmap_cell">{%if box %}X{%endif%}</td>
-                    {% endfor %}
-                </tr>
-                {% endfor %}
-            </table>
+                        {% for row_label,row in zip(covering_terms,pi_chart) %}
+                        <tr>
+                            <th>{{row_label}}</th>
+                            {% for box in row %}
+                            <td class="bitmap_cell">{%if box %}X{%endif%}</td>
+                            {% endfor %}
+                        </tr>
+                        {% endfor %}
+                    </table>
 
-        </div>
-        {%endif%}
-        {%if optimized_expr%}
-        <div id = "output">
-            
-            <h2>Minimum Expression</h2>
+                </div>
+                {%endif%}
+                {%if optimized_expr%}
+                <div id = "output">
+                    
+                    <h2>Minimum Expression</h2>
 
-            <h3 id = "min_expr">{{optimized_expr|safe}}</h2>
+                    <h3 id = "min_expr">{{optimized_expr|safe}}</h2>
 
-        </div>
+                </div>
+                {%endif%}
+
+            {%else%}
+                <div id = "problem">
+                    <h2>An Issue Occured ❌⚠️</h2>
+                    <h3>{{problem}}</h3>
+                </div>
+            {%endif%}
         {%endif%}
         
     </body>

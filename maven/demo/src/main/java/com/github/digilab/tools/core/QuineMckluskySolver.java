@@ -737,15 +737,16 @@ public class QuineMckluskySolver {
 
     // public static void main(String [] args){
     //     // String[] minTerms= {"0-00","--10","01-0","1-01","0101","1110"};
-    //     // int[] terms = {0,4,2,6,10,14,4,6,9,5,14};
-    //     String[] minTerms= {"0010--00-","1000-----","1001-----","1010-0--0","1011-----"};
-    //     String[] DontCares = {"110------","111------"};
+    //     int[] terms = {0,4,2,6,10,14,4,6,9,5,14};
+    //     // String[] minTerms= {"0010--00-","1000-----","1001-----","1010-0--0","1011-----"};
+    //     // String[] DontCares = {"110------","111------"};
+    //     int[] DontCares = {};
     //     // String[] DontCares = {"00--", "011-"};
     //     String[] Variables = {"A","B","C","Rb","Reset","D_7","D_711","D_2312","Eq"};
-    //     SimplificationData simData = getPrimeImplicantsMixedTerms(minTerms,DontCares,9);
-    //     System.out.println(GetExpression(simData.primeImplicants,Variables));
-    //     OptimizationResult optRes = getOptimalExpression(termListToStrArr(simData.primeImplicants), minTerms);
-    //     // System.out.println(GetExpression(optRes.terms, Variables));
+    //     SimplificationData simData = getPrimeImplicantsMinTerms(terms,DontCares,9);
+    //     // System.out.println(GetExpression(simData.primeImplicants,Variables));
+    //     OptimizationResult optRes = getOptimalExpression(termListToStrArr(simData.primeImplicants), terms,9);
+    //     System.out.println(GetExpression(optRes.terms, Variables));
     //     Term term1 = new Term("0011");
     //     Term term2 = new Term("--10");
     //     // System.out.println(Term.GetTheMoreCoveringTerm(term1,term2 ));

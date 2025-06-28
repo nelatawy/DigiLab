@@ -44,16 +44,19 @@ def QuineMcklusky():
     min_terms = []
     covering_terms = []
     itr_data = []
-
+    problem = ""
+    if request.method == "GET" :
+        return render_template("QuineMcklusky.html",solutionPhase = False)
+    
     if request.method == "POST":
         numberOfVariables = request.form["VarCount"]
         variables_input   = request.form["Variables"]
         minTerms_input    = request.form["MinTerms"]
         dontCares_input   = request.form["DontCares"]
 
-        minTerms  = [item.strip() for item in minTerms_input.split(',')]
-        dontCares = [item.strip() for item in dontCares_input.split(',')]
-        variables = [item.strip() for item in variables_input.split(',')]
+        minTerms = [item.strip() for item in minTerms_input.split(',') if item.strip()]
+        dontCares = [item.strip() for item in dontCares_input.split(',') if item.strip()]
+        variables = [item.strip() for item in variables_input.split(',') if item.strip()]
 
 
         data = {
@@ -68,13 +71,21 @@ def QuineMcklusky():
         cmd = ["java", "-cp", classpath,"com.github.digilab.tools.core.QuineMckluskyWebHandler"]
         process = subprocess.run(cmd + [arguments_json], capture_output=True, text=True)
         
+        print("Java output:", process.stdout)
         try:
             result_json = json.loads(process.stdout)
         except json.JSONDecodeError as e:
             print("JSON decode error:", e)
             print("Raw output:", process.stdout)
             optimized_expr = "Java did not return valid JSON. See server logs."
-            return render_template("QuineMcklusky.html", output=optimized_expr)
+            return render_template("QuineMcklusky.html", problem = problem, output=optimized_expr)
+
+        if("Problem" in result_json):
+            problem = result_json["Problem"]
+            return render_template(
+            "QuineMcklusky.html",
+            solutionPhase = True,
+            problem = problem)
 
         optimized_expr = result_json["OutputData"]["OptimizedVarOutput"]
         optimized_terms = result_json["OutputData"]["OptimizedBoolOutput"]
@@ -85,15 +96,17 @@ def QuineMcklusky():
         
         itr_data = JSONtoNestedItrData(result_json)
         print(process.stdout)
-    return render_template(
-        "QuineMcklusky.html",
-        optimized_expr=optimized_expr,
-        optimized_terms = optimized_terms, 
-        pi_chart = pi_chart,
-        min_terms = min_terms,
-        covering_terms = covering_terms,
-        itr_data = itr_data,
-        enumerate = enumerate,
-        zip = zip)
+        return render_template(
+            "QuineMcklusky.html",
+            solutionPhase = True,
+            optimized_expr=optimized_expr,
+            optimized_terms = optimized_terms, 
+            pi_chart = pi_chart,
+            min_terms = min_terms,
+            covering_terms = covering_terms,
+            itr_data = itr_data,
+            enumerate = enumerate,
+            zip = zip)
+
 
 app.run(port=8080,debug=True)

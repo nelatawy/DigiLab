@@ -13,24 +13,24 @@ public class QuineMckluskyWebHandler {
                 int intVal = Integer.parseInt((String)jsonValue);
                 return intVal;
             } catch (Exception e) {
-                System.err.println("Mismatching Value Type At Key");
+                // System.err.println("Mismatching Value Type At Key");
                 return fallbackVal;
             }
         }
-        System.err.println("Mismatching Value Type At Key");
-        return -fallbackVal;
+        // System.err.println("Mismatching Value Type At Key");
+        return fallbackVal;
     }
     public static int GetNumberOfVariablesFromJSONOBJ(JSONObject jsonObj, String KeyForNumberOfVars){
         int numberOfVariables = GetIntFromJSONOBJ(jsonObj, KeyForNumberOfVars, -1);
         if (numberOfVariables == -1) {
-            System.err.println("No 'NumberOfVar' was obtained returning -1");
+            // System.err.println("No 'NumberOfVar' was obtained returning -1");
         }
         return numberOfVariables;
     }
     
     private static String[] GetStrArrFromJSONOBJ(JSONObject jsonObj, String KeyForVar){
         if (!jsonObj.has(KeyForVar)) {
-            System.err.println("Invalid Key to obtain MinTerms");
+            // System.err.println("Invalid Key to obtain elements");
             return null;
         }
         Object variableList = jsonObj.get(KeyForVar);
@@ -48,12 +48,12 @@ public class QuineMckluskyWebHandler {
             
             return StrArr;
         }
-        System.err.println("Mismatching Value Type At " + KeyForVar);
+        // System.err.println("Mismatching Value Type At " + KeyForVar);
         return null;
     }
     private static int[] GetIntArrFromJSONOBJ(JSONObject jsonObj, String KeyForVar){
         if (!jsonObj.has(KeyForVar)) {
-            System.err.println("Invalid Key to obtain MinTerms");
+            // System.err.println("Invalid Key to obtain MinTerms");
             return null;
         }
         Object val = jsonObj.get(KeyForVar);
@@ -61,24 +61,32 @@ public class QuineMckluskyWebHandler {
             JSONArray jsonArr = (JSONArray)val;
             int[] intArr = new int[jsonArr.length()];
             for(int i = 0; i < jsonArr.length(); i++){
-                intArr[i] = Integer.parseInt(jsonArr.getString(i));
+                try{
+                    intArr[i] = Integer.parseInt(jsonArr.getString(i));
+                } catch (Exception e){
+                    return null;
+                }       
             }
             return intArr;
         }
         if (val instanceof String) {
+            if ((String)val == "") return null;
             int[] intArr = new int[1];
-            intArr[0] = (int)val;
-            
+            try{
+                intArr[0] = Integer.parseInt((String)val);
+            } catch (Exception e){
+                return null;
+            }
             return intArr;
         }
-        System.err.println("Mismatching Value Type At " + KeyForVar);
+        // System.err.println("Mismatching Value Type At " + KeyForVar);
         return null;
     }
     
     public static String[] GetVariableListFromJSONOBJ(JSONObject jsonObj, String KeyForVariables){
         String[] varList = GetStrArrFromJSONOBJ(jsonObj,KeyForVariables);
         if (varList == null) {
-            System.err.println("Unable To Obtain Variable Names.. Returning Null");
+            // System.err.println("Unable To Obtain Variable Names.. Returning Null");
             return null;
         }
         return varList;
@@ -104,7 +112,7 @@ public class QuineMckluskyWebHandler {
     public static String[] GetDontCaresFromJSONOBJ(JSONObject jsonObj, String KeyForDontCares){
         String[] dontCares = GetStrArrFromJSONOBJ(jsonObj,KeyForDontCares);
         if (dontCares == null) {
-            System.err.println("Unable To Obtain DontCares.. Returning Null");
+            // System.err.println("Unable To Obtain DontCares.. Returning Null");
             return null;
         }
         return dontCares;
@@ -112,7 +120,7 @@ public class QuineMckluskyWebHandler {
     public static int[] GetDontCaresIntsFromJSONOBJ(JSONObject jsonObj, String KeyForDontCares){
         int[] dontCares = GetIntArrFromJSONOBJ(jsonObj,KeyForDontCares);
         if (dontCares == null) {
-            System.err.println("Unable To Obtain MinTerms.. Returning Null");
+            // System.err.println("Unable To Obtain MinTerms.. Returning Null");
             return null;
         }
         return dontCares;
@@ -147,6 +155,12 @@ public class QuineMckluskyWebHandler {
         return result;
     }
     
+    private static boolean AllTermsWithinRange(int[]terms, int minVal, int maxVal){
+        if (Arrays.stream(terms).max().getAsInt() > maxVal || Arrays.stream(terms).min().getAsInt()  < minVal) {
+            return false;
+        }
+        return true;
+    }
     public static void main(String[] args) {
         String jsonStr = args[0];
         JSONObject jsonObj = new JSONObject(jsonStr);
@@ -154,28 +168,66 @@ public class QuineMckluskyWebHandler {
         String[] variables = GetVariableListFromJSONOBJ(jsonObj,"Variables");
         int[] minTerms = GetMinTermIntsFromJSONOBJ(jsonObj,"MinTerms");
         int[] dontCares = GetDontCaresIntsFromJSONOBJ(jsonObj, "DontCares");
-        
-        if (numberOfVariables < 1) {
-            System.err.println("Invalid NumberOfVars");
-            return;
-        }
-        int maxAllowedVal = (int)Math.pow(2, numberOfVariables);
-        if (Arrays.stream(minTerms).max().getAsInt() >= maxAllowedVal) {
-            System.err.println("Max Possible MinTerm for specified NumberOfVars is" + maxAllowedVal);
-            return;
-        }
-        if (Arrays.stream(dontCares).max().getAsInt() >= maxAllowedVal) {
-            System.err.println("Max Possible DontCares for specified NumberOfVars is" + maxAllowedVal);
-            return;
-        }
 
-        SimplificationData simplificationData = QuineMckluskySolver.getPrimeImplicantsMinTerms(minTerms, dontCares, numberOfVariables);
-
-        // Find the optimal minimized expression
-        OptimizationResult optimizationRes = QuineMckluskySolver.getOptimalExpression(
-            QuineMckluskySolver.termListToStrArr(simplificationData.primeImplicants), minTerms, numberOfVariables);
-        
         JSONObject Data_JSON = new JSONObject();
+        
+        //EDGE-CASE HANDLING
+        //numberOfVariables Edge-Case Handling
+        if (numberOfVariables < 1 || numberOfVariables > 10) {
+            Data_JSON.put("Problem", "Invalid number of variables");
+            System.out.println(Data_JSON.toString());
+            return;
+        }
+        //Variables' Array Edge-Case Handling
+        if (variables == null || variables.length != numberOfVariables) { 
+            Data_JSON.put("Problem", "There's a mismathch between the NumberOfVars and the count of the Variables provided");
+            System.out.println(Data_JSON.toString());
+            return;
+        }
+
+        int maxAllowedVal = (int)Math.pow(2, numberOfVariables) - 1;
+        int minAllowedVal = 0;
+
+
+        //MinTerm Edge-Case Handling
+        if (minTerms == null || minTerms.length == 0) { 
+            Data_JSON.put("Problem", "No MinTerms Were Given");
+            System.out.println(Data_JSON.toString());
+            return;
+        }
+        //if it was null it wont procceed so it wont dereference a null pointer
+        if (!QuineMckluskyWebHandler.AllTermsWithinRange(minTerms, minAllowedVal, maxAllowedVal)) {
+            Data_JSON.put("Problem", "Largest Allowed MinTerm for specified NumberOfVars is " + maxAllowedVal);
+            System.out.println(Data_JSON.toString());
+            return;
+        }
+
+        //DontCare Edge-Case Handling
+        if (dontCares != null && dontCares.length > 0 ) {
+            if (!QuineMckluskyWebHandler.AllTermsWithinRange(dontCares, minAllowedVal, maxAllowedVal)) {
+                Data_JSON.put("Problem", "Largest Allowed DontCare for specified NumberOfVars is " + maxAllowedVal);
+                System.out.println(Data_JSON.toString());
+                return;
+            }
+        }
+        //we couldn't resolve the nesting here since unlike the previous case there isn't an early exit point here
+        //here if dont cares weren't given we just procceed with null and that's allowed
+        
+        //Core Logic Edge-Case Handling
+        SimplificationData simplificationData ;
+        OptimizationResult optimizationRes;
+        try {
+            simplificationData = QuineMckluskySolver.getPrimeImplicantsMinTerms(minTerms, dontCares, numberOfVariables);
+            // Find the optimal minimized expression
+            optimizationRes = QuineMckluskySolver.getOptimalExpression(
+                QuineMckluskySolver.termListToStrArr(simplificationData.primeImplicants), minTerms, numberOfVariables);
+        } catch (Exception e) {
+            Data_JSON.put("Problem", "An Error Occured while processing ..Failed To Give Output");
+            System.out.println(Data_JSON.toString());
+            return;
+        }
+
+        //Output-JSON Setup
         JSONObject simplificationData_JSON = SimplificationDataToResultJSON(simplificationData);
         JSONObject PIChartData_JSON = PIChartDataToResultJSON(simplificationData, optimizationRes, minTerms);
         JSONObject OutputData_JSON = OutputDataToResultJSON(optimizationRes, variables);
