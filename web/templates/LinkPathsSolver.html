@@ -20,16 +20,22 @@
         <h2 id = "VariableSetupTitle" class="stepTitle">Setting Up The Variables' Data</h2>
         <div id="stateCountBlock" class = "inputCard">
             <h3 class="inputLabel">Enter Number of State Variables</h2>
-            <input id = "stateBitsCount" class = "inputBar" type = "number" min = "1" max="5" placeholder = "..." onchange="generateMooreOutputAssignmentBlock()">
+            <input id = "stateBitsCount" class = "inputBar" name = "StateVarCount" type = "number" min = "1" max="5" placeholder = "..." onchange="generateMooreOutputAssignmentBlock()">
         </div>
 
 
         <div id="VariableSetupBlock" class = "inputCard">
-            <h3 class="inputLabel">Enter The Number of Variables (Excluding State Variables)</h3>
-            <input type="number" class = "inputBar" name="VarCount" min = "1" placeholder="Enter The Number Of Variables">
+            <h3 class="inputLabel">Enter The Number of Input Variables (Excluding State Variables)</h3>
+            <input id = "InVarCount" type="number" class = "inputBar" name="InVarCount" min = "1" placeholder="Enter The Number Of Variables" onchange="generateMooreOutputAssignmentBlock()">
             
             <h3 class="inputLabel">Enter Their Names</h3>
-            <input type="text" class = "inputBar" name="Variables" placeholder="Enter your comma seperated Variable Names">
+            <input type="text" class = "inputBar" name="InVariables" placeholder="Enter your comma seperated Variable Names">
+
+            <h3 class="inputLabel">Enter The Number of Output Variables (Excluding State Variables)</h3>
+            <input id = "OutVarCount" type="number" class = "inputBar" name="OutVarCount" min = "1" placeholder="Enter The Number Of Variables" onchange="generateMooreOutputAssignmentBlock()">
+            
+            <h3 class="inputLabel">Enter Their Names</h3>
+            <input type="text" class = "inputBar" name="OutVariables" placeholder="Enter your comma seperated Variable Names">
         </div>
 
         <h2 id = "MooreAssignmentTitle" class="stepTitle">Setting Up The Moore Outputs</h2>
@@ -40,34 +46,46 @@
         </div>
 
 
+        <h2 id = "PathDefinitionTitle" class="stepTitle">Setting Up The Link-Paths</h2>
+        <!-- Hidden input to store count -->
+        <input type="hidden" name="LinkCount" id="LinkCount">
+        
+        <div id="linkPathsContainer">
+            <!-- Input slots will be added here -->
+             <p>Enter The Number Of Bits First ⚠️</p>
+        </div>
+        <button onclick="addLinkPath()">+</button>
+
+        
+
+
         <script>
+            let inputCount = 0;
+
             function generateOptions() {
-            const num = parseInt(document.getElementById("stateBitsCount").value);
-            const select = document.getElementById("choices");
-
-            // Clear previous options
-            select.innerHTML = "";
-
-            if (!isNaN(num) && num > 0) {
-                for (let i = 0; i <= Math.pow(2,num) - 1; i++) {
-                const option = document.createElement("option");
-                option.value = i;
-                option.text = "S" + i;
-                select.appendChild(option);
+                // Simulate generating state names like S0, S1, ..., S7 for 3-bit states
+                const numBits = parseInt(document.getElementById("stateBitsCount").value);
+                const numStates = Math.pow(2, numBits);
+                const states = [];
+                for (let i = 0; i < numStates; i++) {
+                states.push("S" + i);
                 }
-            } else {
-                const option = document.createElement("option");
-                option.text = "-- Invalid number --";
-                select.appendChild(option);
-            }
+
+                return states.map(state => {
+                const opt = document.createElement("option");
+                opt.value = state;
+                opt.textContent = state;
+                return opt;
+                });
             }
 
             function generateMooreOutputAssignmentBlock(){
                 const num = parseInt(document.getElementById("stateBitsCount").value);
+                const inVarCount = parseInt(document.getElementById("InVarCount").value);
+                const outVarCount = parseInt(document.getElementById("OutVarCount").value);
                 const container = document.getElementById("mooreAssignmentInputs");
                 container.innerHTML = "";
-                container.appendChild(document.createElement("h2"))
-                if (!isNaN(num) && num > 0) {
+                if (!isNaN(num)  && !isNaN(inVarCount) && !isNaN(outVarCount)) {
                     for (let i = 0; i <= Math.pow(2,num) - 1; i++) {
                     const label = document.createElement("label");
                     label.htmlFor = "S" + i;
@@ -76,6 +94,7 @@
                     const input = document.createElement("input");
                     input.id = "S" + i;
                     input.type = "text";
+                    input.name = "S" + i + "_MooreOutput";
                     input.className = "mooreAssignmentInput";
                     input.placeholder = "Enter output";
                     container.appendChild(label);
@@ -86,6 +105,68 @@
                     container.innerHTML = "<h2>-- Invalid number --</h2>";
                 }
 
+            }
+        
+            function addLinkPath() {
+                const num = parseInt(document.getElementById("stateBitsCount").value);
+                const inVarCount = parseInt(document.getElementById("InVarCount").value);
+                const outVarCount = parseInt(document.getElementById("OutVarCount").value);
+
+                const container = document.getElementById("linkPathsContainer");
+
+                if (!isNaN(num) && !isNaN(inVarCount) && !isNaN(outVarCount)) {
+                    // Remove the instruction
+
+                    const options = generateOptions();
+                    const linkPath = document.createElement("div");
+                    linkPath.style.border = "1px solid #ccc";
+                    linkPath.style.padding = "10px";
+                    linkPath.style.margin = "10px 0";
+
+                    // From State
+                    const fromState = document.createElement("select");
+                    fromState.name = `Link${inputCount}_fromState`;
+                    options.forEach(opt => fromState.appendChild(opt.cloneNode(true)));
+
+                    // Input String
+                    const inLabel = document.createElement("label");
+                    inLabel.innerText = "Given Input: ";
+                    const inStr = document.createElement("input");
+                    inStr.type = "text";
+                    inStr.name = `Link${inputCount}_inStr`;
+
+                    // Output String
+                    const outLabel = document.createElement("label");
+                    outLabel.innerText = "Gives Output: ";
+                    const outStr = document.createElement("input");
+                    outStr.type = "text";
+                    outStr.name = `Link${inputCount}_outStr`;
+
+                    // To State
+                    const toState = document.createElement("select");
+                    toState.name = `Link${inputCount}_toState`;
+                    options.forEach(opt => toState.appendChild(opt.cloneNode(true)));
+
+                    // Add to linkPath block
+                    linkPath.appendChild(fromState);
+                    linkPath.appendChild(document.createElement("br"));
+                    linkPath.appendChild(inLabel);
+                    linkPath.appendChild(inStr);
+                    linkPath.appendChild(document.createElement("br"));
+                    linkPath.appendChild(outLabel);
+                    linkPath.appendChild(outStr);
+                    linkPath.appendChild(document.createElement("br"));
+                    linkPath.appendChild(toState);
+
+                    // Append to container
+                    container.appendChild(linkPath);
+
+                    // Update count
+                    inputCount++;
+                    document.getElementById("LinkCount").value = inputCount;
+                } else {
+                    container.innerHTML = "<h2>-- Invalid Inputs --</h2>";
+                }
             }
         </script>
 
