@@ -20,7 +20,7 @@
         <h2 id = "VariableSetupTitle" class="stepTitle">Setting Up The Variables' Data</h2>
         <div id="stateCountBlock" class = "inputCard">
             <h3 class="inputLabel">Enter Number of State Variables</h2>
-            <input id = "stateBitsCount" class = "inputBar" name = "StateVarCount" type = "number" min = "1" max="5" placeholder = "..." onchange="generateMooreOutputAssignmentBlock()">
+            <input id = "stateBitsCount" class = "inputBar" name = "StateVarCount" type = "number" min = "1" max="5" placeholder = "..." onchange="generateMooreOutputAssignmentBlock(),cleanUpLinkPathBlock()">
         </div>
 
 
@@ -107,6 +107,10 @@
 
             }
         
+            function cleanUpLinkPathBlock(){
+                const container = document.getElementById("linkPathsContainer");
+                container.innerHTML = "";
+            }
             function addLinkPath() {
                 const num = parseInt(document.getElementById("stateBitsCount").value);
                 const inVarCount = parseInt(document.getElementById("InVarCount").value);
