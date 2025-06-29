@@ -54,7 +54,7 @@
             <!-- Input slots will be added here -->
              <p>Enter The Number Of Bits First ⚠️</p>
         </div>
-        <button onclick="addLinkPath()">+</button>
+        <button id = "addStateButton" onclick="addLinkPath()">+</button>
 
         
 
@@ -123,8 +123,8 @@
 
                     const options = generateOptions();
                     const linkPath = document.createElement("div");
-                    linkPath.style.border = "1px solid #ccc";
                     linkPath.style.padding = "10px";
+                    linkPath.className = "linkPath";
                     linkPath.style.margin = "10px 0";
 
                     // From State
@@ -133,24 +133,26 @@
                     options.forEach(opt => fromState.appendChild(opt.cloneNode(true)));
 
                     // Input String
-                    const inLabel = document.createElement("label");
-                    inLabel.innerText = "Given Input: ";
+                    const inLabel = document.createElement("h3");
+                    inLabel.innerText = " Given Input:  ";
                     const inStr = document.createElement("input");
                     inStr.type = "text";
                     inStr.name = `Link${inputCount}_inStr`;
 
                     // Output String
-                    const outLabel = document.createElement("label");
-                    outLabel.innerText = "Gives Output: ";
+                    const outLabel = document.createElement("h3");
+                    outLabel.innerText = " Gives Output: ";
                     const outStr = document.createElement("input");
                     outStr.type = "text";
                     outStr.name = `Link${inputCount}_outStr`;
 
+                    const goesToLabel = document.createElement("h3");
+                    goesToLabel.innerText = " And Goes To  "
                     // To State
                     const toState = document.createElement("select");
                     toState.name = `Link${inputCount}_toState`;
                     options.forEach(opt => toState.appendChild(opt.cloneNode(true)));
-
+                    
                     // Add to linkPath block
                     linkPath.appendChild(fromState);
                     linkPath.appendChild(document.createElement("br"));
@@ -160,8 +162,9 @@
                     linkPath.appendChild(outLabel);
                     linkPath.appendChild(outStr);
                     linkPath.appendChild(document.createElement("br"));
+                    linkPath.appendChild(goesToLabel);
+                    linkPath.appendChild(document.createElement("br"));
                     linkPath.appendChild(toState);
-
                     // Append to container
                     container.appendChild(linkPath);
 

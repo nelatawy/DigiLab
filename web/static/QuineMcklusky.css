@@ -76,6 +76,8 @@ body {
     background-color: azure;
     min-width: max-content;
     border-radius: 25px;
+    border: none;
+    outline: none;
 }
 .input button {
     margin-block-start: 30px;
@@ -85,13 +87,15 @@ body {
     font-family: "Caprasimo", serif;
     background-color: var(--primary_light);
     border-radius: var(--radius-small);
+    border: none;
+    outline: none;
     
     transition: background 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
     cursor: pointer;
 }
 .input button:hover {
-    background-color: var(--primary_dark);
-    color: var(--secondary);
+    background-color: #333;
+    color: var(--primary_light);
     border-color: var(--primary_dark);
     box-shadow: 0 4px 16px rgba(72, 58, 160, 0.2);
 }
