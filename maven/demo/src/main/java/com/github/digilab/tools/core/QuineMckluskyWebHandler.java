@@ -6,125 +6,58 @@ import org.json.*;
 
 public class QuineMckluskyWebHandler {
 
-    private static int GetIntFromJSONOBJ(JSONObject jsonObj, String KeyForVar , int fallbackVal){
-        Object jsonValue = jsonObj.get(KeyForVar);
-        if (jsonValue instanceof String) {
-            try {
-                int intVal = Integer.parseInt((String)jsonValue);
-                return intVal;
-            } catch (Exception e) {
-                // System.err.println("Mismatching Value Type At Key");
-                return fallbackVal;
-            }
-        }
-        // System.err.println("Mismatching Value Type At Key");
-        return fallbackVal;
-    }
-    public static int GetNumberOfVariablesFromJSONOBJ(JSONObject jsonObj, String KeyForNumberOfVars){
-        int numberOfVariables = GetIntFromJSONOBJ(jsonObj, KeyForNumberOfVars, -1);
-        if (numberOfVariables == -1) {
-            // System.err.println("No 'NumberOfVar' was obtained returning -1");
-        }
-        return numberOfVariables;
-    }
+
+    // public static int GetNumberOfVariablesFromJSONOBJ(JSONObject jsonObj, String KeyForNumberOfVars){
+    //     int numberOfVariables = GetIntFromJSONOBJ(jsonObj, KeyForNumberOfVars, -1);
+    //     if (numberOfVariables == -1) {
+    //         // System.err.println("No 'NumberOfVar' was obtained returning -1");
+    //     }
+    //     return numberOfVariables;
+    // }
     
-    private static String[] GetStrArrFromJSONOBJ(JSONObject jsonObj, String KeyForVar){
-        if (!jsonObj.has(KeyForVar)) {
-            // System.err.println("Invalid Key to obtain elements");
-            return null;
-        }
-        Object variableList = jsonObj.get(KeyForVar);
-        if (variableList instanceof JSONArray) {
-            JSONArray jsonArr = (JSONArray)variableList;
-            String[] StrArr = new String[jsonArr.length()];
-            for(int i = 0; i < jsonArr.length(); i++){
-                StrArr[i] = jsonArr.getString(i);
-            }
-            return StrArr;
-        }
-        if (variableList instanceof String) {
-            String[] StrArr = new String[1];
-            StrArr[0] = (String)variableList;
-            
-            return StrArr;
-        }
-        // System.err.println("Mismatching Value Type At " + KeyForVar);
-        return null;
-    }
-    private static int[] GetIntArrFromJSONOBJ(JSONObject jsonObj, String KeyForVar){
-        if (!jsonObj.has(KeyForVar)) {
-            // System.err.println("Invalid Key to obtain MinTerms");
-            return null;
-        }
-        Object val = jsonObj.get(KeyForVar);
-        if (val instanceof JSONArray) {
-            JSONArray jsonArr = (JSONArray)val;
-            int[] intArr = new int[jsonArr.length()];
-            for(int i = 0; i < jsonArr.length(); i++){
-                try{
-                    intArr[i] = Integer.parseInt(jsonArr.getString(i));
-                } catch (Exception e){
-                    return null;
-                }       
-            }
-            return intArr;
-        }
-        if (val instanceof String) {
-            if ((String)val == "") return null;
-            int[] intArr = new int[1];
-            try{
-                intArr[0] = Integer.parseInt((String)val);
-            } catch (Exception e){
-                return null;
-            }
-            return intArr;
-        }
-        // System.err.println("Mismatching Value Type At " + KeyForVar);
-        return null;
-    }
+
+    // public static String[] GetVariableListFromJSONOBJ(JSONObject jsonObj, String KeyForVariables){
+    //     String[] varList = GetStrArrFromJSONOBJ(jsonObj,KeyForVariables);
+    //     if (varList == null) {
+    //         // System.err.println("Unable To Obtain Variable Names.. Returning Null");
+    //         return null;
+    //     }
+    //     return varList;
+    // }
     
-    public static String[] GetVariableListFromJSONOBJ(JSONObject jsonObj, String KeyForVariables){
-        String[] varList = GetStrArrFromJSONOBJ(jsonObj,KeyForVariables);
-        if (varList == null) {
-            // System.err.println("Unable To Obtain Variable Names.. Returning Null");
-            return null;
-        }
-        return varList;
-    }
+    // public static int[] GetMinTermIntsFromJSONOBJ(JSONObject jsonObj, String KeyForMinTerms){
+    //     int[] minTerms = GetIntArrFromJSONOBJ(jsonObj,KeyForMinTerms);
+    //     if (minTerms == null) {
+    //         System.err.println("Unable To Obtain MinTerms.. Returning Null");
+    //         return null;
+    //     }
+    //     return minTerms;
+    // }
+    // public static String[] GetMinTermStrsFromJSONOBJ(JSONObject jsonObj, String KeyForMinTerms){
+    //     String[] minTerms = GetStrArrFromJSONOBJ(jsonObj,KeyForMinTerms);
+    //     if (minTerms == null) {
+    //         System.err.println("Unable To Obtain MinTerms.. Returning Null");
+    //         return null;
+    //     }
+    //     return minTerms;
+    // }
     
-    public static int[] GetMinTermIntsFromJSONOBJ(JSONObject jsonObj, String KeyForMinTerms){
-        int[] minTerms = GetIntArrFromJSONOBJ(jsonObj,KeyForMinTerms);
-        if (minTerms == null) {
-            System.err.println("Unable To Obtain MinTerms.. Returning Null");
-            return null;
-        }
-        return minTerms;
-    }
-    public static String[] GetMinTermStrsFromJSONOBJ(JSONObject jsonObj, String KeyForMinTerms){
-        String[] minTerms = GetStrArrFromJSONOBJ(jsonObj,KeyForMinTerms);
-        if (minTerms == null) {
-            System.err.println("Unable To Obtain MinTerms.. Returning Null");
-            return null;
-        }
-        return minTerms;
-    }
-    
-    public static String[] GetDontCaresFromJSONOBJ(JSONObject jsonObj, String KeyForDontCares){
-        String[] dontCares = GetStrArrFromJSONOBJ(jsonObj,KeyForDontCares);
-        if (dontCares == null) {
-            // System.err.println("Unable To Obtain DontCares.. Returning Null");
-            return null;
-        }
-        return dontCares;
-    }
-    public static int[] GetDontCaresIntsFromJSONOBJ(JSONObject jsonObj, String KeyForDontCares){
-        int[] dontCares = GetIntArrFromJSONOBJ(jsonObj,KeyForDontCares);
-        if (dontCares == null) {
-            // System.err.println("Unable To Obtain MinTerms.. Returning Null");
-            return null;
-        }
-        return dontCares;
-    }
+    // public static String[] GetDontCaresFromJSONOBJ(JSONObject jsonObj, String KeyForDontCares){
+    //     String[] dontCares = GetStrArrFromJSONOBJ(jsonObj,KeyForDontCares);
+    //     if (dontCares == null) {
+    //         // System.err.println("Unable To Obtain DontCares.. Returning Null");
+    //         return null;
+    //     }
+    //     return dontCares;
+    // }
+    // public static int[] GetDontCaresIntsFromJSONOBJ(JSONObject jsonObj, String KeyForDontCares){
+    //     int[] dontCares = GetIntArrFromJSONOBJ(jsonObj,KeyForDontCares);
+    //     if (dontCares == null) {
+    //         // System.err.println("Unable To Obtain MinTerms.. Returning Null");
+    //         return null;
+    //     }
+    //     return dontCares;
+    // }
     
     public static JSONObject SimplificationDataToResultJSON(SimplificationData data){
         JSONObject result = new JSONObject();
@@ -164,10 +97,10 @@ public class QuineMckluskyWebHandler {
     public static void main(String[] args) {
         String jsonStr = args[0];
         JSONObject jsonObj = new JSONObject(jsonStr);
-        int numberOfVariables = GetNumberOfVariablesFromJSONOBJ(jsonObj,"NumberOfVars");
-        String[] variables = GetVariableListFromJSONOBJ(jsonObj,"Variables");
-        int[] minTerms = GetMinTermIntsFromJSONOBJ(jsonObj,"MinTerms");
-        int[] dontCares = GetDontCaresIntsFromJSONOBJ(jsonObj, "DontCares");
+        int numberOfVariables = JSONInputParser.GetIntFromJSONOBJ(jsonObj,"NumberOfVars", -1);
+        String[] variables = JSONInputParser.GetStrArrFromJSONOBJ(jsonObj,"Variables");
+        int[] minTerms = JSONInputParser.GetIntArrFromJSONOBJ(jsonObj,"MinTerms");
+        int[] dontCares = JSONInputParser.GetIntArrFromJSONOBJ(jsonObj, "DontCares");
 
         JSONObject Data_JSON = new JSONObject();
         

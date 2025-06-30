@@ -23,7 +23,7 @@ class Link {
     }
 }
 class State {
-    LinkedList<Link> links;
+    LinkedList<Link> links;//only accounts for outLinks
     int stateID;
     String stateOutput;
     public State(int ID , String stateOutput){

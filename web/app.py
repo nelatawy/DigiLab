@@ -111,6 +111,54 @@ def QuineMcklusky():
 
 @app.route('/LinkPathsSolver',methods = ['GET','POST'])
 def LinkPathSolver():
+    if request.method == 'POST':
+        stateVarCount = int(request.form["StateVarCount"])
+        inVarCount    = int(request.form["InVarCount"])
+        outVarCount   = int(request.form["OutVarCount"])
+        inVarNames    = request.form["InVariables"]
+        outVarNames   = request.form["OutVariables"]
+        mooreOutputs  = []
+        for i in range(stateVarCount):
+            mooreOutputs.append(request.form["S" + str(i) + "_MooreOutput"])
+        linkCount = request.form["LinkCount"]
+        linkPaths = []
+        for i in range(linkCount):
+            currLink = {
+                "fromState": request.form["Link" + str(i) + "_fromState"],
+                "inStr"    : request.form["Link" + str(i) + "_inStr"],
+                "outStr"   : request.form["Link" + str(i) + "_outStr"],
+                "toState"  : request.form["Link" + str(i) + "_toState"]
+            }
+            linkPaths.append(currLink)
+        
+        data = {
+            "stateVarCount" : stateVarCount,
+            "inVarCount"    : inVarCount,
+            "outVarCount"   : outVarCount,
+            "inVarNames"    : inVarNames,
+            "outVarNames"   : outVarNames,
+            "mooreOutputs"  : mooreOutputs,
+            "linkPathsCount": linkCount,
+            "linkPaths"     : linkPaths
+        }
+        arguments_json = json.dumps(data)
+        cmd = ["java", "-cp", classpath,"com.github.digilab.tools.core.LinkPathsSolverWebHandler"]
+        process = subprocess.run(cmd + [arguments_json], capture_output=True, text=True)
+        try:
+            result_json = json.loads(process.stdout)
+        except json.JSONDecodeError as e:
+            print("JSON decode error:", e)
+            print("Raw output:", process.stdout)
+            optimized_expr = "Java did not return valid JSON. See server logs."
+            return render_template("LinkPathsSolver.html", problem = problem)
+        
+        if("Problem" in result_json):
+            problem = result_json["Problem"]
+            return render_template(
+            "LinkPathsSolver.html",
+            solutionPhase = True,
+            problem = problem)
+
     return render_template("LinkPathsSolver.html")
 
 app.run(port=8080,debug=True)

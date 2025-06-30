@@ -23,6 +23,13 @@ body {
     gap: 30px;
 }
 
+form{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+    justify-content: center;
+}
 .title {
     font-size: 37pt;
     font-family: "Caprasimo", serif;
@@ -207,6 +214,30 @@ input {
     width: 110px;
     height: 110px;
     font-size: 42pt;
+}
+
+
+
+#submitButton {
+    margin-block-start: 30px;
+    padding: 20px;
+    font-size: 30pt;
+    color: var(--primary_mid);
+    font-family: "Caprasimo", serif;
+    background-color: var(--primary_light);
+    border-radius: var(--radius-small);
+    box-shadow: var(--shadow-black);
+    border: none;
+    outline: none;
+    
+    transition: background 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+}
+#submitButton:hover {
+    background-color: #333;
+    color: var(--primary_light);
+    border-color: var(--primary_dark);
+    box-shadow: 0 4px 16px rgba(72, 58, 160, 0.2);
 }
 
 @media (max-width: 750px) {
