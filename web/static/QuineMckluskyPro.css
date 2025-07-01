@@ -1,0 +1,193 @@
+/* -----------------------------
+   Apple Design Language: Root CSS
+   Inspired by iOS/macOS HIG
+------------------------------ */
+
+:root {
+  /* === Fonts === */
+  --font-sans: -apple-system, BlinkMacSystemFont, "San Francisco",
+               "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+  /* === Font Sizes (based on Apple HIG) === */
+
+  --font-extra-large: 4rem;       /* was 4rem */
+  --font-large-title: 2.5rem;       
+  --font-title1: 2rem;              
+  --font-title2: 1.625rem;          
+  --font-headline: 1.5rem;         
+  --font-input-label: 1.3rem;         
+  --font-input: 1.2rem;        
+  --font-button: 1.3rem;         
+  --font-body: 1.25rem;             
+  --font-subheadline: 1.125rem;     
+  --font-footnote: 1rem;            
+
+
+
+  /* === Font Weights === */
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+
+  /* === Border Radii === */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-pill: 999px;
+
+  /* === Spacing (based on 4pt grid) === */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-7: 32px;
+
+  /* === System Colors (light mode defaults) === */
+  --color-bg: #ffffff;
+  --color-bg-secondary: #f2f2f7;
+  --color-label: rgba(0, 0, 0, 0.85);
+  --color-title: rgba(0, 0, 0, 0.85);
+  --color-secondary-text: rgba(60, 60, 67, 0.6);
+  --color-tertiary-text: rgba(60, 60, 67, 0.3);
+  --color-input-border: rgba(60, 60, 67, 0.3);
+  --color-separator: #c6c6c8;
+  --color-accent: #007aff;
+  --color-card-translucent:rgba(255, 255, 255, 0.6);
+  --color-top-bar-translucent:rgba(255, 255, 255, 0.7);
+
+  /* === Shadows === */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 2px 6px rgba(0, 0, 0, 0.1);
+  --shadow-focus: 0 0 0 3px rgba(0, 122, 255, 0.3);
+
+  /* === Transition === */
+  --transition-default: 0.3s ease-in-out;
+
+  /* === Blur === */
+  --blur-bg: blur(20px);
+}
+
+body{
+    /* background-color: var(--color-bg); */
+    background-image: url("logicCircuitWhite.jpg");
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: fixed;
+    font-family: var(--font-sans);
+    text-align: center;
+    display: flex;
+    gap: 20px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding-top: 150px;
+}
+.title {
+    position: fixed;
+    margin-top: 0%;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+
+    background-color: var(--color-top-bar-translucent);
+    backdrop-filter: var(--blur-bg);
+    -webkit-backdrop-filter: var(--blur-bg);
+
+    font-size: var(--font-extra-large); /* Start big */
+    color: var(--color-title);
+    font-weight: var(--weight-bold);
+    box-shadow: var(--shadow-md);
+
+    padding: var(--space-7);
+    transition: font-size 0.3s ease, padding 0.3s ease;
+}
+.title.shrink {
+    font-size: var(--font-title1);
+    padding: var(--space-2);
+}
+.about{
+    color: var(--color-label);
+    background-color: var(--color-card-translucent);
+    backdrop-filter: var(--blur-bg);
+    -webkit-backdrop-filter: var(--blur-bg);
+    font-weight: var(--font-subheadline);
+    padding: var(--space-3);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
+    margin-block-end: 25px;
+    margin-inline: 12vw;
+    min-width: 400px;
+}
+.about h2{
+    font-size: var(--font-large-title);
+    color: var(--color-label);
+}
+.about h3{
+    font-size: var(--font-headline);
+    font-weight: var(--weight-medium);
+}
+
+.input{
+    padding: var(--space-4);
+    background-color: var(--color-card-translucent);
+    border-radius: var(--radius-lg);
+    display: flex;
+    flex-direction: column;
+    width: 400px;
+    box-shadow: var(--shadow-sm);
+    
+    backdrop-filter: var(--blur-bg);
+    -webkit-backdrop-filter: var(--blur-bg);
+}
+.input input {
+    padding: var(--space-2);
+    margin-block-end: var(--space-2);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-input);
+    border :2px solid var(--color-input-border);
+    text-align: center;
+    /* border: none; */
+}
+.input h3 {
+    font-size: var(--font-input-label);
+    color: var(--color-label);
+}
+/* .input button {
+    font-size: var(--font-body);
+    border-radius: var(--radius-sm);
+    border: none;
+    outline: none;
+    padding: var(--space-1);
+    background-color: var(--color-label);
+    color: whitesmoke;
+} */
+
+
+.input button {
+    font-size: var(--font-button);
+    margin-block-start: 20px;
+    font-weight: 600;
+    padding: 12px 24px;
+    border: none;
+    border-radius: var(--radius-sm);
+    background-color: var(--color-accent); /* iOS blue */
+    color: whitesmoke;
+    box-shadow: var(--shadow-md);
+    transition: all 0.2s ease-in-out;
+    cursor: pointer;
+}
+
+.input button:hover {
+    background-color: #339cff; /* Lighter blue */
+    box-shadow: 0 4px 10px rgba(0, 122, 255, 0.3);
+    transform: translateY(-1px);
+}
+
+.input button:active {
+    background-color: #0060df;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15) inset;
+    transform: translateY(0px);
+}

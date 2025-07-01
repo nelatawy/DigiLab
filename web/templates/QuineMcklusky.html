@@ -4,7 +4,7 @@
     <head>
         <meta charset="UTF-8">
         <title>Quine Mcklusky Solver</title>
-        <link rel="stylesheet" href="{{ url_for('static', filename='QuineMcklusky.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='QuineMckluskyPro.css') }}">
 
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,7 +14,11 @@
     </head>
     <body>
         <h1 class="title">Quine Mcklusky Solver</h1>
-        <h2 class="about">This Program Intends To Provide The Simplest Boolean Expression Given The MinTerms Defining the Function Using the Widely-Known Method in Digital Logic</h2>
+        <div class="about">
+            <h2>About</h2>
+            <h3>This Program Intends To Provide The Simplest Boolean Expression Given The MinTerms Defining the Function Using the Widely-Known Method in Digital Logic</h2>
+        </div>
+        
 
         <form class = "input" method="post">
 
@@ -92,6 +96,15 @@
                 </div>
             {%endif%}
         {%endif%}
-        
+        <script>
+            document.addEventListener("scroll", function() {
+                const title = document.querySelector(".title");
+                if (window.scrollY > 30) {
+                    title.classList.add("shrink");
+                } else {
+                    title.classList.remove("shrink");
+                }
+            });
+        </script>
     </body>
 </html>
