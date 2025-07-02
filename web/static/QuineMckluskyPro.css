@@ -11,15 +11,18 @@
   /* === Font Sizes (based on Apple HIG) === */
 
   --font-extra-large: 4rem;       /* was 4rem */
+  --font-larger:3.5rem;
   --font-large-title: 2.5rem;       
   --font-title1: 2rem;              
   --font-title2: 1.625rem;          
-  --font-headline: 1.5rem;         
+  --font-headline: 1.5rem;  
+  --font-cell: 1.7rem;        
   --font-input-label: 1.3rem;         
   --font-input: 1.2rem;        
-  --font-button: 1.3rem;         
-  --font-body: 1.25rem;             
-  --font-subheadline: 1.125rem;     
+  --font-button: 1.35rem;         
+  --font-body: 1.35rem;             
+  --font-subheadline: 1.125rem; 
+  --font-table-label:1.3rem;    
   --font-footnote: 1rem;            
 
 
@@ -48,15 +51,17 @@
   /* === System Colors (light mode defaults) === */
   --color-bg: #ffffff;
   --color-bg-secondary: #f2f2f7;
+  --color-bg-dark:rgba(0, 0, 0, 0.85);
+  --color-bg-dark-mid:rgba(30, 30, 30, 0.85);
   --color-label: rgba(0, 0, 0, 0.85);
   --color-title: rgba(0, 0, 0, 0.85);
-  --color-secondary-text: rgba(60, 60, 67, 0.6);
+  --color-secondary-text: rgba(60, 60, 67, 0.8);
   --color-tertiary-text: rgba(60, 60, 67, 0.3);
   --color-input-border: rgba(60, 60, 67, 0.3);
   --color-separator: #c6c6c8;
   --color-accent: #007aff;
   --color-card-translucent:rgba(255, 255, 255, 0.6);
-  --color-top-bar-translucent:rgba(255, 255, 255, 0.7);
+  --color-bar-translucent:rgba(255, 255, 255, 0.7);
 
   /* === Shadows === */
   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
@@ -92,7 +97,7 @@ body{
     width: 100%;
     z-index: 1000;
 
-    background-color: var(--color-top-bar-translucent);
+    background-color: var(--color-bar-translucent);
     backdrop-filter: var(--blur-bg);
     -webkit-backdrop-filter: var(--blur-bg);
 
@@ -190,4 +195,108 @@ body{
     background-color: #0060df;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15) inset;
     transform: translateY(0px);
+}
+#sol_title{
+    font-size: var(--font-large-title);
+    background-color: var(--color-bg-dark);
+    color: whitesmoke;
+    padding: var(--space-4);
+    box-shadow: var(--shadow-md);
+    border-radius: var(--radius-lg);
+    
+    margin-inline: 10vw;
+    min-width: 400px; 
+}
+#iteration {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--color-card-translucent);
+    backdrop-filter: var(--blur-bg);
+    padding: var(--space-4);
+    -webkit-backdrop-filter: var(--blur-bg);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    width: 400px;
+}
+#iteration h2{
+    font-size: var(--font-title1);
+    background-color: var(--color-bg-dark-mid);
+    color: whitesmoke;
+    border-radius: var(--radius-sm);
+    margin: var(--space-2);
+    padding: var(--space-2);
+}
+#iteration h3{
+    font-size: var(--font-title2);
+    color: var(--color-secondary-text);
+}
+#iteration p {
+    font-size: var(--font-body);
+    color: var(--color-label);
+    font-weight: var(--weight-regular);
+}
+
+#chart {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--color-card-translucent);
+    backdrop-filter: var(--blur-bg);
+    padding: var(--space-4);
+    -webkit-backdrop-filter: var(--blur-bg);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    width: 400px;
+}
+
+#chart h2{
+    font-size: var(--font-title1);
+    background-color: var(--color-bg-dark-mid);
+    color: whitesmoke;
+    border-radius: var(--radius-sm);
+    margin: var(--space-2);
+    padding: var(--space-2);
+}
+#chart th {
+    font-size: var(--font-table-label);
+    font-weight: var(--weight-semibold);
+    color: var(--color-label);
+}
+#chart .picked {
+    color: whitesmoke;
+    background-color: var(--color-accent);
+    border-radius: var(--radius-md);
+    font-size: var(--font-title2);
+    box-shadow: var(--shadow-md);
+}
+
+#chart table {
+    margin: var(--space-5);
+}
+.bitmap_cell {
+    font-size: var(--font-cell);
+    border: 2px solid var(--color-input-border);
+    font-weight: var(--weight-bold);
+    width: 60px;
+    height: 60px;
+    border-radius: var(--radius-sm);
+}
+
+#output {
+    /* display: flex;
+    flex-direction: column; */
+    background-color: var(--color-bar-translucent);
+    backdrop-filter: var(--blur-bg);
+    padding: var(--space-4);
+    -webkit-backdrop-filter: var(--blur-bg);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    width: 100%;
+}
+#output h2 {
+    font-size: var(--font-larger);
+    color: var(--color-label);
+}
+#output h3 {
+    font-size: var(--font-title1);
+    color: var(--color-label);
 }

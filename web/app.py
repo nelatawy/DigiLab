@@ -106,7 +106,8 @@ def QuineMcklusky():
             covering_terms = covering_terms,
             itr_data = itr_data,
             enumerate = enumerate,
-            zip = zip)
+            zip = zip,
+            len = len)
 
 
 @app.route('/LinkPathsSolver',methods = ['GET','POST'])

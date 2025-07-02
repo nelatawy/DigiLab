@@ -43,20 +43,23 @@
                 <h2 id="sol_title">Solution</h2>
 
                 {%for i,itr in enumerate(itr_data)%}
-                <div id = "iteration">
+                <div id = "iteration" >
                     <h2>Iteration {{i + 1}}</h2>
                     {%for j,gp in enumerate(itr) %}
                         <h3 id = "group">Group {{j + 1}}</h3>
                         {%for term in gp%}
                             <p>{{term}}</p><br>
                         {%endfor%}
+                        {%if len(gp) == 0%}
+                        <P>No elements in this group</P>
+                        {%endif%}
                     {%endfor%}
                 </div>
                 {%endfor%}
 
 
                 {%if pi_chart%}
-                <div id = "chart">
+                <div id = "chart" >
 
                     <h2 >Prime Implicant chart</h2>
                     <table>
@@ -69,9 +72,15 @@
 
                         {% for row_label,row in zip(covering_terms,pi_chart) %}
                         <tr>
-                            <th>{{row_label}}</th>
+                            {%if row_label in optimized_terms%}
+                                <th class="picked">{{row_label}}</th>
+                            {%else%}
+                                <th>{{row_label}}</th>
+                            {%endif%}
+                            
                             {% for box in row %}
                             <td class="bitmap_cell">{%if box %}X{%endif%}</td>
+                            
                             {% endfor %}
                         </tr>
                         {% endfor %}
@@ -80,7 +89,7 @@
                 </div>
                 {%endif%}
                 {%if optimized_expr%}
-                <div id = "output">
+                <div id = "output" class = "card">
                     
                     <h2>Minimum Expression</h2>
 
@@ -99,7 +108,7 @@
         <script>
             document.addEventListener("scroll", function() {
                 const title = document.querySelector(".title");
-                if (window.scrollY > 30) {
+                if (window.scrollY > 45) {
                     title.classList.add("shrink");
                 } else {
                     title.classList.remove("shrink");
