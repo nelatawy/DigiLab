@@ -22,7 +22,7 @@ class Term {
     // Converts a specified bit at "bitIndex" to a "Dont-Care"
     public void toDontCare(int bitIndex){
         if(bitIndex >= minTerm.length()){
-            System.err.println("BitIndex-OutOfBoundsError");
+            // System.err.println("BitIndex-OutOfBoundsError");
             return;
         }
         if (minTerm.charAt(bitIndex) == '1') {
@@ -49,7 +49,7 @@ class Term {
     // Find the first differing bit between two terms
     public static int findFirstDiffBet(Term term1, Term term2){
         if (term1.minTerm.length() != term2.minTerm.length()) {
-            System.err.println("ComparingTwoTermsOfMismatchingLengths");
+            // System.err.println("ComparingTwoTermsOfMismatchingLengths");
             return -1;
         }
         for(int i = 0; i < term1.toString().length(); i++){
@@ -62,7 +62,7 @@ class Term {
     // Count the number of differing bits between two terms
     public static int countDiffBet(Term term1, Term term2){
         if (term1.minTerm.length() != term2.minTerm.length()) {
-            System.err.println("ComparingTwoTermsOfMismatchingLengths");
+            // System.err.println("ComparingTwoTermsOfMismatchingLengths");
             return -1;
         }
         int count = 0;
@@ -102,7 +102,7 @@ class Term {
     }
     public static int findFirstMainBitsDiffBet(Term coveringTerm, Term coveredTerm) {
         if (coveringTerm.minTerm.length() != coveredTerm.minTerm.length()) {
-            System.err.println("ComparingTwoTermsOfMismatchingLengths");
+            // System.err.println("ComparingTwoTermsOfMismatchingLengths");
             return -1;
         }
         for(int i = 0; i < coveredTerm.toString().length(); i++){

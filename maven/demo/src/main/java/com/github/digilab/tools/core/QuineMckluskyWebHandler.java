@@ -72,11 +72,18 @@ public class QuineMckluskyWebHandler {
         }
         return result;
     }
-    public static JSONObject PIChartDataToResultJSON(SimplificationData simplificationData, OptimizationResult optimizationRes , int[] minTerms){
+    public static JSONObject PIChartDataToResultJSON(SimplificationData simplificationData, OptimizationResult optimizationRes , int[] terms){
         JSONObject result = new JSONObject();
         result.put("PIChart", optimizationRes.piChart);
         result.put("CoveringTerms", QuineMckluskySolver.termListToStrArr(simplificationData.primeImplicants));
-        result.put("MinTerms", minTerms);
+        result.put("MinTerms", terms);
+        return result;
+    }
+    public static JSONObject PIChartDataToResultJSON(SimplificationData simplificationData, OptimizationResult optimizationRes , String[] terms){
+        JSONObject result = new JSONObject();
+        result.put("PIChart", optimizationRes.piChart);
+        result.put("CoveringTerms", QuineMckluskySolver.termListToStrArr(simplificationData.primeImplicants));
+        result.put("MinTerms", terms);
         return result;
     }
     public static JSONObject OutputDataToResultJSON(OptimizationResult optimizationRes, String[] variables){
@@ -113,7 +120,7 @@ public class QuineMckluskyWebHandler {
         }
         //Variables' Array Edge-Case Handling
         if (variables == null || variables.length != numberOfVariables) { 
-            Data_JSON.put("Problem", "There's a mismathch between the NumberOfVars and the count of the Variables provided");
+            Data_JSON.put("Problem", "There's a mismatch between the NumberOfVars and the number of Variables provided");
             System.out.println(Data_JSON.toString());
             return;
         }

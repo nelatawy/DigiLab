@@ -60,8 +60,8 @@
   --color-input-border: rgba(60, 60, 67, 0.3);
   --color-separator: #c6c6c8;
   --color-accent: #007aff;
-  --color-card-translucent:rgba(255, 255, 255, 0.6);
-  --color-bar-translucent:rgba(255, 255, 255, 0.7);
+  --color-card-translucent:rgba(255, 255, 255, 0.7);
+  --color-bar-translucent:rgba(255, 255, 255, 0.8);
 
   /* === Shadows === */
   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
@@ -74,7 +74,9 @@
   /* === Blur === */
   --blur-bg: blur(20px);
 }
-
+html,body{
+    scroll-behavior: smooth;
+}
 body{
     /* background-color: var(--color-bg); */
     background-image: url("logicCircuitWhite.jpg");
@@ -89,6 +91,7 @@ body{
     justify-content: center;
     align-items: center;
     padding-top: 150px;
+    /* scroll-behavior: smooth; */
 }
 .title {
     position: fixed;
@@ -245,7 +248,7 @@ body{
     -webkit-backdrop-filter: var(--blur-bg);
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-md);
-    width: 400px;
+    width: max-content;
 }
 
 #chart h2{
@@ -260,6 +263,7 @@ body{
     font-size: var(--font-table-label);
     font-weight: var(--weight-semibold);
     color: var(--color-label);
+    padding: var(--space-2);
 }
 #chart .picked {
     color: whitesmoke;
@@ -299,4 +303,24 @@ body{
 #output h3 {
     font-size: var(--font-title1);
     color: var(--color-label);
+}
+
+#problem{
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: var(--space-4);
+    backdrop-filter: var(--blur-bg);
+    -webkit-backdrop-filter: var(--blur-bg);
+    border-radius: var(--radius-lg);
+    width: 400px;
+}
+#problem h2 {
+    font-size: var(--font-title1);
+    /* padding: var(--space-3); */
+    color: crimson;
+}
+#problem h3 {
+    font-size: var(--font-headline);
+    font-weight: var(--weight-regular);
+    color: whitesmoke;
+    margin-block-end: 30px;
 }

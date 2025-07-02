@@ -20,7 +20,7 @@
         </div>
         
 
-        <form class = "input" method="post">
+        <form class = "input" method="post" action = "/QuineMcklusky#sol_title">
 
             <h3>Enter The Number of Variables</h3>
             <input type="number" name="VarCount" min = "1" placeholder="Enter The Number Of Variables">
@@ -77,7 +77,7 @@
                             {%else%}
                                 <th>{{row_label}}</th>
                             {%endif%}
-                            
+
                             {% for box in row %}
                             <td class="bitmap_cell">{%if box %}X{%endif%}</td>
                             
@@ -100,7 +100,7 @@
 
             {%else%}
                 <div id = "problem">
-                    <h2>An Issue Occured ❌⚠️</h2>
+                    <h2>An Issue Occured ❌</h2>
                     <h3>{{problem}}</h3>
                 </div>
             {%endif%}
