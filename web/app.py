@@ -1,6 +1,7 @@
-from flask import Flask,request,render_template
+from flask import Flask,request,render_template,send_file
 import subprocess
 import json
+import uuid
 import os
 
 
@@ -12,6 +13,7 @@ curr_dir = os.path.dirname(os.path.abspath(__file__))
 # core_logic_dir = os.path.join(curr_dir, "..", "maven", "demo", "target", "classes")
 core_logic_dir = os.path.join(curr_dir, "..", "maven", "demo", "target","solver-tools.jar")
 classpath = os.path.abspath(core_logic_dir)
+PDF_DIR = "generated_pdfs"
 # print(classpath)
 
 app = Flask(__name__)
@@ -38,13 +40,13 @@ def JSONtoNestedItrData(json_src):
 
 @app.route('/QuineMcklusky',methods = ['GET','POST'])
 def QuineMcklusky():
-    pi_chart = []
-    optimized_expr = ""
-    optimized_terms = ""
-    min_terms = []
-    covering_terms = []
-    itr_data = []
-    problem = ""
+    # pi_chart = []
+    # optimized_expr = ""
+    # optimized_terms = ""
+    # min_terms = []
+    # covering_terms = []
+    # itr_data = []
+    # problem = ""
     if request.method == "GET" :
         return render_template("QuineMcklusky.html",solutionPhase = False)
     
@@ -110,10 +112,32 @@ def QuineMcklusky():
             len = len)
 
 
+def generatePDF(laTexCode, fileName, PDF_DIR):
+    os.makedirs(PDF_DIR, exist_ok=True)
+
+    tex_path = os.path.join(PDF_DIR, f"{fileName}.tex")
+        # Compile LaTeX
+    try:
+        subprocess.run(
+            ["pdflatex", "-interaction=nonstopmode", tex_path],
+            cwd=PDF_DIR,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            check=True
+        )
+    except subprocess.CalledProcessError:
+        return -1
+
+
 @app.route('/LinkPathsSolver',methods = ['GET','POST'])
 def LinkPathSolver():
+    
+    if request.method == "GET" :
+        return render_template("LinkPathsSolver.html",solutionPhase = False)
+    
     if request.method == 'POST':
         stateVarCount = int(request.form["StateVarCount"])
+        stateVarNames = ["Q"+i for i in range(stateVarCount - 1,0,-1)]
         inVarCount    = int(request.form["InVarCount"])
         outVarCount   = int(request.form["OutVarCount"])
         inVarNames    = request.form["InVariables"]
@@ -159,7 +183,62 @@ def LinkPathSolver():
             "LinkPathsSolver.html",
             solutionPhase = True,
             problem = problem)
+        
+        laTexCode = result_json["LaTexStateGraph"]
+        stateVarOutputs = result_json["StateVarOutputs"]
+        outVarOutputs = result_json["OutVarOutputs"]
 
-    return render_template("LinkPathsSolver.html")
+        if generatePDF(laTexCode,"stateGraph",PDF_DIR) == -1:
+            problem = "Couldn't Generate the StateGraph.."
+            return render_template(
+            "LinkPathsSolver.html",
+            solutionPhase = True,
+            problem = problem)
+
+        totalOutVars = stateVarNames + outVarNames.split(',')
+        stateVarSolutions = []
+        outVarSolutions = []
+        for var in stateVarNames :
+            var_json = stateVarOutputs[var]
+            currVar = {
+                "name"           : var,
+                "itr_data"       :JSONtoNestedItrData(var_json),
+                "optimized_expr" :var_json["OutputData"]["OptimizedVarOutput"],
+                "optimized_terms":var_json["OutputData"]["OptimizedBoolOutput"],
+                "pi_chart"       :var_json["PIChartData"]["PIChart"],
+                "covering_terms" :var_json["PIChartData"]["CoveringTerms"],
+                "terms"          :var_json["PIChartData"]["MinTerms"]
+            }
+            stateVarSolutions.append(currVar)
+        
+        for var in outVarNames :
+            var_json = outVarOutputs[var]
+            currVar = {
+                "name"           : var,
+                "itr_data"       :JSONtoNestedItrData(var_json),
+                "optimized_expr" :var_json["OutputData"]["OptimizedVarOutput"],
+                "optimized_terms":var_json["OutputData"]["OptimizedBoolOutput"],
+                "pi_chart"       :var_json["PIChartData"]["PIChart"],
+                "covering_terms" :var_json["PIChartData"]["CoveringTerms"],
+                "terms"          :var_json["PIChartData"]["MinTerms"]
+            }
+            outVarSolutions.append(currVar)
+        
+        return render_template(
+            "LinkPathsSolver.html",
+            solutionPhase = True,
+            stateVarSolutions = stateVarSolutions,
+            outVarSolutions = outVarSolutions,
+            enumerate = enumerate,
+            zip = zip,
+            len = len)
+
+@app.route('/LinkPathsSolverPDF/<pdf_Name>')
+def servePDF(pdf_name):
+    pdf_path = os.path.join(PDF_DIR,f"{pdf_name}.pdf")
+    if not os.path.exists(pdf_path):
+        return "Couldn't find the file with the specified name"
+    else:
+        return send_file(pdf_path, mimetype="application/pdf")
 
 app.run(port=8080,debug=True)

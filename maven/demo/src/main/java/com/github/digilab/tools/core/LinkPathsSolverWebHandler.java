@@ -122,9 +122,9 @@ public class LinkPathsSolverWebHandler {
                 return;
             }
             
-            JSONObject simplificationData_JSON = QuineMckluskyWebHandler.SimplificationDataToResultJSON(solutionData.simplificationData);
-            JSONObject PIChartData_JSON = QuineMckluskyWebHandler.PIChartDataToResultJSON(solutionData.simplificationData, solutionData.optimizationResult, terms);
-            JSONObject OutputData_JSON = QuineMckluskyWebHandler.OutputDataToResultJSON(solutionData.optimizationResult, totalInVars);
+            JSONObject simplificationData_JSON = JSONOutputFormatter.SimplificationDataToResultJSON(solutionData.simplificationData);
+            JSONObject PIChartData_JSON = JSONOutputFormatter.PIChartDataToResultJSON(solutionData.simplificationData, solutionData.optimizationResult, terms);
+            JSONObject OutputData_JSON = JSONOutputFormatter.OutputDataToResultJSON(solutionData.optimizationResult, totalInVars);
 
             state_var_Data.put("SimplificationData", simplificationData_JSON);
             state_var_Data.put("PIChartData", PIChartData_JSON);
@@ -149,9 +149,9 @@ public class LinkPathsSolverWebHandler {
                 return;
             }
 
-            JSONObject simplificationData_JSON = QuineMckluskyWebHandler.SimplificationDataToResultJSON(solutionData.simplificationData);
-            JSONObject PIChartData_JSON = QuineMckluskyWebHandler.PIChartDataToResultJSON(solutionData.simplificationData, solutionData.optimizationResult, terms);
-            JSONObject OutputData_JSON = QuineMckluskyWebHandler.OutputDataToResultJSON(solutionData.optimizationResult, totalInVars);
+            JSONObject simplificationData_JSON = JSONOutputFormatter.SimplificationDataToResultJSON(solutionData.simplificationData);
+            JSONObject PIChartData_JSON = JSONOutputFormatter.PIChartDataToResultJSON(solutionData.simplificationData, solutionData.optimizationResult, terms);
+            JSONObject OutputData_JSON = JSONOutputFormatter.OutputDataToResultJSON(solutionData.optimizationResult, totalInVars);
 
             out_var_Data.put("SimplificationData", simplificationData_JSON);
             out_var_Data.put("PIChartData", PIChartData_JSON);
@@ -161,6 +161,7 @@ public class LinkPathsSolverWebHandler {
         }
         Data_JSON.put("OutVarOutputs", outVarOutputs);
 
+        System.out.println(Data_JSON.toString());
     }
     
 }
