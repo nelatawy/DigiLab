@@ -42,7 +42,7 @@
             {%if not problem %}
                 <h2 id="sol_title">Solution</h2>
 
-                {%for i,itr in enumerate(itr_data)%}
+                {%for i,itr in enumerate(solutionData["ItrData"])%}
                 <div id = "iteration" >
                     <h2>Iteration {{i + 1}}</h2>
                     {%for j,gp in enumerate(itr) %}
@@ -58,21 +58,21 @@
                 {%endfor%}
 
 
-                {%if pi_chart%}
+                {%if solutionData["PIChart"]%}
                 <div id = "chart" >
 
                     <h2 >Prime Implicant chart</h2>
                     <table>
                         <tr> 
                             <th></th>
-                            {% for term in min_terms %}
+                            {% for term in solutionData["MinTerms"] %}
                                 <th>{{ term }}</th>
                             {% endfor %}
                         </tr>
 
-                        {% for row_label,row in zip(covering_terms,pi_chart) %}
+                        {% for row_label,row in zip(solutionData["CoveringTerms"], solutionData["PIChart"]) %}
                         <tr>
-                            {%if row_label in optimized_terms%}
+                            {%if row_label in solutionData["OptimizedBoolOutput"]%}
                                 <th class="picked">{{row_label}}</th>
                             {%else%}
                                 <th>{{row_label}}</th>
@@ -88,12 +88,12 @@
 
                 </div>
                 {%endif%}
-                {%if optimized_expr%}
+                {%if solutionData["OptimizedVarOutput"]%}
                 <div id = "output" class = "card">
                     
                     <h2>Minimum Expression</h2>
 
-                    <h3 id = "min_expr">{{optimized_expr|safe}}</h2>
+                    <h3 id = "min_expr">{{solutionData["OptimizedVarOutput"]|safe}}</h2>
 
                 </div>
                 {%endif%}

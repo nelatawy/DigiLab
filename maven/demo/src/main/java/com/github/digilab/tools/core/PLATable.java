@@ -131,37 +131,43 @@ public class PLATable{
         }
     }
     public static void main(String[] args){
-        String[] inVars = {"Rb","Reset","D7","D711","D2312","Eq"};
-        String[] outVars = {"Win","Lose","Roll","Sp"};
-        int stateVarCount = 3;
+        // String[] inVars = {"Rb","Reset","D7","D711","D2312","Eq"};
+        String[] inVars = {"a","b"};
+        String[] outVars = {"c","d"};
+        int stateVarCount = 2;
         PLATable table = new PLATable(inVars, outVars, stateVarCount);
         
-        table.AddRow(new RelationRow("S0", "S0", "0-----", "0000"));
-        table.AddRow(new RelationRow("S0", "S1", "1-----", "0000"));
-        table.AddRow(new RelationRow("S1", "S1", "1-----", "0010"));
-        table.AddRow(new RelationRow("S1", "S4", "0--00-", "0001"));
-        table.AddRow(new RelationRow("S1", "S3", "0--01-", "0000"));
-        table.AddRow(new RelationRow("S1", "S2", "0--1--", "0000"));
-        table.AddRow(new RelationRow("S2", "S2", "-0----", "1000"));
-        table.AddRow(new RelationRow("S2", "S0", "-1----", "1000"));
-        table.AddRow(new RelationRow("S3", "S0", "-1----", "0100"));
-        table.AddRow(new RelationRow("S3", "S3", "-0----", "0100"));
-        table.AddRow(new RelationRow("S4", "S4", "0-----", "0000"));
-        table.AddRow(new RelationRow("S4", "S5", "1-----", "0000"));
-        table.AddRow(new RelationRow("S5", "S4", "0-0--0", "0000"));
-        table.AddRow(new RelationRow("S5", "S3", "0-1--0", "0000"));
-        table.AddRow(new RelationRow("S5", "S2", "0----1", "0000"));
-        table.AddRow(new RelationRow("S5", "S5", "1-----", "0010"));
-        table.AddRow(new RelationRow("S6", "DC", "------", "----"));
-        table.AddRow(new RelationRow("S7", "DC", "------", "----"));
+        table.AddRow(new RelationRow("S0", "S1", "01", "10"));
+        table.AddRow(new RelationRow("S1", "S2", "--", "01"));
+        table.AddRow(new RelationRow("S2", "DC", "--", "--"));
+        table.AddRow(new RelationRow("S3", "DC", "--", "--"));
+        // table.AddRow(new RelationRow("S0", "S0", "0-----", "0000"));
+        // table.AddRow(new RelationRow("S0", "S1", "1-----", "0000"));
+        // table.AddRow(new RelationRow("S1", "S1", "1-----", "0010"));
+        // table.AddRow(new RelationRow("S1", "S4", "0--00-", "0001"));
+        // table.AddRow(new RelationRow("S1", "S3", "0--01-", "0000"));
+        // table.AddRow(new RelationRow("S1", "S2", "0--1--", "0000"));
+        // table.AddRow(new RelationRow("S2", "S2", "-0----", "1000"));
+        // table.AddRow(new RelationRow("S2", "S0", "-1----", "1000"));
+        // table.AddRow(new RelationRow("S3", "S0", "-1----", "0100"));
+        // table.AddRow(new RelationRow("S3", "S3", "-0----", "0100"));
+        // table.AddRow(new RelationRow("S4", "S4", "0-----", "0000"));
+        // table.AddRow(new RelationRow("S4", "S5", "1-----", "0000"));
+        // table.AddRow(new RelationRow("S5", "S4", "0-0--0", "0000"));
+        // table.AddRow(new RelationRow("S5", "S3", "0-1--0", "0000"));
+        // table.AddRow(new RelationRow("S5", "S2", "0----1", "0000"));
+        // table.AddRow(new RelationRow("S5", "S5", "1-----", "0010"));
+        // table.AddRow(new RelationRow("S6", "DC", "------", "----"));
+        // table.AddRow(new RelationRow("S7", "DC", "------", "----"));
         
-        System.out.println(table.toString());
+        // System.out.println(table.toString());
         for(int i = 0; i < outVars.length; i++){
-            String[] terms = table.GetTermsOf(false,i,null);
-            String[] dontCares = table.GetDontCaresOf(false,i,null);
-            SimplificationData data = QuineMckluskySolver.getPrimeImplicantsMixedTerms(terms,dontCares,inVars.length + stateVarCount);
-            OptimizationResult res = QuineMckluskySolver.getOptimalExpression(QuineMckluskySolver.termListToStrArr(data.primeImplicants) , terms);
-            System.out.println(outVars[i] + " : " + QuineMckluskySolver.GetExpression(res.terms, null) );
+            // String[] terms = table.GetTermsOf(false,i,null);
+            // String[] dontCares = table.GetDontCaresOf(false,i,null);
+            // SimplificationData data = QuineMckluskySolver.getPrimeImplicantsMixedTerms(terms,dontCares,inVars.length + stateVarCount);
+            // OptimizationResult res = QuineMckluskySolver.getOptimalExpression(QuineMckluskySolver.termListToStrArr(data.primeImplicants) , terms);
+            SolutionData output = table.SolveVariableAt(false, i, null);
+            System.out.println(outVars[i] + " : " + QuineMckluskySolver.GetExpression(output.optimizationResult.terms, null) );
         }
     }
     

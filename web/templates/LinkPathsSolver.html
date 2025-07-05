@@ -4,7 +4,7 @@
     <head>
         <meta charset="UTF-8">
         <title>Link Paths Solver</title>
-        <link rel="stylesheet" href="{{ url_for('static', filename='LinkPathsSolver.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='LinkPathsSolverPro.css') }}">
 
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,8 +14,12 @@
     </head>
     <body>
         <h1 class="title">Link Paths Solver</h1>
-        <h2 class="about">This Program intends to provide a method to solve a sequential system given by it's link paths <br> (i.e state A goes to state B when input xxxx is given and gives output xxxx)</h2>
-    
+        
+        <div class="about">
+            <h2>About</h2>
+            <h3>This Program intends to provide a method to solve a sequential system given by it's link paths <br> (i.e state A goes to state B when input xxxx is given and gives output xxxx)</h2>
+        </div>
+
         <form method = "POST" action = "/LinkPathsSolver">
             <h2 id = "VariableSetupTitle" class="stepTitle">Setting Up The Variables' Data</h2>
             <div id="stateCountBlock" class = "inputCard">
@@ -39,7 +43,7 @@
             </div>
 
             <h2 id = "MooreAssignmentTitle" class="stepTitle">Setting Up The Moore Outputs</h2>
-            <div id = "mooreAssignmentBlock">
+            <div id = "mooreAssignmentBlock" class="inputCard">
                 <div id = "mooreAssignmentInputs">
                     <p>Enter The Number Of Bits First ⚠️</p>
                 </div>
@@ -50,7 +54,7 @@
             <!-- Hidden input to store count -->
             <input type="hidden" name="LinkCount" id="LinkCount">
             
-            <div id="linkPathsContainer">
+            <div id="linkPathsContainer" class="inputCard">
                 <!-- Input slots will be added here -->
                 <p>Enter The Number Of Bits First ⚠️</p>
             </div>
@@ -59,9 +63,140 @@
             <button id ="submitButton" type = "submit">Solve</button>
         </form>
 
-        
+        {%if solutionPhase%}
+            <h1 id="solutionData">Solution</h1>
+            {%if not problem %}
+                
+                <h2 class = "solutionStepTitle">Solution of State Variables</h2>
+                <div class="VarSolution"></div>
+                {%for varSolData in stateVarSolutions%}
+                    <h2>{{varSolData["Name"]}}</h2>
+                    {%for i,itr in enumerate(varSolData["ItrData"])%}
+                    <div class = "iteration" >
+                        <h2>Iteration {{i + 1}}</h2>
+                        {%for j,gp in enumerate(itr) %}
+                            <h3 id = "group">Group {{j + 1}}</h3>
+                            {%for term in gp%}
+                                <p>{{term}}</p><br>
+                            {%endfor%}
+                            {%if len(gp) == 0%}
+                            <P>No elements in this group</P>
+                            {%endif%}
+                        {%endfor%}
+                    </div>
+                    {%endfor%}
 
+                    {%if varSolData["PIChart"]%}
+                    <div class = "chart" >
 
+                        <h2 >Prime Implicant chart</h2>
+                        <table>
+                            <tr> 
+                                <th></th>
+                                {% for term in varSolData["MinTerms"] %}
+                                    <th>{{ term }}</th>
+                                {% endfor %}
+                            </tr>
+
+                            {% for row_label,row in zip(varSolData["CoveringTerms"], varSolData["PIChart"]) %}
+                            <tr>
+                                {%if row_label in varSolData["OptimizedBoolOutput"]%}
+                                    <th class="picked">{{row_label}}</th>
+                                {%else%}
+                                    <th>{{row_label}}</th>
+                                {%endif%}
+
+                                {% for box in row %}
+                                <td class="bitmap_cell">{%if box %}X{%endif%}</td>
+                                
+                                {% endfor %}
+                            </tr>
+                            {% endfor %}
+                        </table>
+
+                    </div>
+                    {%endif%}
+                    {%if varSolData["OptimizedVarOutput"]%}
+                    <div class = "output">
+                        
+                        <h2>Minimum Expression</h2>
+
+                        <h3 id = "min_expr">{{varSolData["OptimizedVarOutput"]|safe}}</h2>
+
+                    </div>
+                    {%endif%}
+                {%endfor%}
+                </div>
+                    
+
+                <h2 class = "solutionStepTitle">Solution of Output Variables</h2>
+                <div class="VarSolution"></div>
+                {%for varSolData in stateVarSolutions%}
+                    <h2>{{varSolData["Name"]}}</h2>
+                    {%for i,itr in enumerate(varSolData["ItrData"])%}
+                    <div class = "iteration" >
+                        <h2>Iteration {{i + 1}}</h2>
+                        {%for j,gp in enumerate(itr) %}
+                            <h3 id = "group">Group {{j + 1}}</h3>
+                            {%for term in gp%}
+                                <p>{{term}}</p><br>
+                            {%endfor%}
+                            {%if len(gp) == 0%}
+                            <P>No elements in this group</P>
+                            {%endif%}
+                        {%endfor%}
+                    </div>
+                    {%endfor%}
+
+                    {%if varSolData["PIChart"]%}
+                    <div class = "chart" >
+
+                        <h2 >Prime Implicant chart</h2>
+                        <table>
+                            <tr> 
+                                <th></th>
+                                {% for term in varSolData["MinTerms"] %}
+                                    <th>{{ term }}</th>
+                                {% endfor %}
+                            </tr>
+
+                            {% for row_label,row in zip(varSolData["CoveringTerms"], varSolData["PIChart"]) %}
+                            <tr>
+                                {%if row_label in varSolData["OptimizedBoolOutput"]%}
+                                    <th class="picked">{{row_label}}</th>
+                                {%else%}
+                                    <th>{{row_label}}</th>
+                                {%endif%}
+
+                                {% for box in row %}
+                                <td class="bitmap_cell">{%if box %}X{%endif%}</td>
+                                
+                                {% endfor %}
+                            </tr>
+                            {% endfor %}
+                        </table>
+
+                    </div>
+                    {%endif%}
+                    {%if varSolData["OptimizedVarOutput"]%}
+                    <div class = "output">
+                        
+                        <h2>Minimum Expression</h2>
+
+                        <h3 id = "min_expr">{{varSolData["OptimizedVarOutput"]|safe}}</h2>
+
+                    </div>
+                    {%endif%}
+                {%endfor%}
+                </div>
+
+            {%else%}
+                <div id = "problem">
+                    <h2>An Issue Occured ❌</h2>
+                    <h3>{{problem}}</h3>
+                </div>
+            {%endif%}
+        {%endif%}
         <script>
             let inputCount = 0;
 
@@ -114,6 +249,7 @@
                 const container = document.getElementById("linkPathsContainer");
                 container.innerHTML = "";
             }
+            
             function addLinkPath() {
                 const num = parseInt(document.getElementById("stateBitsCount").value);
                 const inVarCount = parseInt(document.getElementById("InVarCount").value);
@@ -178,6 +314,15 @@
                     container.innerHTML = "<h2>-- Invalid Inputs --</h2>";
                 }
             }
+            
+            document.addEventListener("scroll", function() {
+                const title = document.querySelector(".title");
+                if (window.scrollY > 45) {
+                    title.classList.add("shrink");
+                } else {
+                    title.classList.remove("shrink");
+                }
+            });
         </script>
 
     </body>

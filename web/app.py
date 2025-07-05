@@ -89,24 +89,34 @@ def QuineMcklusky():
             solutionPhase = True,
             problem = problem)
 
-        optimized_expr = result_json["OutputData"]["OptimizedVarOutput"]
-        optimized_terms = result_json["OutputData"]["OptimizedBoolOutput"]
+        # optimized_expr = result_json["OutputData"]["OptimizedVarOutput"]
+        # optimized_terms = result_json["OutputData"]["OptimizedBoolOutput"]
         
-        pi_chart = result_json["PIChartData"]["PIChart"]
-        covering_terms = result_json["PIChartData"]["CoveringTerms"]
-        min_terms = result_json["PIChartData"]["MinTerms"]
+        # pi_chart = result_json["PIChartData"]["PIChart"]
+        # covering_terms = result_json["PIChartData"]["CoveringTerms"]
+        # min_terms = result_json["PIChartData"]["MinTerms"]
         
-        itr_data = JSONtoNestedItrData(result_json)
+        # itr_data = JSONtoNestedItrData(result_json)
+        solutionData = {
+            "OptimizedVarOutput" : result_json["OutputData"]["OptimizedVarOutput"],
+            "OptimizedBoolOutput": result_json["OutputData"]["OptimizedBoolOutput"],
+            "PIChart"            : result_json["PIChartData"]["PIChart"],
+            "CoveringTerms"      : result_json["PIChartData"]["CoveringTerms"],
+            "MinTerms"           : result_json["PIChartData"]["MinTerms"],
+            "ItrData"            : JSONtoNestedItrData(result_json)
+        }
+
         print(process.stdout)
         return render_template(
             "QuineMcklusky.html",
             solutionPhase = True,
-            optimized_expr=optimized_expr,
-            optimized_terms = optimized_terms, 
-            pi_chart = pi_chart,
-            min_terms = min_terms,
-            covering_terms = covering_terms,
-            itr_data = itr_data,
+            # optimized_expr=optimized_expr,
+            # optimized_terms = optimized_terms, 
+            # pi_chart = pi_chart,
+            # min_terms = min_terms,
+            # covering_terms = covering_terms,
+            # itr_data = itr_data,
+            solutionData = solutionData,
             enumerate = enumerate,
             zip = zip,
             len = len)
@@ -131,23 +141,23 @@ def generatePDF(laTexCode, fileName, PDF_DIR):
 
 @app.route('/LinkPathsSolver',methods = ['GET','POST'])
 def LinkPathSolver():
-    
+    problem = ""
     if request.method == "GET" :
         return render_template("LinkPathsSolver.html",solutionPhase = False)
     
     if request.method == 'POST':
         stateVarCount = int(request.form["StateVarCount"])
-        stateVarNames = ["Q"+i for i in range(stateVarCount - 1,0,-1)]
+        stateVarNames = ["Q"+ str(i) for i in range(stateVarCount - 1,0,-1)]
         inVarCount    = int(request.form["InVarCount"])
         outVarCount   = int(request.form["OutVarCount"])
-        inVarNames    = request.form["InVariables"]
-        outVarNames   = request.form["OutVariables"]
+        inVarNames    = [item.strip() for item in request.form["InVariables"].split(',') if item.strip()] 
+        outVarNames   = [item.strip() for item in request.form["OutVariables"].split(',') if item.strip()] 
         mooreOutputs  = []
-        for i in range(stateVarCount):
+        for i in range(int(stateVarCount)):
             mooreOutputs.append(request.form["S" + str(i) + "_MooreOutput"])
         linkCount = request.form["LinkCount"]
         linkPaths = []
-        for i in range(linkCount):
+        for i in range(int(linkCount)):
             currLink = {
                 "fromState": request.form["Link" + str(i) + "_fromState"],
                 "inStr"    : request.form["Link" + str(i) + "_inStr"],
@@ -155,7 +165,7 @@ def LinkPathSolver():
                 "toState"  : request.form["Link" + str(i) + "_toState"]
             }
             linkPaths.append(currLink)
-        
+        print(request.form)
         data = {
             "stateVarCount" : stateVarCount,
             "inVarCount"    : inVarCount,
@@ -175,7 +185,7 @@ def LinkPathSolver():
             print("JSON decode error:", e)
             print("Raw output:", process.stdout)
             optimized_expr = "Java did not return valid JSON. See server logs."
-            return render_template("LinkPathsSolver.html", problem = problem)
+            return render_template("LinkPathsSolver.html", problem = "Java did not return valid JSON. See server logs.")
         
         if("Problem" in result_json):
             problem = result_json["Problem"]
@@ -201,13 +211,13 @@ def LinkPathSolver():
         for var in stateVarNames :
             var_json = stateVarOutputs[var]
             currVar = {
-                "name"           : var,
-                "itr_data"       :JSONtoNestedItrData(var_json),
-                "optimized_expr" :var_json["OutputData"]["OptimizedVarOutput"],
-                "optimized_terms":var_json["OutputData"]["OptimizedBoolOutput"],
-                "pi_chart"       :var_json["PIChartData"]["PIChart"],
-                "covering_terms" :var_json["PIChartData"]["CoveringTerms"],
-                "terms"          :var_json["PIChartData"]["MinTerms"]
+                "Name"               : var,
+                "ItrData"            :JSONtoNestedItrData(var_json),
+                "OptimizedVarOutput" :var_json["OutputData"]["OptimizedVarOutput"],
+                "OptimizedBoolOutput":var_json["OutputData"]["OptimizedBoolOutput"],
+                "PIChart"            :var_json["PIChartData"]["PIChart"],
+                "CoveringTerms"      :var_json["PIChartData"]["CoveringTerms"],
+                "Terms"              :var_json["PIChartData"]["MinTerms"]
             }
             stateVarSolutions.append(currVar)
         

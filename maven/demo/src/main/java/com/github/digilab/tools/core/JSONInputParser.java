@@ -11,17 +11,18 @@ public class JSONInputParser {
             return fallbackVal;
         }
         Object jsonValue = jsonObj.get(KeyForVar);
-        if (jsonValue instanceof String) {
-            try {
-                int intVal = Integer.parseInt((String)jsonValue);
-                return intVal;
-            } catch (Exception e) {
-                // System.err.println("Mismatching Value Type At Key");
-                return fallbackVal;
-            }
+        if (jsonValue instanceof Number) {
+            return ((Number)jsonValue).intValue();
         }
-        // System.err.println("Mismatching Value Type At Key");
-        return fallbackVal;
+        try {
+            int intVal = Integer.parseInt((String)jsonValue);
+            return intVal;
+        } catch (Exception e) {
+            // System.err.println("Mismatching Value Type At Key");
+            return fallbackVal;
+        }
+        // // System.err.println("Mismatching Value Type At Key");
+        // return fallbackVal;
     }
     public static String GetStrFromJSONOBJ(JSONObject jsonObj, String KeyForVar , String fallbackVal){
         if (!jsonObj.has(KeyForVar)) {
