@@ -68,64 +68,67 @@
             <pre>{{ stateVarSolutions|tojson(indent=2) }}</pre>
             <pre>{{ outVarSolutions|tojson(indent=2) }}</pre> -->
             {%if not problem %}
-                <h1 id="solutionData">Solution</h1>
+                <h1 id="sol_title">Solution</h1>
                 <h2 class = "solutionStepTitle">Solution of State Variables</h2>
                 
                 {%for varSolData in stateVarSolutions%}
-                <div class="VarSolution">
-                    <h2>{{varSolData["Name"]}}</h2>
-                    {%for i,itr in enumerate(varSolData["ItrData"])%}
-                    <div class = "iteration" >
-                        <h2>Iteration {{i + 1}}</h2>
-                        {%for j,gp in enumerate(itr) %}
-                            <h3 id = "group">Group {{j + 1}}</h3>
-                            {%for term in gp%}
-                                <p>{{term}}</p><br>
-                            {%endfor%}
-                            {%if len(gp) == 0%}
-                            <P>No elements in this group</P>
-                            {%endif%}
-                        {%endfor%}
-                    </div>
-                    {%endfor%}
-
-                    {%if varSolData["PIChart"]%}
-                    <div class = "chart" >
-
-                        <h2 >Prime Implicant chart</h2>
-                        <table>
-                            <tr> 
-                                <th></th>
-                                {% for term in varSolData["MinTerms"] %}
-                                    <th>{{ term }}</th>
-                                {% endfor %}
-                            </tr>
-
-                            {% for row_label,row in zip(varSolData["CoveringTerms"], varSolData["PIChart"]) %}
-                            <tr>
-                                {%if row_label in varSolData["OptimizedBoolOutput"]%}
-                                    <th class="picked">{{row_label}}</th>
-                                {%else%}
-                                    <th>{{row_label}}</th>
+                <div class="VarSolution" id="{{ varSolData['Name'] }}">
+                    <h2 class="varTitle">Solution for "{{ varSolData['Name'] }}"</h2>
+                    <button type="button" onclick="expandSteps('{{ varSolData.Name}}')">Show/Hide Steps</button>
+                    <div class="stepsContainer" id="steps-{{ varSolData.Name }}">
+                        {%for i,itr in enumerate(varSolData["ItrData"])%}
+                        <div class = "iteration" >
+                            <h2>Iteration {{i + 1}}</h2>
+                            {%for j,gp in enumerate(itr) %}
+                                <h3 id = "group">Group {{j + 1}}</h3>
+                                {%for term in gp%}
+                                    <p>{{term}}</p><br>
+                                {%endfor%}
+                                {%if len(gp) == 0%}
+                                <P>No elements in this group</P>
                                 {%endif%}
+                            {%endfor%}
+                        </div>
+                        {%endfor%}
 
-                                {% for box in row %}
-                                <td class="bitmap_cell">{%if box %}X{%endif%}</td>
-                                
+                        {%if varSolData["PIChart"]%}
+                        <div class = "chart" >
+
+                            <h2 >Prime Implicant chart</h2>
+                            <table>
+                                <tr> 
+                                    <th></th>
+                                    {% for term in varSolData["MinTerms"] %}
+                                        <th>{{ term }}</th>
+                                    {% endfor %}
+                                </tr>
+
+                                {% for row_label,row in zip(varSolData["CoveringTerms"], varSolData["PIChart"]) %}
+                                <tr>
+                                    {%if row_label in varSolData["OptimizedBoolOutput"]%}
+                                        <th class="picked">{{row_label}}</th>
+                                    {%else%}
+                                        <th>{{row_label}}</th>
+                                    {%endif%}
+
+                                    {% for box in row %}
+                                    <td class="bitmap_cell">{%if box %}X{%endif%}</td>
+                                    
+                                    {% endfor %}
+                                </tr>
                                 {% endfor %}
-                            </tr>
-                            {% endfor %}
-                        </table>
+                            </table>
 
-                    </div>
-                    {%endif%}
-                    {%if varSolData["OptimizedVarOutput"]%}
-                    <div class = "output">
-                        
-                        <h2>Minimum Expression</h2>
+                        </div>
+                        {%endif%}
+                        {%if varSolData["OptimizedVarOutput"]%}
+                        <div class = "output">
+                            
+                            <h2>Minimum Expression</h2>
 
-                        <h3 class = "min_expr">{{varSolData["OptimizedVarOutput"]|safe}}</h3>
+                            <h3 class = "min_expr">{{varSolData["OptimizedVarOutput"]|safe}}</h3>
 
+                        </div>
                     </div>
                     {%endif%}
                 </div>
@@ -136,60 +139,63 @@
                 <h2 class = "solutionStepTitle">Solution of Output Variables</h2>
 
                 {%for varSolData in outVarSolutions%}
-                <div class="VarSolution">
-                    <h2>{{varSolData["Name"]}}</h2>
-                    {%for i,itr in enumerate(varSolData["ItrData"])%}
-                    <div class = "iteration" >
-                        <h2>Iteration {{i + 1}}</h2>
-                        {%for j,gp in enumerate(itr) %}
-                            <h3 id = "group">Group {{j + 1}}</h3>
-                            {%for term in gp%}
-                                <p>{{term}}</p><br>
-                            {%endfor%}
-                            {%if len(gp) == 0%}
-                            <P>No elements in this group</P>
-                            {%endif%}
-                        {%endfor%}
-                    </div>
-                    {%endfor%}
-
-                    {%if varSolData["PIChart"]%}
-                    <div class = "chart" >
-
-                        <h2 >Prime Implicant chart</h2>
-                        <table>
-                            <tr> 
-                                <th></th>
-                                {% for term in varSolData["MinTerms"] %}
-                                    <th>{{ term }}</th>
-                                {% endfor %}
-                            </tr>
-
-                            {% for row_label,row in zip(varSolData["CoveringTerms"], varSolData["PIChart"]) %}
-                            <tr>
-                                {%if row_label in varSolData["OptimizedBoolOutput"]%}
-                                    <th class="picked">{{row_label}}</th>
-                                {%else%}
-                                    <th>{{row_label}}</th>
+                <div class="VarSolution" id="{{ varSolData['Name'] }}">
+                    <h2 class="varTitle">Solution for "{{ varSolData['Name'] }}"</h2>
+                    <button type="button" onclick="expandSteps('{{ varSolData.Name}}')">Show/Hide Steps</button>
+                    <div class="stepsContainer" id="steps-{{ varSolData.Name }}">
+                        {%for i,itr in enumerate(varSolData["ItrData"])%}
+                        <div class = "iteration" >
+                            <h2>Iteration {{i + 1}}</h2>
+                            {%for j,gp in enumerate(itr) %}
+                                <h3 id = "group">Group {{j + 1}}</h3>
+                                {%for term in gp%}
+                                    <p>{{term}}</p><br>
+                                {%endfor%}
+                                {%if len(gp) == 0%}
+                                <P>No elements in this group</P>
                                 {%endif%}
+                            {%endfor%}
+                        </div>
+                        {%endfor%}
 
-                                {% for box in row %}
-                                <td class="bitmap_cell">{%if box %}X{%endif%}</td>
-                                
+                        {%if varSolData["PIChart"]%}
+                        <div class = "chart" >
+
+                            <h2 >Prime Implicant chart</h2>
+                            <table>
+                                <tr> 
+                                    <th></th>
+                                    {% for term in varSolData["MinTerms"] %}
+                                        <th>{{ term }}</th>
+                                    {% endfor %}
+                                </tr>
+
+                                {% for row_label,row in zip(varSolData["CoveringTerms"], varSolData["PIChart"]) %}
+                                <tr>
+                                    {%if row_label in varSolData["OptimizedBoolOutput"]%}
+                                        <th class="picked">{{row_label}}</th>
+                                    {%else%}
+                                        <th>{{row_label}}</th>
+                                    {%endif%}
+
+                                    {% for box in row %}
+                                    <td class="bitmap_cell">{%if box %}X{%endif%}</td>
+                                    
+                                    {% endfor %}
+                                </tr>
                                 {% endfor %}
-                            </tr>
-                            {% endfor %}
-                        </table>
+                            </table>
 
-                    </div>
-                    {%endif%}
-                    {%if varSolData["OptimizedVarOutput"]%}
-                    <div class = "output">
-                        
-                        <h2>Minimum Expression</h2>
+                        </div>
+                        {%endif%}
+                        {%if varSolData["OptimizedVarOutput"]%}
+                        <div class = "output">
+                            
+                            <h2>Minimum Expression</h2>
 
-                        <h3 class = "min_expr">{{varSolData["OptimizedVarOutput"]|safe}}</h3>
+                            <h3 class = "min_expr">{{varSolData["OptimizedVarOutput"]|safe}}</h3>
 
+                        </div>
                     </div>
                     {%endif%}
                 </div>
@@ -321,6 +327,14 @@
                 }
             }
             
+            function expandSteps(id) {
+            const steps = document.getElementById("steps-" + id);
+            if (steps) {
+                steps.classList.toggle("activeVariable");
+            }
+            }
+
+
             document.addEventListener("scroll", function() {
                 const title = document.querySelector(".title");
                 if (window.scrollY > 45) {

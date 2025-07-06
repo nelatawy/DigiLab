@@ -74,7 +74,7 @@ html,body{
 }
 body{
     /* background-color: var(--color-bg); */
-    background-image: url("logicCircuitWhite.jpg");
+    background-image: url("logicCircuitMain.jpeg");
     background-size: cover;
     background-attachment: fixed;
     background-position: fixed;
@@ -297,6 +297,181 @@ form {
   flex-direction: row;
   width: 500px;
 }
+
+#sol_title{
+  background-color: var(--color-bar-translucent);
+  font-size: var(--font-larger);
+  width: 100%;
+  backdrop-filter: var(--blur-bg);
+  -webkit-backdrop-filter: var(--blur-bg);
+  padding: var(--space-5);
+  box-shadow: var(--shadow-md);
+}
+.solutionStepTitle{
+  background-color: var(--color-bg-dark);
+  color: whitesmoke;
+  font-size: var(--font-larger);
+  width: 80%;
+  min-width: fit-content;
+  max-width: 600px;
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  backdrop-filter: var(--blur-bg);
+  -webkit-backdrop-filter: var(--blur-bg);
+
+}
+
+.VarSolution{
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  align-items: center;
+  background-color: var(--color-bg-dark-mid);
+  backdrop-filter: var(--blur-bg);
+  -webkit-backdrop-filter: var(--blur-bg);
+  border-radius: var(--radius-lg);
+  padding: var(--space-7);
+  gap: var(--space-5);
+  transition: all 0.3s ease-in-out;
+}
+.VarSolution button {
+  background-color: var(--color-bg-dark);
+  font-size: var(--font-title1);
+  border-radius: var(--radius-md);
+  color: whitesmoke;
+  padding: var(--space-5);
+  border: none;
+  outline: none;
+  transition: all 0.3s ease-in-out;
+  width: 100%;
+}
+.VarSolution button:hover {
+  background-color: var(--color-card-translucent);
+  color: var(--color-label);
+  box-shadow: 0 4px 10px rgba(248, 248, 248, 0.3);
+  transform: translateY(-2px);
+}
+.VarSolution .stepsContainer {
+  display: none;
+  flex-direction: column;
+  gap: 1rem;
+  transition: all 0.3s ease-in-out;
+  margin-top: 1rem;
+}
+
+.VarSolution .stepsContainer.activeVariable {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.VarSolution .varTitle{
+  /* background-color: var(--color-bar-translucent); */
+  color: whitesmoke;
+  border-radius: var(--radius-lg);
+  font-size: var(--font-large-title);
+  padding: var(--space-2);
+  width: 100%;
+}
+.iteration {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--color-card-translucent);
+    backdrop-filter: var(--blur-bg);
+    padding: var(--space-4);
+    -webkit-backdrop-filter: var(--blur-bg);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    width: 400px;
+}
+.iteration h2{
+    font-size: var(--font-title1);
+    background-color: var(--color-bg-dark-mid);
+    color: whitesmoke;
+    border-radius: var(--radius-sm);
+    margin: var(--space-2);
+    padding: var(--space-2);
+}
+.iteration h3{
+    font-size: var(--font-title2);
+    color: var(--color-secondary-text);
+}
+.iteration p {
+    font-size: var(--font-body);
+    color: var(--color-label);
+    font-weight: var(--weight-regular);
+}
+
+.chart {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--color-card-translucent);
+    backdrop-filter: var(--blur-bg);
+    padding: var(--space-4);
+    -webkit-backdrop-filter: var(--blur-bg);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    width: max-content;
+    min-width: 400px;
+}
+
+.chart h2{
+    font-size: var(--font-title1);
+    background-color: var(--color-bg-dark-mid);
+    color: whitesmoke;
+    border-radius: var(--radius-sm);
+    margin: var(--space-2);
+    padding: var(--space-2);
+}
+.chart th {
+    font-size: var(--font-table-label);
+    font-weight: var(--weight-semibold);
+    color: var(--color-label);
+    padding: var(--space-2);
+}
+.chart .picked {
+    color: whitesmoke;
+    background-color: var(--color-accent);
+    border-radius: var(--radius-md);
+    font-size: var(--font-title2);
+    box-shadow: var(--shadow-md);
+}
+
+.chart table {
+    margin: var(--space-5);
+}
+.bitmap_cell {
+    font-size: var(--font-cell);
+    border: 2px solid var(--color-input-border);
+    font-weight: var(--weight-bold);
+    width: 60px;
+    height: 60px;
+    border-radius: var(--radius-sm);
+}
+
+.output {
+    /* display: flex;
+    flex-direction: column; */
+    background-color: var(--color-card-translucent);
+    backdrop-filter: var(--blur-bg);
+    padding: var(--space-4);
+    -webkit-backdrop-filter: var(--blur-bg);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    /* margin-inline: 15%; */
+    width: 90%;
+}
+.output h2 {
+    font-size: var(--font-larger);
+    color: var(--color-label);
+}
+.output h3 {
+    font-size: var(--font-title1);
+    color: var(--color-label);
+}
+
+
 
 
 #problem{
