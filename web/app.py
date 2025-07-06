@@ -3,7 +3,12 @@ import subprocess
 import json
 import uuid
 import os
+import logging
 
+
+
+import sys
+sys.stdout.reconfigure(line_buffering=True)
 
 
 
@@ -141,19 +146,21 @@ def generatePDF(laTexCode, fileName, PDF_DIR):
 
 @app.route('/LinkPathsSolver',methods = ['GET','POST'])
 def LinkPathSolver():
+    print("DEBUG:", "lol", flush=True)
     problem = ""
     if request.method == "GET" :
         return render_template("LinkPathsSolver.html",solutionPhase = False)
     
     if request.method == 'POST':
         stateVarCount = int(request.form["StateVarCount"])
+        stateCount    = 2**stateVarCount
         stateVarNames = ["Q"+ str(i) for i in range(stateVarCount - 1,0,-1)]
         inVarCount    = int(request.form["InVarCount"])
         outVarCount   = int(request.form["OutVarCount"])
         inVarNames    = [item.strip() for item in request.form["InVariables"].split(',') if item.strip()] 
         outVarNames   = [item.strip() for item in request.form["OutVariables"].split(',') if item.strip()] 
         mooreOutputs  = []
-        for i in range(int(stateVarCount)):
+        for i in range(stateCount):
             mooreOutputs.append(request.form["S" + str(i) + "_MooreOutput"])
         linkCount = request.form["LinkCount"]
         linkPaths = []
@@ -165,7 +172,8 @@ def LinkPathSolver():
                 "toState"  : request.form["Link" + str(i) + "_toState"]
             }
             linkPaths.append(currLink)
-        print(request.form)
+        logging.basicConfig(level=logging.DEBUG)
+        logging.debug(request.form)
         data = {
             "stateVarCount" : stateVarCount,
             "inVarCount"    : inVarCount,
@@ -177,13 +185,14 @@ def LinkPathSolver():
             "linkPaths"     : linkPaths
         }
         arguments_json = json.dumps(data)
+        logging.debug(arguments_json)
         cmd = ["java", "-cp", classpath,"com.github.digilab.tools.core.LinkPathsSolverWebHandler"]
         process = subprocess.run(cmd + [arguments_json], capture_output=True, text=True)
         try:
             result_json = json.loads(process.stdout)
         except json.JSONDecodeError as e:
             print("JSON decode error:", e)
-            print("Raw output:", process.stdout)
+            print("Raw output:", process.stderr)
             optimized_expr = "Java did not return valid JSON. See server logs."
             return render_template("LinkPathsSolver.html", problem = "Java did not return valid JSON. See server logs.")
         
@@ -198,14 +207,14 @@ def LinkPathSolver():
         stateVarOutputs = result_json["StateVarOutputs"]
         outVarOutputs = result_json["OutVarOutputs"]
 
-        if generatePDF(laTexCode,"stateGraph",PDF_DIR) == -1:
-            problem = "Couldn't Generate the StateGraph.."
-            return render_template(
-            "LinkPathsSolver.html",
-            solutionPhase = True,
-            problem = problem)
+        # if generatePDF(laTexCode,"stateGraph",PDF_DIR) == -1:
+        #     problem = "Couldn't Generate the StateGraph.."
+        #     return render_template(
+        #     "LinkPathsSolver.html",
+        #     solutionPhase = True,
+        #     problem = problem)
 
-        totalOutVars = stateVarNames + outVarNames.split(',')
+        # totalOutVars = stateVarNames + outVarNames.split(',')
         stateVarSolutions = []
         outVarSolutions = []
         for var in stateVarNames :
@@ -220,19 +229,23 @@ def LinkPathSolver():
                 "Terms"              :var_json["PIChartData"]["MinTerms"]
             }
             stateVarSolutions.append(currVar)
-        
+        logging.debug(process.stdout)
+
         for var in outVarNames :
             var_json = outVarOutputs[var]
             currVar = {
-                "name"           : var,
-                "itr_data"       :JSONtoNestedItrData(var_json),
-                "optimized_expr" :var_json["OutputData"]["OptimizedVarOutput"],
-                "optimized_terms":var_json["OutputData"]["OptimizedBoolOutput"],
-                "pi_chart"       :var_json["PIChartData"]["PIChart"],
-                "covering_terms" :var_json["PIChartData"]["CoveringTerms"],
-                "terms"          :var_json["PIChartData"]["MinTerms"]
+                "Name"               : var,
+                "ItrData"            :JSONtoNestedItrData(var_json),
+                "OptimizedVarOutput" :var_json["OutputData"]["OptimizedVarOutput"],
+                "OptimizedBoolOutput":var_json["OutputData"]["OptimizedBoolOutput"],
+                "PIChart"            :var_json["PIChartData"]["PIChart"],
+                "CoveringTerms"      :var_json["PIChartData"]["CoveringTerms"],
+                "Terms"              :var_json["PIChartData"]["MinTerms"]
             }
             outVarSolutions.append(currVar)
+        
+        print("DEBUG:", outVarSolutions, flush=True)
+
         
         return render_template(
             "LinkPathsSolver.html",
@@ -240,6 +253,7 @@ def LinkPathSolver():
             stateVarSolutions = stateVarSolutions,
             outVarSolutions = outVarSolutions,
             enumerate = enumerate,
+            raw = process.stdout,
             zip = zip,
             len = len)
 
@@ -251,4 +265,4 @@ def servePDF(pdf_name):
     else:
         return send_file(pdf_path, mimetype="application/pdf")
 
-app.run(port=8080,debug=True)
+app.run(debug=True, port=8080)

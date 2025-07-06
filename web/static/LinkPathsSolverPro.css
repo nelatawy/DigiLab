@@ -134,6 +134,27 @@ body{
     font-weight: var(--weight-medium);
 }
 
+form {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  align-items: center;
+  background-color: var(--color-bg-dark-mid);
+  backdrop-filter: var(--blur-bg);
+  -webkit-backdrop-filter: var(--blur-bg);
+  border-radius: var(--radius-lg);
+  padding: var(--space-7);
+}
+
+
+.stepTitle{
+  font-size: var(--font-title1);
+  color: whitesmoke;
+  padding: var(--space-3);
+  font-weight: var(--weight-semibold);
+  width: 100%;
+
+}
 .inputCard{
     padding: var(--space-4);
     background-color: var(--color-card-translucent);
@@ -142,6 +163,7 @@ body{
     flex-direction: column;
     width: 400px;
     box-shadow: var(--shadow-sm);
+    margin: var(--space-3);
     
     backdrop-filter: var(--blur-bg);
     -webkit-backdrop-filter: var(--blur-bg);
@@ -161,42 +183,121 @@ body{
     font-size: var(--font-input-label);
     color: var(--color-label);
 }
-/* .input button {
-    font-size: var(--font-body);
-    border-radius: var(--radius-sm);
-    border: none;
-    outline: none;
-    padding: var(--space-1);
-    background-color: var(--color-label);
-    color: whitesmoke;
-} */
 
 
-.inputCard button {
-    font-size: var(--font-button);
+
+
+#addStateButton {
+  border-radius: var(--radius-pill);
+  margin: var(--space-2);
+  padding: var(--space-2);
+  font-size: var(--font-larger);
+  border :none;
+  background-color: var(--color-bg-dark);
+  color: whitesmoke;
+  outline: none;
+  transition: all 0.2s ease;
+  width: 100%;
+}
+#addStateButton:hover{
+  background-color: var(--color-bar-translucent);
+  color: var(--color-label);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  transform: translateY(-1px);
+}
+
+
+
+#submitButton {
+    font-size: var(--font-larger);
     margin-block-start: 20px;
     font-weight: 600;
     padding: 12px 24px;
     border: none;
-    border-radius: var(--radius-sm);
+    border-radius: var(--radius-md);
     background-color: var(--color-accent); /* iOS blue */
     color: whitesmoke;
     box-shadow: var(--shadow-md);
     transition: all 0.2s ease-in-out;
     cursor: pointer;
+    width: 100%;
 }
 
-.inputCard button:hover {
+#submitButton:hover {
     background-color: #339cff; /* Lighter blue */
     box-shadow: 0 4px 10px rgba(0, 122, 255, 0.3);
-    transform: translateY(-1px);
+    transform: translateY(-2px);
 }
 
-.inputCard button:active {
+#submitButton:active {
     background-color: #0060df;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15) inset;
     transform: translateY(0px);
 }
+
+
+
+
+#mooreAssignmentInputs{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: var(--space-3);
+
+}
+#mooreAssignmentInputs input{
+  width: 100%;
+}
+#mooreAssignmentInputs h2{
+  font-size: var(--font-headline);
+  font-weight: var(--weight-semibold);
+}
+
+
+
+#linkPathsContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 500px;
+
+}
+#linkPathsContainer select {
+  appearance: none;            /* removes default arrow */
+  background-color: var(--color-bg-dark);      /* dark theme example */
+  color: whitesmoke;
+  padding: var(--space-3);
+  border: none;
+  border-radius: var(--radius-pill);
+  font-size: var(--font-button);
+  box-shadow: var(--shadow-md);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+#linkPathsContainer select:hover {
+  background-color: whitesmoke;
+  color: var(--color-label);
+  transform: scale(1.03);
+}
+#linkPathsContainer select:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(100, 180, 255, 0.5);
+}
+
+
+
+#linkPathsContainer input {
+  border-radius: var(--radius-md);
+  width: 60px;
+}
+.linkPath{
+  display: flex;
+  flex-direction: row;
+  width: 500px;
+}
+
 
 #problem{
     background-color: rgba(0, 0, 0, 0.7);

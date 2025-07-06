@@ -4,30 +4,31 @@ import org.json.JSONObject;
 
 public class LinkPathsSolverWebHandler {
     public static void main(String[] args){
-        String jsonStr = "{\r\n" + //
-                        "  \"stateVarCount\": 2,\r\n" + //
-                        "  \"inVarCount\": 2,\r\n" + //
-                        "  \"outVarCount\": 2,\r\n" + //
-                        "  \"inVarNames\": [\"a\", \"b\"],\r\n" + //
-                        "  \"outVarNames\": [\"c\", \"d\"],\r\n" + //
-                        "  \"mooreOutputs\": [\"11\", \"10\" , \"10\", \"00\"],\r\n" + //
-                        "  \"linkPathsCount\": \"2\", \r\n" + //
-                        "  \"linkPaths\": [\r\n" + //
-                        "    {\r\n" + //
-                        "      \"fromState\": \"S0\",\r\n" + //
-                        "      \"inStr\": \"01\",\r\n" + //
-                        "      \"outStr\": \"10\",\r\n" + //
-                        "      \"toState\": \"S1\"\r\n" + //
-                        "    },\r\n" + //
-                        "    {\r\n" + //
-                        "      \"fromState\": \"S1\",\r\n" + //
-                        "      \"inStr\": \"--\",\r\n" + //
-                        "      \"outStr\": \"01\",\r\n" + //
-                        "      \"toState\": \"S2\"\r\n" + //
-                        "    }\r\n" +
-                        "  ]\r\n" + //
-                        "}\r\n" + //
-                        "";
+        // String jsonStr = "{\r\n" + //
+        //                 "  \"stateVarCount\": 2,\r\n" + //
+        //                 "  \"inVarCount\": 2,\r\n" + //
+        //                 "  \"outVarCount\": 2,\r\n" + //
+        //                 "  \"inVarNames\": [\"a\", \"b\"],\r\n" + //
+        //                 "  \"outVarNames\": [\"c\", \"d\"],\r\n" + //
+        //                 "  \"mooreOutputs\": [\"11\", \"10\" , \"10\", \"00\"],\r\n" + //
+        //                 "  \"linkPathsCount\": \"2\", \r\n" + //
+        //                 "  \"linkPaths\": [\r\n" + //
+        //                 "    {\r\n" + //
+        //                 "      \"fromState\": \"S0\",\r\n" + //
+        //                 "      \"inStr\": \"01\",\r\n" + //
+        //                 "      \"outStr\": \"10\",\r\n" + //
+        //                 "      \"toState\": \"S1\"\r\n" + //
+        //                 "    },\r\n" + //
+        //                 "    {\r\n" + //
+        //                 "      \"fromState\": \"S1\",\r\n" + //
+        //                 "      \"inStr\": \"--\",\r\n" + //
+        //                 "      \"outStr\": \"01\",\r\n" + //
+        //                 "      \"toState\": \"S2\"\r\n" + //
+        //                 "    }\r\n" +
+        //                 "  ]\r\n" + //
+        //                 "}\r\n" + //
+        //                 "";
+        String jsonStr = args[0];
         JSONObject jsonObj = new JSONObject(jsonStr);
         JSONObject Data_JSON = new JSONObject();
 
@@ -87,7 +88,9 @@ public class LinkPathsSolverWebHandler {
             //no need to handle non-numeric data since it's prohibited in the front-end
             String toState = JSONInputParser.GetStrFromJSONOBJ(currLink, "toState", "").replaceAll("S",""); //to only get ID
             int toStateID = Integer.parseInt(toState);
+            
             addedStates[fromStateID] = true;
+            //mark only the from states so that we dont have to add it in the table afterwards..it's already there
             //Adding the state on it's first encounter
             if (states[fromStateID] == null) {
                 states[fromStateID] = new State(fromStateID, mooreOutputs[fromStateID]);
@@ -123,13 +126,14 @@ public class LinkPathsSolverWebHandler {
         //Adding DontCare States
         for (int i = 0 ; i < states.length; i++) {
             if (addedStates[i] == false) { // then all outputs are dont cares
-                table.AddRow(new RelationRow("S" + i, 
-                            "DC", 
+                table.AddRow(new RelationRow(
+                            new State(i, "00"), 
+                            new State(table.DONT_CARE, null), 
                             "-".repeat(inVarCount), 
                             "-".repeat(outVarCount)));
             }
         }
-        System.out.println(table.toString());
+        // System.out.println(table.toString());
         //to get minimized expressions and steps of solution of output bits
         
         //Adding stateVars solution with steps
@@ -173,7 +177,7 @@ public class LinkPathsSolverWebHandler {
                 System.out.println(Data_JSON.toString());
                 return;
             }
-            System.out.println(table.toString());
+            // System.out.println(table.toString());
             JSONObject simplificationData_JSON = JSONOutputFormatter.SimplificationDataToResultJSON(solutionData.simplificationData);
             JSONObject PIChartData_JSON = JSONOutputFormatter.PIChartDataToResultJSON(solutionData.simplificationData, solutionData.optimizationResult, terms);
             JSONObject OutputData_JSON = JSONOutputFormatter.OutputDataToResultJSON(solutionData.optimizationResult, totalInVars);
@@ -182,7 +186,7 @@ public class LinkPathsSolverWebHandler {
             out_var_Data.put("PIChartData", PIChartData_JSON);
             out_var_Data.put("OutputData", OutputData_JSON);
 
-            outVarOutputs.put(totalInVars[i + stateVarCount], out_var_Data); //since its after the stateVars
+            outVarOutputs.put(outVars[i], out_var_Data); //since its after the stateVars
         }
         Data_JSON.put("OutVarOutputs", outVarOutputs);
 

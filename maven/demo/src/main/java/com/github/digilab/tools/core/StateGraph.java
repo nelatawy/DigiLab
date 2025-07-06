@@ -64,8 +64,8 @@ public class StateGraph {
         
         for (State state : states) {
             for (Link link : state.links) {
-                String currentState = "S" + link.fromState.stateID;
-                String nextState    = "S" + link.toState.stateID;
+                State currentState  = link.fromState;
+                State nextState    = link.toState;
                 String inputStr     = link.inputStr;
                 String outputStr    = link.outputStr;
                 

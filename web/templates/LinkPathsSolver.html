@@ -59,17 +59,20 @@
                 <p>Enter The Number Of Bits First ⚠️</p>
             </div>
             <button id = "addStateButton" type = "button" onclick="addLinkPath()">+</button>
-
+            <br>
             <button id ="submitButton" type = "submit">Solve</button>
         </form>
 
         {%if solutionPhase%}
-            <h1 id="solutionData">Solution</h1>
+            <!-- <h2>Debug Output</h2>
+            <pre>{{ stateVarSolutions|tojson(indent=2) }}</pre>
+            <pre>{{ outVarSolutions|tojson(indent=2) }}</pre> -->
             {%if not problem %}
-                
+                <h1 id="solutionData">Solution</h1>
                 <h2 class = "solutionStepTitle">Solution of State Variables</h2>
-                <div class="VarSolution"></div>
+                
                 {%for varSolData in stateVarSolutions%}
+                <div class="VarSolution">
                     <h2>{{varSolData["Name"]}}</h2>
                     {%for i,itr in enumerate(varSolData["ItrData"])%}
                     <div class = "iteration" >
@@ -121,17 +124,19 @@
                         
                         <h2>Minimum Expression</h2>
 
-                        <h3 id = "min_expr">{{varSolData["OptimizedVarOutput"]|safe}}</h2>
+                        <h3 class = "min_expr">{{varSolData["OptimizedVarOutput"]|safe}}</h3>
 
                     </div>
                     {%endif%}
-                {%endfor%}
                 </div>
+                {%endfor%}
+                
                     
 
                 <h2 class = "solutionStepTitle">Solution of Output Variables</h2>
-                <div class="VarSolution"></div>
-                {%for varSolData in stateVarSolutions%}
+
+                {%for varSolData in outVarSolutions%}
+                <div class="VarSolution">
                     <h2>{{varSolData["Name"]}}</h2>
                     {%for i,itr in enumerate(varSolData["ItrData"])%}
                     <div class = "iteration" >
@@ -183,12 +188,13 @@
                         
                         <h2>Minimum Expression</h2>
 
-                        <h3 id = "min_expr">{{varSolData["OptimizedVarOutput"]|safe}}</h2>
+                        <h3 class = "min_expr">{{varSolData["OptimizedVarOutput"]|safe}}</h3>
 
                     </div>
                     {%endif%}
-                {%endfor%}
                 </div>
+                {%endfor%}
+
 
             {%else%}
                 <div id = "problem">
@@ -225,7 +231,7 @@
                 container.innerHTML = "";
                 if (!isNaN(num)  && !isNaN(inVarCount) && !isNaN(outVarCount)) {
                     for (let i = 0; i <= Math.pow(2,num) - 1; i++) {
-                    const label = document.createElement("label");
+                    const label = document.createElement("h2");
                     label.htmlFor = "S" + i;
                     label.textContent = "S" + i;
 

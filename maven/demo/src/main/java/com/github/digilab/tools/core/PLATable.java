@@ -3,9 +3,9 @@ package com.github.digilab.tools.core;
 import java.util.LinkedList;
 
 class RelationRow {
-    String currentState,nextState;
+    State currentState,nextState;
     String input,output;
-    public RelationRow(String currentState,String nextState, String input, String output){
+    public RelationRow(State currentState,State nextState, String input, String output){
         this.currentState = currentState;
         this.nextState = nextState;
         this.input = input;
@@ -21,6 +21,7 @@ class SolutionData {
     }
 }
 public class PLATable{
+    final static int DONT_CARE = -1;
     LinkedList<RelationRow> rows ;
     String[] inVars,outVars;//variable names excuding state vars
     int numberOfRows;
@@ -58,6 +59,9 @@ public class PLATable{
         return true;
     }
     public String GetStateStrAssignment(State state, String[] stateAssignments){
+        if (state.stateID == DONT_CARE) {
+            return "-".repeat(this.stateVarCount);
+        }
         int stateIndex = state.stateID;
         return (stateAssignments == null)?Term.minTermToString(stateIndex, this.stateVarCount) : stateAssignments[stateIndex];
     }
@@ -83,9 +87,13 @@ public class PLATable{
         for (RelationRow row : this.rows) {
             String lookUpStr = (isStateVar)? GetStateStrAssignment(row.nextState , stateAssignments): row.output;
             if (lookUpStr.charAt(index) == '1') {
-                    tempList.push(GetStateStrAssignment(row.currentState, stateAssignments) + row.input);
+                tempList.push(GetStateStrAssignment(row.currentState, stateAssignments) + row.input);
+            }
+            if (row.currentState.stateOutput.charAt(index) == '1') {//moore Output Handling
+                tempList.push(GetStateStrAssignment(row.currentState, stateAssignments) + "-".repeat(this.inVarCount));
             }
         }
+        
         return tempList.toArray(new String[0]);
     }
     public String[] GetDontCaresOf(boolean isStateVar , int index, String[] stateAssignments){
@@ -94,7 +102,10 @@ public class PLATable{
         for (RelationRow row : this.rows) {
             String lookUpStr = (isStateVar)? GetStateStrAssignment(row.nextState , stateAssignments) : row.output;
             if (lookUpStr.charAt(index) == '-') {
-                    tempList.push(GetStateStrAssignment(row.currentState, stateAssignments) + row.input);
+                tempList.push(GetStateStrAssignment(row.currentState, stateAssignments) + row.input);
+            }
+            if (row.currentState.stateOutput.charAt(index) == '-') {//moore Output Handling
+                tempList.push(GetStateStrAssignment(row.currentState, stateAssignments) + "-".repeat(this.inVarCount));
             }
         }
         return tempList.toArray(new String[0]);
@@ -103,7 +114,7 @@ public class PLATable{
     public String toString(){
         String result = "Table\n----------------";
         for (RelationRow row : this.rows) {
-            result += "\n" + row.currentState + "|" + row.input + "|||" + row.nextState + "|" + row.output;
+            result += "\n" + "S"+ row.currentState.stateID + "|" + row.input + "|||" + "S"+ row.currentState.stateID + "|" + row.output;
         }
         return result;
     }
@@ -137,10 +148,10 @@ public class PLATable{
         int stateVarCount = 2;
         PLATable table = new PLATable(inVars, outVars, stateVarCount);
         
-        table.AddRow(new RelationRow("S0", "S1", "01", "10"));
-        table.AddRow(new RelationRow("S1", "S2", "--", "01"));
-        table.AddRow(new RelationRow("S2", "DC", "--", "--"));
-        table.AddRow(new RelationRow("S3", "DC", "--", "--"));
+        table.AddRow(new RelationRow(new State(0, "10"), new State(1,             "01"), "01", "10"));
+        table.AddRow(new RelationRow(new State(1, "01"), new State(2,             "00"), "--", "01"));
+        table.AddRow(new RelationRow(new State(2, "00"), new State(table.DONT_CARE , "00"), "--", "--"));
+        table.AddRow(new RelationRow(new State(3, "00"), new State(table.DONT_CARE , "00"), "--", "--"));
         // table.AddRow(new RelationRow("S0", "S0", "0-----", "0000"));
         // table.AddRow(new RelationRow("S0", "S1", "1-----", "0000"));
         // table.AddRow(new RelationRow("S1", "S1", "1-----", "0010"));
