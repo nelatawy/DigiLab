@@ -2,6 +2,13 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "type": "java",
+      "name": "StateGraph",
+      "request": "launch",
+      "mainClass": "com.github.digilab.tools.core.StateGraph",
+      "projectName": "demo"
+    },
+    {
       "name": "C/C++ Runner: Debug Session",
       "type": "cppdbg",
       "request": "launch",
