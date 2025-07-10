@@ -17,8 +17,9 @@ curr_dir = os.path.dirname(os.path.abspath(__file__))
 # Build the absolute path to your JAR file
 # core_logic_dir = os.path.join(curr_dir, "..", "maven", "demo", "target", "classes")
 core_logic_dir = os.path.join(curr_dir, "..", "maven", "demo", "target","solver-tools.jar")
+webpath = os.path.abspath(os.path.join(curr_dir, "..","web"))
 classpath = os.path.abspath(core_logic_dir)
-PDF_DIR = "generated_pdfs"
+PDF_DIR_NAME = "generated_pdfs"
 # print(classpath)
 
 app = Flask(__name__)
@@ -127,19 +128,26 @@ def QuineMcklusky():
             len = len)
 
 
-def generatePDF(laTexCode, fileName, PDF_DIR):
-    os.makedirs(PDF_DIR, exist_ok=True)
+def generatePDF(laTexCode, fileName, folderName):
+    # Create full folder path
+    output_dir = os.path.join(webpath, folderName)
+    os.makedirs(output_dir, exist_ok=True)
 
-    tex_path = os.path.join(PDF_DIR, f"{fileName}.tex")
-        # Compile LaTeX
+    tex_path = os.path.join(output_dir, f"{fileName}.tex")
+
+    # Write LaTeX code to file
+    with open(tex_path, "w") as file:
+        file.write(laTexCode)
+
     try:
         subprocess.run(
-            ["pdflatex", "-interaction=nonstopmode", tex_path],
-            cwd=PDF_DIR,
+            ["pdflatex", "-interaction=nonstopmode", f"{fileName}.tex"],
+            cwd=os.path.abspath(output_dir),
             stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL,
             check=True
         )
+        return os.path.join(output_dir, f"{fileName}.pdf")
     except subprocess.CalledProcessError:
         return -1
 
@@ -154,7 +162,7 @@ def LinkPathSolver():
     if request.method == 'POST':
         stateVarCount = int(request.form["StateVarCount"])
         stateCount    = 2**stateVarCount
-        stateVarNames = ["Q"+ str(i) for i in range(stateVarCount - 1,0,-1)]
+        stateVarNames = ["Q"+ str(i) for i in range(stateVarCount - 1,-1,-1)]
         inVarCount    = int(request.form["InVarCount"])
         outVarCount   = int(request.form["OutVarCount"])
         inVarNames    = [item.strip() for item in request.form["InVariables"].split(',') if item.strip()] 
@@ -207,12 +215,15 @@ def LinkPathSolver():
         stateVarOutputs = result_json["StateVarOutputs"]
         outVarOutputs = result_json["OutVarOutputs"]
 
-        # if generatePDF(laTexCode,"stateGraph",PDF_DIR) == -1:
-        #     problem = "Couldn't Generate the StateGraph.."
-        #     return render_template(
-        #     "LinkPathsSolver.html",
-        #     solutionPhase = True,
-        #     problem = problem)
+        graph = generatePDF(laTexCode,"stateGraph",PDF_DIR_NAME)
+        if  graph == -1:
+            problem = "Couldn't Generate the StateGraph.."
+            return render_template(
+            "LinkPathsSolver.html",
+            solutionPhase = True,
+            problem = problem)
+        else :
+            print("DEBUG:", "lol", flush=True)
 
         # totalOutVars = stateVarNames + outVarNames.split(',')
         stateVarSolutions = []
@@ -252,14 +263,16 @@ def LinkPathSolver():
             solutionPhase = True,
             stateVarSolutions = stateVarSolutions,
             outVarSolutions = outVarSolutions,
+            pdfName = "stateGraph",
+            folderName = PDF_DIR_NAME,
             enumerate = enumerate,
             raw = process.stdout,
             zip = zip,
             len = len)
 
-@app.route('/LinkPathsSolverPDF/<pdf_Name>')
-def servePDF(pdf_name):
-    pdf_path = os.path.join(PDF_DIR,f"{pdf_name}.pdf")
+@app.route('/LinkPathsSolverPDF/<pdf_name>/<folder_name>')
+def servePDF(pdf_name,folder_name):
+    pdf_path = os.path.join(webpath,folder_name, f"{pdf_name}.pdf")
     if not os.path.exists(pdf_path):
         return "Couldn't find the file with the specified name"
     else:

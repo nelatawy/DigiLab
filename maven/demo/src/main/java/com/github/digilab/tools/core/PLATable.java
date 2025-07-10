@@ -89,7 +89,7 @@ public class PLATable{
             if (lookUpStr.charAt(index) == '1') {
                 tempList.push(GetStateStrAssignment(row.currentState, stateAssignments) + row.input);
             }
-            if (row.currentState.stateOutput.charAt(index) == '1') {//moore Output Handling
+            if (!isStateVar && row.currentState.stateOutput.charAt(index) == '1') {//moore Output Handling
                 tempList.push(GetStateStrAssignment(row.currentState, stateAssignments) + "-".repeat(this.inVarCount));
             }
         }
@@ -138,6 +138,7 @@ public class PLATable{
             
         } catch (Exception e) {
             // An Issue occured while trying to solve
+            
             return null;
         }
     }

@@ -1,0 +1,18 @@
+\documentclass{article}
+\usepackage{tikz}
+\usetikzlibrary{automata, positioning}
+\begin{document}
+
+\begin{center}
+\begin{tikzpicture}[shorten >=1pt, on grid, auto]
+
+\node[state]	(S1)	 at (7.000,0.000)	{$S_1$/d};
+\node[state]	(S0)	 at (-7.000,-0.000)	{$S_0$/d'};
+
+\path[->] (S1)	 edge node [pos=0.2]{ab'c/d'}	(S0);
+\path[->] (S0)	 edge node [pos=0.2]{a'b'c'/d}	(S1);
+
+\end{tikzpicture}
+\end{center}
+
+\end{document}

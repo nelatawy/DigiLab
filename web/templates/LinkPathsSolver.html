@@ -64,9 +64,6 @@
         </form>
 
         {%if solutionPhase%}
-            <!-- <h2>Debug Output</h2>
-            <pre>{{ stateVarSolutions|tojson(indent=2) }}</pre>
-            <pre>{{ outVarSolutions|tojson(indent=2) }}</pre> -->
             {%if not problem %}
                 <h1 id="sol_title">Solution</h1>
                 <h2 class = "solutionStepTitle">Solution of State Variables</h2>
@@ -200,6 +197,12 @@
                     {%endif%}
                 </div>
                 {%endfor%}
+
+                <h2 class = "solutionStepTitle">State Graph</h2>
+                
+                <div id = "stateGraphCard">
+                    <iframe src="/LinkPathsSolverPDF/{{ pdfName }}/{{ folderName }}" frameborder="0" width="100%" height="600px"></iframe>
+                </div>
 
 
             {%else%}
