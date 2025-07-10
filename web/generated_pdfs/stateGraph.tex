@@ -6,11 +6,29 @@
 \begin{center}
 \begin{tikzpicture}[shorten >=1pt, on grid, auto]
 
-\node[state]	(S1)	 at (7.000,0.000)	{$S_1$/cd};
-\node[state]	(S0)	 at (-7.000,-0.000)	{$S_0$/c'd'};
+\node[state]	(S5)	 at (7.000,0.000)	{$S_5$/(Win)'(Lose)'(Roll)'(Sp)'};
+\node[state]	(S4)	 at (3.500,6.062)	{$S_4$/(Win)'(Lose)'(Roll)'(Sp)'};
+\node[state]	(S3)	 at (-3.500,6.062)	{$S_3$/(Win)'(Lose)'(Roll)'(Sp)'};
+\node[state]	(S2)	 at (-7.000,-0.000)	{$S_2$/(Win)'(Lose)'(Roll)'(Sp)'};
+\node[state]	(S1)	 at (-3.500,-6.062)	{$S_1$/(Win)'(Lose)'(Roll)'(Sp)'};
+\node[state]	(S0)	 at (3.500,-6.062)	{$S_0$/(Win)'(Lose)'(Roll)'(Sp)'};
 
-\path[->] (S1)	 edge node [pos=0.2]{ab/c'd}	(S0);
-\path[->] (S0)	 edge node [pos=0.2]{a'b/cd}	(S1);
+\path[->] (S5)	 edge node [pos=0.2]{(Rb)/(Win)'(Lose)'(Roll)(Sp)'}	(S5);
+\path[->] (S5)	 edge node [pos=0.2]{(Rb)'(Eq)/(Win)'(Lose)'(Roll)'(Sp)'}	(S2);
+\path[->] (S5)	 edge node [pos=0.2]{(Rb)'(D7)(Eq)'/(Win)'(Lose)'(Roll)'(Sp)'}	(S3);
+\path[->] (S5)	 edge node [pos=0.2]{(Rb)'(D7)'(Eq)'/(Win)'(Lose)'(Roll)'(Sp)'}	(S4);
+\path[->] (S4)	 edge node [pos=0.2]{(Rb)/(Win)'(Lose)'(Roll)'(Sp)'}	(S5);
+\path[->] (S4)	 edge node [pos=0.2]{(Rb)'/(Win)'(Lose)'(Roll)'(Sp)'}	(S4);
+\path[->] (S3)	 edge node [pos=0.2]{(Reset)'/(Win)'(Lose)(Roll)'(Sp)'}	(S3);
+\path[->] (S3)	 edge node [pos=0.2]{(Reset)/(Win)'(Lose)(Roll)'(Sp)'}	(S0);
+\path[->] (S2)	 edge node [pos=0.2]{(Reset)/(Win)(Lose)'(Roll)'(Sp)'}	(S0);
+\path[->] (S2)	 edge node [pos=0.2]{(Reset)'/(Win)(Lose)'(Roll)'(Sp)'}	(S2);
+\path[->] (S1)	 edge node [pos=0.2]{(Rb)'(D711)/(Win)'(Lose)'(Roll)'(Sp)'}	(S2);
+\path[->] (S1)	 edge node [pos=0.2]{(Rb)'(D711)'(D2312)/(Win)'(Lose)'(Roll)'(Sp)'}	(S3);
+\path[->] (S1)	 edge node [pos=0.2]{(Rb)'(D711)'(D2312)'/(Win)'(Lose)'(Roll)'(Sp)}	(S4);
+\path[->] (S1)	 edge node [pos=0.2]{(Rb)/(Win)'(Lose)'(Roll)(Sp)'}	(S1);
+\path[->] (S0)	 edge node [pos=0.2]{(Rb)/(Win)'(Lose)'(Roll)'(Sp)'}	(S1);
+\path[->] (S0)	 edge node [pos=0.2]{(Rb)'/(Win)'(Lose)'(Roll)'(Sp)'}	(S0);
 
 \end{tikzpicture}
 \end{center}

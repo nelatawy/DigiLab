@@ -142,7 +142,7 @@ public class LinkPathsSolverWebHandler {
             JSONObject state_var_Data = new JSONObject();
             String[] terms = table.GetTermsOf(true, i, optimalAssignment?null/*TODO:optimal assignment */:null);
             SolutionData solutionData ;
-            try {
+            // try {
                 solutionData = table.SolveVariableAt(true, i, optimalAssignment?null/*TODO:optimal assignment */:null);
                 JSONObject simplificationData_JSON = JSONOutputFormatter.SimplificationDataToResultJSON(solutionData.simplificationData);
                 JSONObject PIChartData_JSON = JSONOutputFormatter.PIChartDataToResultJSON(solutionData.simplificationData, solutionData.optimizationResult, terms);
@@ -154,12 +154,12 @@ public class LinkPathsSolverWebHandler {
 
                 stateVarOutputs.put(totalInVars[i], state_var_Data);
 
-            } catch (Exception e) {
-                Data_JSON.put("Problem", "An Issue occured while trying to find solution.");
-                System.out.println(Data_JSON.toString());
-                return;
-            }
-            
+            // } catch (Exception e) {
+            //     Data_JSON.put("Problem", "An Issue occured while trying to find solution.");
+            //     System.out.println(Data_JSON.toString());
+            //     return;
+            // }
+            // 
         }
         Data_JSON.put("StateVarOutputs", stateVarOutputs);
 
@@ -169,7 +169,7 @@ public class LinkPathsSolverWebHandler {
             JSONObject out_var_Data = new JSONObject();
             String[] terms = table.GetTermsOf(false, i, optimalAssignment?null/*TODO:optimal assignment */:null);
             SolutionData solutionData ;
-            try {
+            // try {
                 solutionData = table.SolveVariableAt(false, i, optimalAssignment?null/*TODO:optimal assignment */:null);
                 JSONObject simplificationData_JSON = JSONOutputFormatter.SimplificationDataToResultJSON(solutionData.simplificationData);
                 JSONObject PIChartData_JSON = JSONOutputFormatter.PIChartDataToResultJSON(solutionData.simplificationData, solutionData.optimizationResult, terms);
@@ -181,11 +181,11 @@ public class LinkPathsSolverWebHandler {
 
                 outVarOutputs.put(outVars[i], out_var_Data); //since its after the stateVars
 
-            } catch (Exception e) {
-                Data_JSON.put("Problem", "An Issue occured while trying to find solution.");
-                System.out.println(Data_JSON.toString());
-                return;
-            }
+            // } catch (Exception e) {
+            //     Data_JSON.put("Problem", "An Issue occured while trying to find solution.");
+            //     System.out.println(Data_JSON.toString());
+            //     return;
+            // }
             // System.out.println(table.toString());
         }
         Data_JSON.put("OutVarOutputs", outVarOutputs);

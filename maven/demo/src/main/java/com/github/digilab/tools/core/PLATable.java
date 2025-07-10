@@ -104,7 +104,7 @@ public class PLATable{
             if (lookUpStr.charAt(index) == '-') {
                 tempList.push(GetStateStrAssignment(row.currentState, stateAssignments) + row.input);
             }
-            if (row.currentState.stateOutput.charAt(index) == '-') {//moore Output Handling
+            if (!isStateVar && row.currentState.stateOutput.charAt(index) == '-') {//moore Output Handling
                 tempList.push(GetStateStrAssignment(row.currentState, stateAssignments) + "-".repeat(this.inVarCount));
             }
         }
@@ -128,7 +128,7 @@ public class PLATable{
             usedAssignment = stateAssignments;
         }
 
-        try{
+        // try{
             String[] terms = this.GetTermsOf(isStateVar, index, usedAssignment);
             String[] dontCares = this.GetDontCaresOf(isStateVar, index, usedAssignment);
             
@@ -136,11 +136,11 @@ public class PLATable{
             OptimizationResult res = QuineMckluskySolver.getOptimalExpression(QuineMckluskySolver.termListToStrArr(data.primeImplicants) , terms);
             return new SolutionData(data, res);
             
-        } catch (Exception e) {
-            // An Issue occured while trying to solve
+        // } catch (Exception e) {
+        //     // An Issue occured while trying to solve
             
-            return null;
-        }
+        //     return null;
+        // }
     }
     public static void main(String[] args){
         // String[] inVars = {"Rb","Reset","D7","D711","D2312","Eq"};
