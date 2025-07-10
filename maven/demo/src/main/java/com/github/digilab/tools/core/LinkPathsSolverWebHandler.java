@@ -73,7 +73,7 @@ public class LinkPathsSolverWebHandler {
         //Checking the validity of Moore outputs
         for (int i = 0; i < mooreOutputs.length; i++) {
             if (!Term.isBooleanString(mooreOutputs[i]) || mooreOutputs[i].length() != outVarCount) {
-                Data_JSON.put("Problem", "Invalid Moore Output(Make sure that it's a valid Boolean term having the same number of bits as the inVar count)");
+                Data_JSON.put("Problem", "Invalid Moore Output(Make sure that it's a valid Boolean term having the same number of bits as the outVar count)");
                 System.out.println(Data_JSON.toString());
                 return;
             }
