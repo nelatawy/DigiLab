@@ -133,16 +133,15 @@ public class LinkPathsSolverWebHandler {
                             "-".repeat(outVarCount)));
             }
         }
-        // System.out.println(table.toString());
         //to get minimized expressions and steps of solution of output bits
         
         //Adding stateVars solution with steps
         JSONObject stateVarOutputs = new JSONObject();
         for (int i = 0; i < table.stateVarCount; i++) {
-            JSONObject state_var_Data = new JSONObject();
-            String[] terms = table.GetTermsOf(true, i, optimalAssignment?null/*TODO:optimal assignment */:null);
-            SolutionData solutionData ;
-            // try {
+            try {
+                JSONObject state_var_Data = new JSONObject();
+                String[] terms = table.GetTermsOf(true, i, optimalAssignment?null/*TODO:optimal assignment */:null);
+                SolutionData solutionData ;
                 solutionData = table.SolveVariableAt(true, i, optimalAssignment?null/*TODO:optimal assignment */:null);
                 JSONObject simplificationData_JSON = JSONOutputFormatter.SimplificationDataToResultJSON(solutionData.simplificationData);
                 JSONObject PIChartData_JSON = JSONOutputFormatter.PIChartDataToResultJSON(solutionData.simplificationData, solutionData.optimizationResult, terms);
@@ -154,22 +153,22 @@ public class LinkPathsSolverWebHandler {
 
                 stateVarOutputs.put(totalInVars[i], state_var_Data);
 
-            // } catch (Exception e) {
-            //     Data_JSON.put("Problem", "An Issue occured while trying to find solution.");
-            //     System.out.println(Data_JSON.toString());
-            //     return;
-            // }
-            // 
+            } catch (Exception e) {
+                Data_JSON.put("Problem", "An Issue occured while trying to find solution.");
+                System.out.println(Data_JSON.toString());
+                return;
+            }
+            
         }
         Data_JSON.put("StateVarOutputs", stateVarOutputs);
 
         //Adding outVars solution with steps
         JSONObject outVarOutputs = new JSONObject();
         for (int i = 0; i < table.outVarCount; i++) {
-            JSONObject out_var_Data = new JSONObject();
-            String[] terms = table.GetTermsOf(false, i, optimalAssignment?null/*TODO:optimal assignment */:null);
-            SolutionData solutionData ;
-            // try {
+            try {
+                JSONObject out_var_Data = new JSONObject();
+                String[] terms = table.GetTermsOf(false, i, optimalAssignment?null/*TODO:optimal assignment */:null);
+                SolutionData solutionData ;
                 solutionData = table.SolveVariableAt(false, i, optimalAssignment?null/*TODO:optimal assignment */:null);
                 JSONObject simplificationData_JSON = JSONOutputFormatter.SimplificationDataToResultJSON(solutionData.simplificationData);
                 JSONObject PIChartData_JSON = JSONOutputFormatter.PIChartDataToResultJSON(solutionData.simplificationData, solutionData.optimizationResult, terms);
@@ -181,12 +180,11 @@ public class LinkPathsSolverWebHandler {
 
                 outVarOutputs.put(outVars[i], out_var_Data); //since its after the stateVars
 
-            // } catch (Exception e) {
-            //     Data_JSON.put("Problem", "An Issue occured while trying to find solution.");
-            //     System.out.println(Data_JSON.toString());
-            //     return;
-            // }
-            // System.out.println(table.toString());
+            } catch (Exception e) {
+                Data_JSON.put("Problem", "An Issue occured while trying to find solution.");
+                System.out.println(Data_JSON.toString());
+                return;
+            }
         }
         Data_JSON.put("OutVarOutputs", outVarOutputs);
 

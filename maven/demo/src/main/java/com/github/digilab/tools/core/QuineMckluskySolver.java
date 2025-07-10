@@ -766,11 +766,3 @@ public class QuineMckluskySolver {
 
     // }
 }
-
-// Minimization is correct
-// What's Next : 
-// 1-Revamp the Duplicate-Term-Removal : Edit:Done
-// 2-Don't-Cares Handling : Edit: Done
-// 3-Remove Terms covering same minterms : Edit:Done
-// 4- Refine the Optimazion process and Dont Care Handling
-

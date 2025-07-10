@@ -127,20 +127,13 @@ public class PLATable{
         if (isValidAssignmentArr(stateAssignments)) {
             usedAssignment = stateAssignments;
         }
+        String[] terms = this.GetTermsOf(isStateVar, index, usedAssignment);
+        String[] dontCares = this.GetDontCaresOf(isStateVar, index, usedAssignment);
+        
+        SimplificationData data = QuineMckluskySolver.getPrimeImplicantsMixedTerms(terms,dontCares,inVars.length + stateVarCount);
+        OptimizationResult res = QuineMckluskySolver.getOptimalExpression(QuineMckluskySolver.termListToStrArr(data.primeImplicants) , terms);
+        return new SolutionData(data, res);
 
-        // try{
-            String[] terms = this.GetTermsOf(isStateVar, index, usedAssignment);
-            String[] dontCares = this.GetDontCaresOf(isStateVar, index, usedAssignment);
-            
-            SimplificationData data = QuineMckluskySolver.getPrimeImplicantsMixedTerms(terms,dontCares,inVars.length + stateVarCount);
-            OptimizationResult res = QuineMckluskySolver.getOptimalExpression(QuineMckluskySolver.termListToStrArr(data.primeImplicants) , terms);
-            return new SolutionData(data, res);
-            
-        // } catch (Exception e) {
-        //     // An Issue occured while trying to solve
-            
-        //     return null;
-        // }
     }
     public static void main(String[] args){
         // String[] inVars = {"Rb","Reset","D7","D711","D2312","Eq"};
