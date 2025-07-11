@@ -34,10 +34,12 @@ public class PLATable{
         this.numberOfRows  = 0;
         
         this.inVars  = inVars;
-        this.outVars = outVars;
+        this.outVars = (outVars != null)? outVars: new String[0] ; 
+        //since u can have a system that only changes states but doesnt have any outputs
+
         
         this.inVarCount    = inVars.length;
-        this.outVarCount   = outVars.length;
+        this.outVarCount   = (outVars != null)? outVars.length : 0 ; 
         this.stateVarCount = stateVarCount;
 
         this.maxStateCount = (int)Math.pow(2,stateVarCount);

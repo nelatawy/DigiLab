@@ -162,7 +162,8 @@ def LinkPathSolver():
     if request.method == 'POST':
         stateVarCount = int(request.form["StateVarCount"])
         stateCount    = 2**stateVarCount
-        stateVarNames = ["Q"+ str(i) for i in range(stateVarCount - 1,-1,-1)]
+        # stateVarNames = ["Q"+ str(i) for i in range(stateVarCount - 1,-1,-1)]
+        stateVarNames = ["Q"+ str(i) for i in range(0,stateVarCount)]
         inVarCount    = int(request.form["InVarCount"])
         outVarCount   = int(request.form["OutVarCount"])
         inVarNames    = [item.strip() for item in request.form["InVariables"].split(',') if item.strip()] 
