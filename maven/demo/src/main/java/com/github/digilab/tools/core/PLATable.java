@@ -116,7 +116,7 @@ public class PLATable{
     public String toString(){
         String result = "Table\n----------------";
         for (RelationRow row : this.rows) {
-            result += "\n" + "S"+ row.currentState.stateID + "|" + row.input + "|||" + "S"+ row.currentState.stateID + "|" + row.output;
+            result += "\n" + "S"+ row.currentState.stateID + "|" + row.input + "|||" + "S"+ row.nextState.stateID + "|" + row.output;
         }
         return result;
     }

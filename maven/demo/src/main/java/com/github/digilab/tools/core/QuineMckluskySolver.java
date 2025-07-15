@@ -1,6 +1,7 @@
 package com.github.digilab.tools.core;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 
 // This class describes a Boolean Term like "0011" or "00-1" and '-' can be any char to be considered a "Dont-Care"
@@ -162,6 +163,103 @@ class Term {
             }
         }
         return true;
+    }
+    public static int booleanToInt(String boolStr){
+        int result = 0;
+        int power = 1;
+        for(int i = boolStr.length() - 1; i >= 0; i--){
+            result += power * Integer.parseInt(boolStr.substring(i, i+1));
+            power <<= 1;
+        }
+        return result;
+    }
+
+    public static Term getIntersection(Term first, Term second){
+        if (first.minTerm.toString().length() != second.minTerm.toString().length()) {
+            return null;
+        }
+        System.out.println("Comparing: '" + first.minTerm.toString() + "' and '" + second.minTerm.toString() + "'");
+        int length = first.minTerm.length();
+        String termStr = "";
+        for(int i = 0; i < length; i++){
+            char c1 = first.minTerm.charAt(i);
+            char c2 = second.minTerm.charAt(i);
+            if (c1 == '-' || c1 == c2) {
+                termStr += c2;
+            }
+            else if(c2 == '-'){
+                termStr += c1;
+            }
+            else{
+                System.out.println("Failed : " + termStr);
+                return null; //0 and a 1 on the same bit..no intersection
+            }
+        }
+        // System.out.println(termStr + "\n\n\n");
+        return new Term(termStr);
+    }
+    public LinkedList<Term> getComplement(){
+        LinkedList<Term> complementTerms = new LinkedList<Term>();
+        int length = this.minTerm.length();
+        for (int i = 0; i < length; i++) {
+            char c = this.minTerm.charAt(i);
+            String newTermStr;
+            switch (c) {
+                case '1':
+                    newTermStr = "-".repeat(i) + "0" + "-".repeat(length - i - 1);
+                    complementTerms.push(new Term(newTermStr));
+                    break;
+                case '0':
+                    newTermStr = "-".repeat(i) + "1" + "-".repeat(length - i - 1);
+                    complementTerms.push(new Term(newTermStr));
+                    break; 
+                default:
+                    break;
+            }
+        }
+        return complementTerms;
+    }
+    public static LinkedList<Term> getIntersectionList(LinkedList<Term> firstList, LinkedList<Term> secondList){
+        LinkedList<Term> intersection = new LinkedList<Term>();
+        for (Term first : firstList) {
+            for (Term second : secondList) {
+                
+                Term newTerm = Term.getIntersection(first, second);
+                boolean found = false;
+                if (newTerm != null) {
+                    Iterator<Term> itr = intersection.iterator();
+                    //remove in a reverse order ..it could've been done in the head-to-tail order without messing it up since itr.remove() handles it
+                    while (itr.hasNext()) {
+                        // System.out.println("Moving the iterator");
+
+
+
+                        Term tempTerm = itr.next();
+                        // System.out.println("Comparing: '" + tempTerm.minTerm.toString() + "' and '" + newTerm.minTerm.toString() + "'");
+                        if (tempTerm.minTerm.toString().equals(newTerm.minTerm.toString())) { //since equals doesnt compare values by default but actually object references
+                            // System.out.println("Equality..Skipping : " + newTerm.minTerm);
+                            found = true;
+                            // break; //no need to do anything
+                        }
+                        else if (tempTerm.isCoveredBy(newTerm)) {
+                            // System.out.println("Removing less covering term : " + tempTerm.minTerm + " covered by " + newTerm.minTerm);
+                            itr.remove();//to avoid concurrentModificationException
+                        }
+                    }
+                    if (!found) {
+                        System.out.println("Adding : " + newTerm.minTerm);
+                        intersection.add(newTerm);
+                    }
+                }
+                // System.out.println( " Current Intersection List : ");
+                // for (Term term : intersection) {
+                //     System.out.print(term.minTerm + " ");
+                // }
+                // System.out.println("\n");
+
+            }
+        }
+        return intersection;
     }
 }
 

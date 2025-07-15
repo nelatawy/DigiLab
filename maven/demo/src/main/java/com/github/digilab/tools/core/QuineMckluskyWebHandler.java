@@ -7,58 +7,6 @@ import org.json.*;
 public class QuineMckluskyWebHandler {
 
 
-    // public static int GetNumberOfVariablesFromJSONOBJ(JSONObject jsonObj, String KeyForNumberOfVars){
-    //     int numberOfVariables = GetIntFromJSONOBJ(jsonObj, KeyForNumberOfVars, -1);
-    //     if (numberOfVariables == -1) {
-    //         // System.err.println("No 'NumberOfVar' was obtained returning -1");
-    //     }
-    //     return numberOfVariables;
-    // }
-    
-
-    // public static String[] GetVariableListFromJSONOBJ(JSONObject jsonObj, String KeyForVariables){
-    //     String[] varList = GetStrArrFromJSONOBJ(jsonObj,KeyForVariables);
-    //     if (varList == null) {
-    //         // System.err.println("Unable To Obtain Variable Names.. Returning Null");
-    //         return null;
-    //     }
-    //     return varList;
-    // }
-    
-    // public static int[] GetMinTermIntsFromJSONOBJ(JSONObject jsonObj, String KeyForMinTerms){
-    //     int[] minTerms = GetIntArrFromJSONOBJ(jsonObj,KeyForMinTerms);
-    //     if (minTerms == null) {
-    //         System.err.println("Unable To Obtain MinTerms.. Returning Null");
-    //         return null;
-    //     }
-    //     return minTerms;
-    // }
-    // public static String[] GetMinTermStrsFromJSONOBJ(JSONObject jsonObj, String KeyForMinTerms){
-    //     String[] minTerms = GetStrArrFromJSONOBJ(jsonObj,KeyForMinTerms);
-    //     if (minTerms == null) {
-    //         System.err.println("Unable To Obtain MinTerms.. Returning Null");
-    //         return null;
-    //     }
-    //     return minTerms;
-    // }
-    
-    // public static String[] GetDontCaresFromJSONOBJ(JSONObject jsonObj, String KeyForDontCares){
-    //     String[] dontCares = GetStrArrFromJSONOBJ(jsonObj,KeyForDontCares);
-    //     if (dontCares == null) {
-    //         // System.err.println("Unable To Obtain DontCares.. Returning Null");
-    //         return null;
-    //     }
-    //     return dontCares;
-    // }
-    // public static int[] GetDontCaresIntsFromJSONOBJ(JSONObject jsonObj, String KeyForDontCares){
-    //     int[] dontCares = GetIntArrFromJSONOBJ(jsonObj,KeyForDontCares);
-    //     if (dontCares == null) {
-    //         // System.err.println("Unable To Obtain MinTerms.. Returning Null");
-    //         return null;
-    //     }
-    //     return dontCares;
-    // }
-
     private static boolean AllTermsWithinRange(int[]terms, int minVal, int maxVal){
         if (Arrays.stream(terms).max().getAsInt() > maxVal || Arrays.stream(terms).min().getAsInt()  < minVal) {
             return false;
