@@ -73,13 +73,24 @@ public class FlipFlopRealizer {
             }
 
         }
+        SimplificationData simplificationData;
+        OptimizationResult optimizationResult;
 
-        SimplificationData simplificationData = QuineMckluskySolver.getPrimeImplicantsMixedTerms( terms.toArray(new String[0]), 
-                                                                                                  dontCares.toArray(new String[0]), 
-                                                                                                  1 + table.inVarCount);
+        if (terms == null || terms.isEmpty()) {
+            simplificationData = null;
+            LinkedList<Term> nullTermList = new LinkedList<Term>();
+            nullTermList.add(new Term("0"));
+            optimizationResult = new OptimizationResult(nullTermList, null);
+        }else{
+            simplificationData = QuineMckluskySolver.getPrimeImplicantsMixedTerms( terms.toArray(new String[0]), 
+                                                                                   dontCares.toArray(new String[0]), 
+                                                                                   1 + table.inVarCount);
+        
+            optimizationResult = QuineMckluskySolver.getOptimalExpression( QuineMckluskySolver.termListToStrArr(simplificationData.primeImplicants), 
+                                                                           terms.toArray(new String[0]));
+        }
 
-        OptimizationResult optimizationResult = QuineMckluskySolver.getOptimalExpression( QuineMckluskySolver.termListToStrArr(simplificationData.primeImplicants), 
-                                                                                          terms.toArray(new String[0]));
+
         return new SolutionData(simplificationData, optimizationResult);
     }
 
@@ -173,23 +184,23 @@ public class FlipFlopRealizer {
             }
             //getting the running Complement Intersection
             Term tempTerm = new Term(termStr);
-            System.out.println("Getting Intersection Between : Old IntersectionList");
-            for (Term term : intersection) {
-                System.out.print(term.minTerm + " ");
-            }
-            System.out.println("\n And Between The Complement List of " + termStr);
-            for (Term term : tempTerm.getComplement()) {
-                System.out.print(term.minTerm + " ");
-            }
-            System.out.println("\n");
+            // System.out.println("Getting Intersection Between : Old IntersectionList");
+            // for (Term term : intersection) {
+            //     System.out.print(term.minTerm + " ");
+            // }
+            // System.out.println("\n And Between The Complement List of " + termStr);
+            // for (Term term : tempTerm.getComplement()) {
+            //     System.out.print(term.minTerm + " ");
+            // }
+            // System.out.println("\n");
 
             intersection = Term.getIntersectionList(intersection, tempTerm.getComplement());
             
-            System.out.println("Total Intersection");
-            for (Term term : intersection) {
-                System.out.print(term.minTerm + " ");
-            }
-            System.out.println("\n");
+            // System.out.println("Total Intersection");
+            // for (Term term : intersection) {
+            //     System.out.print(term.minTerm + " ");
+            // }
+            // System.out.println("\n");
 
         }
         
@@ -215,9 +226,7 @@ public class FlipFlopRealizer {
         
         return table;
     }
-    public static void AddZeroesOfFunctionToTable(PLATable table){
 
-    }
     public static void main(String[] args){
         String[] inVars = {"Ab","Bc"};
         String[] outVars = {};

@@ -163,7 +163,7 @@ def LinkPathSolver():
         stateVarCount = int(request.form["StateVarCount"])
         stateCount    = 2**stateVarCount
         # stateVarNames = ["Q"+ str(i) for i in range(stateVarCount - 1,-1,-1)]
-        stateVarNames = ["Q"+ str(i) for i in range(0,stateVarCount)]
+        stateVarNames = ["Q"+ str(i) for i in range(stateVarCount - 1,-1,-1)]
         inVarCount    = int(request.form["InVarCount"])
         outVarCount   = int(request.form["OutVarCount"])
         inVarNames    = [item.strip() for item in request.form["InVariables"].split(',') if item.strip()] 
@@ -201,7 +201,8 @@ def LinkPathSolver():
             result_json = json.loads(process.stdout)
         except json.JSONDecodeError as e:
             print("JSON decode error:", e)
-            print("Raw output:", process.stderr)
+            print("Raw err:", process.stderr)
+            print("Raw output:", process.stdout)
             optimized_expr = "Java did not return valid JSON. See server logs."
             return render_template("LinkPathsSolver.html", problem = "Java did not return valid JSON. See server logs.")
         
@@ -214,7 +215,9 @@ def LinkPathSolver():
         
         laTexCode = result_json["LaTexStateGraph"]
         stateVarOutputs = result_json["StateVarOutputs"]
+        nullStateVars = result_json["NullStateVars"]
         outVarOutputs = result_json["OutVarOutputs"]
+        nullOutVars = result_json["NullOutVars"]
 
         graph = generatePDF(laTexCode,"stateGraph",PDF_DIR_NAME)
         if  graph == -1:
@@ -229,7 +232,13 @@ def LinkPathSolver():
         # totalOutVars = stateVarNames + outVarNames.split(',')
         stateVarSolutions = []
         outVarSolutions = []
+
+        print(nullOutVars)
+        print(nullStateVars)
+        print(process.stdout)
         for var in stateVarNames :
+            if var in nullStateVars :
+                continue
             var_json = stateVarOutputs[var]
             currVar = {
                 "Name"               : var,
@@ -241,9 +250,10 @@ def LinkPathSolver():
                 "Terms"              :var_json["PIChartData"]["MinTerms"]
             }
             stateVarSolutions.append(currVar)
-        logging.debug(process.stdout)
 
         for var in outVarNames :
+            if var in nullOutVars :
+                continue
             var_json = outVarOutputs[var]
             currVar = {
                 "Name"               : var,
@@ -255,6 +265,8 @@ def LinkPathSolver():
                 "Terms"              :var_json["PIChartData"]["MinTerms"]
             }
             outVarSolutions.append(currVar)
+            logging.debug(process.stdout)
+
         
         print("DEBUG:", outVarSolutions, flush=True)
 
@@ -263,7 +275,9 @@ def LinkPathSolver():
             "LinkPathsSolver.html",
             solutionPhase = True,
             stateVarSolutions = stateVarSolutions,
+            nullStateVars = nullStateVars,
             outVarSolutions = outVarSolutions,
+            nullOutVars = nullOutVars,
             pdfName = "stateGraph",
             folderName = PDF_DIR_NAME,
             enumerate = enumerate,

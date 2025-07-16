@@ -131,6 +131,24 @@
                 </div>
                 {%endfor%}
                 
+                {%for nullVar in nullStateVars%}
+                <div class="VarSolution" id = "{{nullVar}}">
+                    <h2 class="varTitle">Solution for "{{nullVar}}"</h2>
+                    <button type="button" onclick="expandSteps('{{nullVar}}')">Show/Hide Steps</button>
+                    <div class="stepsContainer" id="steps-{{nullVar}}">
+                        
+                        <div class = "output">
+                            
+                            <h2>Minimum Expression</h2>
+
+                            <h3 class = "min_expr">0</h3>
+
+                        </div>
+                    </div>
+
+                </div>
+                {%endfor%}
+                
                     
 
                 <h2 class = "solutionStepTitle">Solution of Output Variables</h2>
@@ -198,6 +216,25 @@
                 </div>
                 {%endfor%}
 
+                {%for nullVar in nullOutVars%}
+                <div class="VarSolution" id = "{{nullVar}}">
+                    <h2 class="varTitle">Solution for "{{nullVar}}"</h2>
+                    <button type="button" onclick="expandSteps('{{nullVar}}')">Show/Hide Steps</button>
+                    <div class="stepsContainer" id="steps-{{nullVar}}">
+                        
+                        <div class = "output">
+                            
+                            <h2>Minimum Expression</h2>
+
+                            <h3 class = "min_expr">0</h3>
+
+                        </div>
+                    </div>
+                    
+
+                </div>
+                {%endfor%}
+
                 <h2 class = "solutionStepTitle">State Graph</h2>
                 
                 <div id = "stateGraphCard">
@@ -250,6 +287,7 @@
                     input.name = "S" + i + "_MooreOutput";
                     input.className = "mooreAssignmentInput";
                     input.placeholder = "Enter output";
+                    input.defaultValue = "0".repeat(outVarCount);
                     container.appendChild(label);
                     container.appendChild(input);
                     }

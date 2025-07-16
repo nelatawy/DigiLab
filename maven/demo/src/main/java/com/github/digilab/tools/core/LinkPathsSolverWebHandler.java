@@ -1,8 +1,52 @@
 package com.github.digilab.tools.core;
+import java.util.Arrays;
+import java.util.LinkedList;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class LinkPathsSolverWebHandler {
+    public static final int INVALID_TERMS = -1;
+    public static final int VALID_TERMS  = 1;
+    
+    public static int CheckValidityOfMooreOutputs(String[] mooreOutputs, int outVarCount){
+        for (int i = 0; i < mooreOutputs.length; i++) {
+            if (!Term.isBooleanString(mooreOutputs[i]) || mooreOutputs[i].length() != outVarCount) {
+                return INVALID_TERMS;
+            }
+        }
+        return VALID_TERMS;
+    }
+    
+    public static int AssignStatesFromLinkPaths(JSONArray linkPaths, int linkPathCount, boolean[] addedStates , State[] states , String[] mooreOutputs , int inVarCount, int outVarCount){
+        for (int i = 0; i < linkPathCount; i++) {
+            JSONObject currLink = linkPaths.getJSONObject(i);
+            
+            String fromState = JSONInputParser.GetStrFromJSONOBJ(currLink, "fromState", "").replaceAll("S",""); //to only get ID
+            int fromStateID = Integer.parseInt(fromState);
+            //no need to handle non-numeric data since it's prohibited in the front-end
+            String toState = JSONInputParser.GetStrFromJSONOBJ(currLink, "toState", "").replaceAll("S",""); //to only get ID
+            int toStateID = Integer.parseInt(toState);
+            
+            addedStates[fromStateID] = true;
+            //mark only the from states so that we dont have to add it in the table afterwards..it's already there
+            //Adding the state on it's first encounter
+            if (states[fromStateID] == null) {
+                states[fromStateID] = new State(fromStateID, mooreOutputs[fromStateID]);
+            }
+            if (states[toStateID] == null) {
+                states[toStateID] = new State(toStateID, mooreOutputs[toStateID]);
+            }
+            //Adding the Input And Output String of CurrLink
+            String inStr = JSONInputParser.GetStrFromJSONOBJ(currLink, "inStr", ""); 
+            String outStr = JSONInputParser.GetStrFromJSONOBJ(currLink, "outStr", ""); 
+            if (!Term.isBooleanString(inStr) || !Term.isBooleanString(outStr) || inStr.length() != inVarCount || outStr.length() != outVarCount) {
+                return INVALID_TERMS;
+            }
+            states[fromStateID].AddLinkTo(states[toStateID], inStr, outStr);//since we store outLiks Only
+        }
+        return VALID_TERMS;
+    }
     public static void main(String[] args){
         // String jsonStr = "{\r\n" + //
         //                 "  \"stateVarCount\": 2,\r\n" + //
@@ -68,46 +112,52 @@ public class LinkPathsSolverWebHandler {
 
         String[] mooreOutputs = JSONInputParser.GetStrArrFromJSONOBJ(jsonObj, "mooreOutputs");
         State[] states = new State[maxNumberOfStates];//indices indicate stateIDs
+        // for (int i = 0; i < maxNumberOfStates; i++) {
+        //     states[i] = new State(i, mooreOutputs[i]); // so that we dont have any null states
+        // }
         boolean[] addedStates = new boolean[maxNumberOfStates];
         
         //Checking the validity of Moore outputs
-        for (int i = 0; i < mooreOutputs.length; i++) {
-            if (!Term.isBooleanString(mooreOutputs[i]) || mooreOutputs[i].length() != outVarCount) {
-                Data_JSON.put("Problem", "Invalid Moore Output(Make sure that it's a valid Boolean term having the same number of bits as the outVar count)");
-                System.out.println(Data_JSON.toString());
-                return;
-            }
+        if (CheckValidityOfMooreOutputs(mooreOutputs, outVarCount) == INVALID_TERMS) {
+            Data_JSON.put("Problem", "Invalid Moore Output(Make sure that it's a valid Boolean term having the same number of bits as the outVar count)");
+            System.out.println(Data_JSON.toString());
+            return;
         }
         //Validation and Addition of LinkPaths
         JSONArray linkPaths = jsonObj.getJSONArray("linkPaths");
-        for (int i = 0; i < linkPathCount; i++) {
-            JSONObject currLink = linkPaths.getJSONObject(i);
-            
-            String fromState = JSONInputParser.GetStrFromJSONOBJ(currLink, "fromState", "").replaceAll("S",""); //to only get ID
-            int fromStateID = Integer.parseInt(fromState);
-            //no need to handle non-numeric data since it's prohibited in the front-end
-            String toState = JSONInputParser.GetStrFromJSONOBJ(currLink, "toState", "").replaceAll("S",""); //to only get ID
-            int toStateID = Integer.parseInt(toState);
-            
-            addedStates[fromStateID] = true;
-            //mark only the from states so that we dont have to add it in the table afterwards..it's already there
-            //Adding the state on it's first encounter
-            if (states[fromStateID] == null) {
-                states[fromStateID] = new State(fromStateID, mooreOutputs[fromStateID]);
-            }
-            if (states[toStateID] == null) {
-                states[toStateID] = new State(toStateID, mooreOutputs[toStateID]);
-            }
-            //Adding the Input And Output String of CurrLink
-            String inStr = JSONInputParser.GetStrFromJSONOBJ(currLink, "inStr", ""); 
-            String outStr = JSONInputParser.GetStrFromJSONOBJ(currLink, "outStr", ""); 
-            if (!Term.isBooleanString(inStr) || !Term.isBooleanString(outStr) || inStr.length() != inVarCount || outStr.length() != outVarCount) {
-                Data_JSON.put("Problem", "Invalid Link Input/Output String (Make sure that it's a valid Boolean term having the same number of bits as the inVar count)");
-                System.out.println(Data_JSON.toString());
-                return;
-            }
-            states[fromStateID].AddLinkTo(states[toStateID], inStr, outStr);//since we store outLiks Only
+        if (AssignStatesFromLinkPaths(linkPaths, linkPathCount, addedStates, states, mooreOutputs, inVarCount, outVarCount) == INVALID_TERMS) {
+            Data_JSON.put("Problem", "Invalid Link Input/Output String (Make sure that it's a valid Boolean term having the same number of bits as the inVar count)");
+            System.out.println(Data_JSON.toString());
+            return;
         }
+        // for (int i = 0; i < linkPathCount; i++) {
+        //     JSONObject currLink = linkPaths.getJSONObject(i);
+            
+        //     String fromState = JSONInputParser.GetStrFromJSONOBJ(currLink, "fromState", "").replaceAll("S",""); //to only get ID
+        //     int fromStateID = Integer.parseInt(fromState);
+        //     //no need to handle non-numeric data since it's prohibited in the front-end
+        //     String toState = JSONInputParser.GetStrFromJSONOBJ(currLink, "toState", "").replaceAll("S",""); //to only get ID
+        //     int toStateID = Integer.parseInt(toState);
+            
+        //     addedStates[fromStateID] = true;
+        //     //mark only the from states so that we dont have to add it in the table afterwards..it's already there
+        //     //Adding the state on it's first encounter
+        //     if (states[fromStateID] == null) {
+        //         states[fromStateID] = new State(fromStateID, mooreOutputs[fromStateID]);
+        //     }
+        //     if (states[toStateID] == null) {
+        //         states[toStateID] = new State(toStateID, mooreOutputs[toStateID]);
+        //     }
+        //     //Adding the Input And Output String of CurrLink
+        //     String inStr = JSONInputParser.GetStrFromJSONOBJ(currLink, "inStr", ""); 
+        //     String outStr = JSONInputParser.GetStrFromJSONOBJ(currLink, "outStr", ""); 
+        //     if (!Term.isBooleanString(inStr) || !Term.isBooleanString(outStr) || inStr.length() != inVarCount || outStr.length() != outVarCount) {
+        //         Data_JSON.put("Problem", "Invalid Link Input/Output String (Make sure that it's a valid Boolean term having the same number of bits as the inVar count)");
+        //         System.out.println(Data_JSON.toString());
+        //         return;
+        //     }
+        //     states[fromStateID].AddLinkTo(states[toStateID], inStr, outStr);//since we store outLiks Only
+        // }
 
         boolean optimalAssignment = false;
         //Swapping the stateID to it's Boolean Representation
@@ -119,66 +169,110 @@ public class LinkPathsSolverWebHandler {
                 stateGraph.AddState(state);
         }
 
+        // System.out.println("Count of states in state graph : " + stateGraph.numberOfStates);
+
         String laTexStr = stateGraph.ToLaTexCircularGraph(7);
         Data_JSON.put("LaTexStateGraph", laTexStr);
 
-        PLATable table = stateGraph.ToPLATable();
-        //Adding DontCare States
-        for (int i = 0 ; i < states.length; i++) {
-            if (addedStates[i] == false) { // then all outputs are dont cares
-                table.AddRow(new RelationRow(
-                            new State(i, mooreOutputs[i]), 
-                            new State(table.DONT_CARE, null), 
-                            "-".repeat(inVarCount), 
-                            "-".repeat(outVarCount)));
-            }
-        }
+        PLATable table = stateGraph.ToPLATable(mooreOutputs);
+        // System.out.println("Count of state bits in table : " + table.stateVarCount);
         //to get minimized expressions and steps of solution of output bits
-        
         //Adding stateVars solution with steps
+        JSONArray nullStateVarOutputs = new JSONArray();
         JSONObject stateVarOutputs = new JSONObject();
+        // System.out.println("TOTAL IN VARS");
+        // for (String str : totalInVars) {
+        //     System.out.print(str + " ");
+        // }
+        
         for (int i = 0; i < table.stateVarCount; i++) {
             try {
+                // System.out.println("Trying to process " + totalInVars[i] + " now");
                 JSONObject state_var_Data = new JSONObject();
                 String[] terms = table.GetTermsOf(true, i, optimalAssignment?null/*TODO:optimal assignment */:null);
+                // System.out.println("→ terms.length = " + (terms != null ? terms.length : -1));
+
+                
                 SolutionData solutionData ;
-                solutionData = table.SolveVariableAt(true, i, optimalAssignment?null/*TODO:optimal assignment */:null);
-                JSONObject simplificationData_JSON = JSONOutputFormatter.SimplificationDataToResultJSON(solutionData.simplificationData);
-                JSONObject PIChartData_JSON = JSONOutputFormatter.PIChartDataToResultJSON(solutionData.simplificationData, solutionData.optimizationResult, terms);
-                JSONObject OutputData_JSON = JSONOutputFormatter.OutputDataToResultJSON(solutionData.optimizationResult, totalInVars);
+                // JSONArray debugObj = new JSONArray();
+                // if (terms != null) {
+                //     for (String string : terms) {
+                //         debugObj.put(string);
+                //     }
+                // }
+                // Data_JSON.put("DEBUG Terms for " + totalInVars[i], debugObj); // Will still insert []
+                // System.out.println("PUT => DEBUG Terms for " + totalInVars[i] + " = " + debugObj);
+                // System.out.println("After put, current keys: " + Data_JSON.keySet());
 
-                state_var_Data.put("SimplificationData", simplificationData_JSON);
-                state_var_Data.put("PIChartData", PIChartData_JSON);
-                state_var_Data.put("OutputData", OutputData_JSON);
+                //Assigning the SolutionData
+                if (terms.length == 0) { // it's fully zero--no function
+                    nullStateVarOutputs.put(totalInVars[i]);
+                    // Data_JSON.put("DUBUG " + i + " state var", totalInVars[i] + " SHOULD BE ADDED");
 
-                stateVarOutputs.put(totalInVars[i], state_var_Data);
+                }
+                else{
+                    solutionData = table.SolveVariableAt(true, i, optimalAssignment?null/*TODO:optimal assignment */:null);
+                    JSONObject simplificationData_JSON = JSONOutputFormatter.SimplificationDataToResultJSON(solutionData.simplificationData);
+                    state_var_Data.put("SimplificationData", simplificationData_JSON);
+                    
+                    JSONObject PIChartData_JSON = JSONOutputFormatter.PIChartDataToResultJSON(solutionData.simplificationData, solutionData.optimizationResult, terms);
+                    state_var_Data.put("PIChartData", PIChartData_JSON);
+                    
+                    JSONObject OutputData_JSON = JSONOutputFormatter.OutputDataToResultJSON(solutionData.optimizationResult, totalInVars);
+                    state_var_Data.put("OutputData", OutputData_JSON);
+                    stateVarOutputs.put(totalInVars[i], state_var_Data);
+                }
+
 
             } catch (Exception e) {
-                Data_JSON.put("Problem", "An Issue occured while trying to find solution.");
+                Data_JSON.put("Problem", "An Issue occured while trying to find solution." + e.getMessage() + Arrays.toString(e.getStackTrace()));
                 System.out.println(Data_JSON.toString());
                 return;
             }
             
         }
+        
         Data_JSON.put("StateVarOutputs", stateVarOutputs);
+        Data_JSON.put("NullStateVars", nullStateVarOutputs);
 
         //Adding outVars solution with steps
+        JSONArray nullVarOutputs = new JSONArray();
         JSONObject outVarOutputs = new JSONObject();
+        
         for (int i = 0; i < table.outVarCount; i++) {
             try {
+                // System.out.println("Trying to process " + outVars[i] + " now");
                 JSONObject out_var_Data = new JSONObject();
                 String[] terms = table.GetTermsOf(false, i, optimalAssignment?null/*TODO:optimal assignment */:null);
+                // System.out.println("→ terms.length = " + (terms != null ? terms.length : -1));
+
                 SolutionData solutionData ;
-                solutionData = table.SolveVariableAt(false, i, optimalAssignment?null/*TODO:optimal assignment */:null);
-                JSONObject simplificationData_JSON = JSONOutputFormatter.SimplificationDataToResultJSON(solutionData.simplificationData);
-                JSONObject PIChartData_JSON = JSONOutputFormatter.PIChartDataToResultJSON(solutionData.simplificationData, solutionData.optimizationResult, terms);
-                JSONObject OutputData_JSON = JSONOutputFormatter.OutputDataToResultJSON(solutionData.optimizationResult, totalInVars);
+                // JSONArray debugObj = new JSONArray();
+                // if (terms != null) {
+                //     for (String string : terms) {
+                //         debugObj.put(string);
+                //     }
+                // }
+                // Data_JSON.put("DEBUG Terms for " + outVars[i], debugObj);
+                // System.out.println("PUT => DEBUG Terms for " + outVars[i] + " = " + debugObj);
+                // System.out.println("After put, current keys: " + Data_JSON.keySet());
+                
+                if (terms.length == 0) {
+                    nullVarOutputs.put(outVars[i]);
+                    // Data_JSON.put("DUBUG " + i + " out var", outVars[i] + " SHOULD BE ADDED");
+                }
 
-                out_var_Data.put("SimplificationData", simplificationData_JSON);
-                out_var_Data.put("PIChartData", PIChartData_JSON);
-                out_var_Data.put("OutputData", OutputData_JSON);
+                else{
+                    solutionData = table.SolveVariableAt(false, i, optimalAssignment?null/*TODO:optimal assignment */:null);
+                    JSONObject simplificationData_JSON = JSONOutputFormatter.SimplificationDataToResultJSON(solutionData.simplificationData);
+                    out_var_Data.put("SimplificationData", simplificationData_JSON);
+                    JSONObject PIChartData_JSON = JSONOutputFormatter.PIChartDataToResultJSON(solutionData.simplificationData, solutionData.optimizationResult, terms);
+                    out_var_Data.put("PIChartData", PIChartData_JSON);
+                    JSONObject OutputData_JSON = JSONOutputFormatter.OutputDataToResultJSON(solutionData.optimizationResult, totalInVars);
+                    out_var_Data.put("OutputData", OutputData_JSON);
+                    outVarOutputs.put(outVars[i], out_var_Data); //since its after the stateVars
+                }
 
-                outVarOutputs.put(outVars[i], out_var_Data); //since its after the stateVars
 
             } catch (Exception e) {
                 Data_JSON.put("Problem", "An Issue occured while trying to find solution.");
@@ -186,7 +280,9 @@ public class LinkPathsSolverWebHandler {
                 return;
             }
         }
+        
         Data_JSON.put("OutVarOutputs", outVarOutputs);
+        Data_JSON.put("NullOutVars", nullVarOutputs);
 
         System.out.println(Data_JSON.toString());
     }

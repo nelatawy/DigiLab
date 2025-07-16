@@ -19,6 +19,13 @@ class SolutionData {
         this.simplificationData = simplificationData;
         this.optimizationResult = optimizationResult;
     }
+    public static SolutionData CreateNoSolutionData(){
+        SimplificationData simplificationData = null;
+        LinkedList<Term> nullTermList = new LinkedList<Term>();
+        nullTermList.add(new Term("0"));
+        OptimizationResult optimizationResult = new OptimizationResult(nullTermList, null);
+        return new SolutionData(simplificationData, optimizationResult);
+    }
 }
 public class PLATable{
     final static int DONT_CARE = -1;
@@ -44,11 +51,17 @@ public class PLATable{
 
         this.maxStateCount = (int)Math.pow(2,stateVarCount);
     }
-    public void AddRow(RelationRow row){
-        rows.push(row);
+    public void AddRow(RelationRow newRow){
+        for (RelationRow currRow : rows) {
+            if (currRow.currentState.stateID == newRow.currentState.stateID &&
+                currRow.nextState.stateID == newRow.nextState.stateID &&
+                currRow.input.equals(newRow.input) &&
+                currRow.output.equals(newRow.output)) return; //already found
+        }
+        rows.push(newRow);
         numberOfRows++;
     }
-    
+
     public boolean isValidAssignmentArr(String[] stateAssignments){
         if (stateAssignments == null || this.maxStateCount > stateAssignments.length) {
             return false;

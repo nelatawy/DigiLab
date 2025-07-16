@@ -4,14 +4,15 @@
 \begin{document}
 
 \begin{center}
-\begin{tikzpicture}[scale = 0.830, transform shape, shorten >=5pt, on grid, auto]
+\begin{tikzpicture}[scale = 0.800, transform shape, shorten >=5pt, on grid, auto]
 
-\node[state]	(S1)	 at (7.000,0.000)	{\resizebox{1.8cm}{!}{$S_1$/c}};
-\node[state]	(S0)	 at (-7.000,-0.000)	{\resizebox{1.8cm}{!}{$S_0$/c'}};
+\node[state]	(S15)	 at (7.000,0.000)	{\resizebox{1.8cm}{!}{$S_15$/b'}};
+\node[state]	(S12)	 at (-0.000,7.000)	{\resizebox{1.8cm}{!}{$S_12$/b'}};
+\node[state]	(S7)	 at (-7.000,-0.000)	{\resizebox{1.8cm}{!}{$S_7$/b'}};
+\node[state]	(S0)	 at (0.000,-7.000)	{\resizebox{1.8cm}{!}{$S_0$/b'}};
 
-\path[->, bend left =5] (S1)	 edge node [pos=0.2]{ab/c'}	(S0);
-\path[->] (S0)	 edge[loop below] node [pos=0.2]{a'b'/c'}	(S0);
-\path[->, bend left =5] (S0)	 edge node [pos=0.2]{a'b/c}	(S1);
+\path[->, bend left =-5] (S12)	 edge node [pos=0.2]{a'/b'}	(S7);
+\path[->, bend left =15] (S0)	 edge node [pos=0.2]{a'/b}	(S15);
 
 \end{tikzpicture}
 \end{center}

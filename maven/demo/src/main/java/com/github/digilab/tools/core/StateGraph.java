@@ -41,6 +41,7 @@ public class StateGraph {
     LinkedList<State> states;
     String[] inVars,outVars; //excluding state vars
     int numberOfStates;
+    int largestStateID;
     public StateGraph(String[] inVars, String[] outVars){
         this.inVars  = inVars;
         this.outVars = outVars;
@@ -53,13 +54,19 @@ public class StateGraph {
         if (!states.contains(state)) {
             states.push(state);
             numberOfStates++;
+            largestStateID = Math.max(largestStateID, state.stateID);
         } else {
             System.out.println("Graph already has this state..State wasn't added");
         }
     }
     
-    public PLATable ToPLATable(){
-        int stateVarCount = (int) Math.ceil(Math.log(numberOfStates) / Math.log(2));
+    public PLATable ToPLATable(String[] mooreOutputs){
+        int stateVarCount = Math.max( (int) Math.ceil(Math.log(largestStateID) / Math.log(2)) , 1); 
+        int maxNumberOfStates = (int) Math.pow(2, stateVarCount);
+        //to never have 0 bits even for 1 state and we choose number of state bits to accomodate the largest ID
+
+        boolean[] addedStates = new boolean[maxNumberOfStates]; // to add the rows having the DCs later
+        //and we used maxNumberOfStates because we want to use all possible states for optimization
         PLATable table = new PLATable(inVars,outVars,stateVarCount);
         
         for (State state : states) {
@@ -71,6 +78,16 @@ public class StateGraph {
                 
                 RelationRow newRow  = new RelationRow(currentState, nextState, inputStr, outputStr);
                 table.AddRow(newRow);
+                addedStates[currentState.stateID] = true;
+            }
+        }
+        for (int i = 0 ; i < maxNumberOfStates; i++) {
+            if (addedStates[i] == false) { // then all outputs are dont cares
+                table.AddRow(new RelationRow(
+                            new State(i, (mooreOutputs != null && i < mooreOutputs.length)? mooreOutputs[i]: "-".repeat(outVars.length)), 
+                            new State(table.DONT_CARE, null), 
+                            "-".repeat(inVars.length), 
+                            "-".repeat(outVars.length)));
             }
         }
         return table;
@@ -81,7 +98,8 @@ public class StateGraph {
     }
     private Coordinate[] GetCircularPositionsOfStates(double radius){
         float angleBetStates = (float)(2*Math.PI)/this.numberOfStates; // angle in Radians
-        Coordinate[] positions = new Coordinate[numberOfStates];
+        
+        Coordinate[] positions = new Coordinate[largestStateID + 1]; //to be fitting everything
         int currIndex = 0;
         Coordinate initialPos = new Coordinate(radius, 0);
         for (State state : this.states) {

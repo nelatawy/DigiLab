@@ -178,7 +178,7 @@ class Term {
         if (first.minTerm.toString().length() != second.minTerm.toString().length()) {
             return null;
         }
-        System.out.println("Comparing: '" + first.minTerm.toString() + "' and '" + second.minTerm.toString() + "'");
+        // System.out.println("Comparing: '" + first.minTerm.toString() + "' and '" + second.minTerm.toString() + "'");
         int length = first.minTerm.length();
         String termStr = "";
         for(int i = 0; i < length; i++){
@@ -191,7 +191,7 @@ class Term {
                 termStr += c1;
             }
             else{
-                System.out.println("Failed : " + termStr);
+                // System.out.println("Failed : " + termStr);
                 return null; //0 and a 1 on the same bit..no intersection
             }
         }
@@ -223,7 +223,6 @@ class Term {
         LinkedList<Term> intersection = new LinkedList<Term>();
         for (Term first : firstList) {
             for (Term second : secondList) {
-                
                 Term newTerm = Term.getIntersection(first, second);
                 boolean found = false;
                 if (newTerm != null) {
@@ -231,15 +230,12 @@ class Term {
                     //remove in a reverse order ..it could've been done in the head-to-tail order without messing it up since itr.remove() handles it
                     while (itr.hasNext()) {
                         // System.out.println("Moving the iterator");
-
-
-
                         Term tempTerm = itr.next();
                         // System.out.println("Comparing: '" + tempTerm.minTerm.toString() + "' and '" + newTerm.minTerm.toString() + "'");
                         if (tempTerm.minTerm.toString().equals(newTerm.minTerm.toString())) { //since equals doesnt compare values by default but actually object references
                             // System.out.println("Equality..Skipping : " + newTerm.minTerm);
                             found = true;
-                            // break; //no need to do anything
+                            break; //no need to do anything--early exit
                         }
                         else if (tempTerm.isCoveredBy(newTerm)) {
                             // System.out.println("Removing less covering term : " + tempTerm.minTerm + " covered by " + newTerm.minTerm);
@@ -247,7 +243,7 @@ class Term {
                         }
                     }
                     if (!found) {
-                        System.out.println("Adding : " + newTerm.minTerm);
+                        // System.out.println("Adding : " + newTerm.minTerm);
                         intersection.add(newTerm);
                     }
                 }
@@ -256,7 +252,6 @@ class Term {
                 //     System.out.print(term.minTerm + " ");
                 // }
                 // System.out.println("\n");
-
             }
         }
         return intersection;
@@ -811,8 +806,6 @@ public class QuineMckluskySolver {
                 case '0':
                     newString += (variables[i].length() == 1) ? variables[i] + "'" : "(" + variables[i] + ")'";
                     break;
-                default:
-                    break;
             }
         }
         return newString;
@@ -838,29 +831,35 @@ public class QuineMckluskySolver {
                 }
             }
         }
+        if (Expression.equals( "")) { //all are minimized... all are valid.. answer is 1
+            Expression = "1";
+        }
         return Expression;
     }
 
     // Example main method for testing
 
-    // public static void main(String [] args){
-    //     // String[] minTerms= {"0-00","--10","01-0","1-01","0101","1110"};
-    //     int[] terms = {0,4,2,6,10,14,4,6,9,5,14};
-    //     // String[] minTerms= {"0010--00-","1000-----","1001-----","1010-0--0","1011-----"};
-    //     // String[] DontCares = {"110------","111------"};
-    //     int[] DontCares = {};
-    //     // String[] DontCares = {"00--", "011-"};
-    //     String[] Variables = {"A","B","C","Rb","Reset","D_7","D_711","D_2312","Eq"};
-    //     SimplificationData simData = getPrimeImplicantsMinTerms(terms,DontCares,9);
-    //     // System.out.println(GetExpression(simData.primeImplicants,Variables));
-    //     OptimizationResult optRes = getOptimalExpression(termListToStrArr(simData.primeImplicants), terms,9);
-    //     System.out.println(GetExpression(optRes.terms, Variables));
-    //     Term term1 = new Term("0011");
-    //     Term term2 = new Term("--10");
-    //     // System.out.println(Term.GetTheMoreCoveringTerm(term1,term2 ));
-    //     // System.out.println(Term.findFirstMainBitsDiffBet(term2,term1));
-    //     // System.out.println(term2.ContainsTermToOptimize(term1));
+    public static void main(String [] args){
+        // String[] minTerms= {"0-00","--10","01-0","1-01","0101","1110"};
+        int[] terms = {0,1,2,3};
+        // String[] minTerms= {"0010--00-","1000-----","1001-----","1010-0--0","1011-----"};
+        // String[] DontCares = {"110------","111------"};
+        int[] DontCares = {};
+        // String[] DontCares = {"00--", "011-"};
+        String[] Variables = {"A","B","C","Rb","Reset","D_7","D_711","D_2312","Eq"};
+        SimplificationData simData = getPrimeImplicantsMinTerms(terms,DontCares,2);
+        // System.out.println(GetExpression(simData.primeImplicants,Variables));
+        for (Term term : simData.primeImplicants) {
+            System.out.println(term.minTerm);
+        }
+        OptimizationResult optRes = getOptimalExpression(termListToStrArr(simData.primeImplicants), terms,2);
+        System.out.println(GetExpression(optRes.terms, Variables));
+        Term term1 = new Term("0011");
+        Term term2 = new Term("--10");
+        // System.out.println(Term.GetTheMoreCoveringTerm(term1,term2 ));
+        // System.out.println(Term.findFirstMainBitsDiffBet(term2,term1));
+        // System.out.println(term2.ContainsTermToOptimize(term1));
         
 
-    // }
+    }
 }
