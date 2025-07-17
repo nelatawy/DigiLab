@@ -1,16 +1,17 @@
 package com.github.digilab.tools.core;
 import java.util.LinkedList;
 
-
+//This class is for handling specific control lines like the S in an SR FlipFlop
 class ControlLineRuleSet{
     String name;
-    char[][] ruleGrid;
+    char[][] ruleGrid; //the indices are number (0/1)(0/1) first is for current state the second is for next state
     public ControlLineRuleSet(String name, char[][] ruleGrid){
         this.name = name;
         this.ruleGrid = ruleGrid;
     }
 }
 
+//This class handles the entirety of a FlipFlop and includes different Control Lines
 class FFRuleSet {
     int numberOfControlLines;
     LinkedList<ControlLineRuleSet> ruleSet;
@@ -18,23 +19,27 @@ class FFRuleSet {
         numberOfControlLines = 0;
         ruleSet = new LinkedList<ControlLineRuleSet>();
     }
+    //Adds a new Control Line like adding the S Control Line to an SR FlipFlop implementation
+    //and this allows you to solve the control line at that index
     public void AddControlLine(ControlLineRuleSet newRule){
         ruleSet.add(newRule);
     }
-
-
 }
+
 
 public class FlipFlopRealizer {
     
     FFRuleSet rules;
     PLATable table;
-    
+
+    //Initiate the FFRealizaer from the FFRuleset Created Priorly and needs a PLATable 
+    // (Recommended : use the GetTableFromExpresion() method to genereate the table in the expected format)
     public FlipFlopRealizer(FFRuleSet rules, PLATable table){
         this.rules = rules;
         this.table = table;
     }
     
+    //Checks the Straight-Forward reasons that will prevent this FFRealizer from being solved
     public boolean IsSolvable(){
         if (table.stateVarCount != 1 || table.numberOfRows != 4) {
             return false;
@@ -42,6 +47,7 @@ public class FlipFlopRealizer {
         return true;
     }
 
+    //Gets the SolutionData of that Control-Line at that index ..(indices are 0-based and in the order of insertion of that control-Line )
     public SolutionData SolveControlLineAt(int index){
         LinkedList<String> terms = new LinkedList<String>();
         LinkedList<String> dontCares = new LinkedList<String>();
@@ -76,11 +82,8 @@ public class FlipFlopRealizer {
         SimplificationData simplificationData;
         OptimizationResult optimizationResult;
 
-        if (terms == null || terms.isEmpty()) {
-            simplificationData = null;
-            LinkedList<Term> nullTermList = new LinkedList<Term>();
-            nullTermList.add(new Term("0"));
-            optimizationResult = new OptimizationResult(nullTermList, null);
+        if (terms.isEmpty()) { // So that we use this null value to handle it later in the WebHandler
+            return null;
         }else{
             simplificationData = QuineMckluskySolver.getPrimeImplicantsMixedTerms( terms.toArray(new String[0]), 
                                                                                    dontCares.toArray(new String[0]), 
@@ -94,7 +97,7 @@ public class FlipFlopRealizer {
         return new SolutionData(simplificationData, optimizationResult);
     }
 
-
+    //used as an auxilary function for GetRowInStr()
     private static int GetIndexOfVar(String[] varNameList, String target){
         for (int i = 0; i < varNameList.length; i++) {
             if (target.equals(varNameList[i])) {
@@ -104,9 +107,11 @@ public class FlipFlopRealizer {
         return -1;
 
     }
+    
+    //Get the boolean expression written the notation(stateBits|inVars) for a certain Trm written in Variable Notiation like :
+    // e.g : (Q0)A(Bb)'C and getting '1101' from it
     private static String GetRowInString(String term, String[] varNameList, String stateVarName){
         char[] inputRowStr = "-".repeat(varNameList.length).toCharArray();
-
         String currVar = "";
         String stateStr = "-"; 
         for (int itr = 0; itr < term.length(); itr++) {
@@ -149,26 +154,35 @@ public class FlipFlopRealizer {
         } else if (currVar != "") { // add previous non-negated var 
             inputRowStr[GetIndexOfVar(varNameList, currVar)] = '1';
         }
+
         return stateStr + String.copyValueOf(inputRowStr);
     }
+    
+    //Given an expression like ABC' + BD  and constructs the PLATable from it that can be used to construct the FFRealizer
+    
     public static PLATable GetTableFromExpression(String expression, String[] varNameList, String stateVarName){ 
         //we need to have only one state variable other state variables should be considered as other inVars
         PLATable table = new PLATable(varNameList, null, 1);
-        String[] terms = expression.split("\\s*\\+\\s*");
-        LinkedList<String> onTerms = new LinkedList<String>();
-        LinkedList<Term> intersection = new LinkedList<Term>();
-        intersection.add(new Term("-".repeat(table.inVarCount + table.stateVarCount)));
-
         
+        // Seperating the expression to it's terms
+        String[] terms = expression.split("\\s*\\+\\s*"); 
+        
+        // The Terms that define the ones of the function
+        LinkedList<String> onTerms = new LinkedList<String>(); 
+        
+        //total intersection of zeroes of the function
+        LinkedList<Term> offIntersections = new LinkedList<Term>();
+        offIntersections.add(new Term("-".repeat(table.inVarCount + table.stateVarCount)));
+        
+        //Default Values for on and off states
         State state1 = new State(1, "00");
         State state0 = new State(0, "00");
         
-
-
+        // getting the ones of a function 
         for (String termStr : terms) {
             onTerms.add(GetRowInString(termStr, varNameList, stateVarName));
         }
-        //adding where the function gives 1
+        //Adding the Ones of the function
         for (String termStr : onTerms) {
             switch (termStr.charAt(0)) { //check state bit
                 case '0':
@@ -182,30 +196,14 @@ public class FlipFlopRealizer {
                     table.AddRow(new RelationRow(state1, state1, termStr.substring(1), "0"));
                     break;
             }
-            //getting the running Complement Intersection
+            //getting the running Complement Intersection that is : The total intersection of the complements of all the ones of that function
+            //which is basically a way of getting the zeroes of a function
             Term tempTerm = new Term(termStr);
-            // System.out.println("Getting Intersection Between : Old IntersectionList");
-            // for (Term term : intersection) {
-            //     System.out.print(term.minTerm + " ");
-            // }
-            // System.out.println("\n And Between The Complement List of " + termStr);
-            // for (Term term : tempTerm.getComplement()) {
-            //     System.out.print(term.minTerm + " ");
-            // }
-            // System.out.println("\n");
-
-            intersection = Term.getIntersectionList(intersection, tempTerm.getComplement());
-            
-            // System.out.println("Total Intersection");
-            // for (Term term : intersection) {
-            //     System.out.print(term.minTerm + " ");
-            // }
-            // System.out.println("\n");
-
+            offIntersections = Term.getIntersectionList(offIntersections, tempTerm.getComplement());
         }
         
-        //adding where the function gives 0
-        String[] offTerms = QuineMckluskySolver.termListToStrArr(intersection);
+        //Adding the Zeroes of the function
+        String[] offTerms = QuineMckluskySolver.termListToStrArr(offIntersections);
 
         for (String termStr : offTerms) {
             // String rowInStr = GetRowInString(termStr, varNameList, stateVarName);
@@ -229,12 +227,10 @@ public class FlipFlopRealizer {
 
     public static void main(String[] args){
         String[] inVars = {"Ab","Bc"};
-        String[] outVars = {};
+        // String[] outVars = {};
         char[][] gridS = {{'0','1'},{'0','-'}}; //SR S FF grid
         char[][] gridR = {{'-','0'},{'1','0'}}; //SR R FF grid
-        // PLATable table = new PLATable(inVars, null, 1);
-        // table.AddRow(new RelationRow(new State(0, "00"), new State(1, "00"), "010", "0"));
-        // table.AddRow(new RelationRow(new State(1, "00"), new State(0, "00"), "110", "0"));
+
 
         FFRuleSet rules = new FFRuleSet();
         rules.AddControlLine(new ControlLineRuleSet("S", gridS));
@@ -245,17 +241,10 @@ public class FlipFlopRealizer {
         FlipFlopRealizer ffSolver = new FlipFlopRealizer(rules, genTable);
         String expressionS = QuineMckluskySolver.GetExpression(ffSolver.SolveControlLineAt(0).optimizationResult.terms, null);
         String expressionR = QuineMckluskySolver.GetExpression(ffSolver.SolveControlLineAt(1).optimizationResult.terms, null);
-        System.out.println(expressionR );
-        // System.out.println(FlipFlopRealizer.GetRowInString("ABC",inVars,"Q"));
+        System.out.println("Control Lines' Outputs : ");
+        System.out.println("S : " + expressionS);
+        System.out.println("R : " + expressionR);
 
-        // String test = "";
-        // String test2 = "A";
-        // test += 'A';
-        // System.out.println(FlipFlopRealizer.GetIndexOfVar(inVars, test2));
-        // System.out.println(Term.booleanToInt("10111"));
-        // System.out.println(Term.getIntersection(new Term("-1-0"), new Term("-11-")).minTerm);
-
-        // System.out.println(test == test2);
     }
 
 }

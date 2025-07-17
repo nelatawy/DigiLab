@@ -9,6 +9,7 @@ class Coordinate{
         this.y = y;
     }
 }
+
 class Link {
     State fromState,toState;
     String inputStr;
@@ -22,6 +23,7 @@ class Link {
         this.outputStr = output;
     }
 }
+
 class State {
     LinkedList<Link> links;//only accounts for outLinks
     int stateID;
@@ -36,12 +38,14 @@ class State {
         links.push(newLink);
     }
 }
+
 public class StateGraph {
 
     LinkedList<State> states;
     String[] inVars,outVars; //excluding state vars
     int numberOfStates;
     int largestStateID;
+    
     public StateGraph(String[] inVars, String[] outVars){
         this.inVars  = inVars;
         this.outVars = outVars;
@@ -60,8 +64,11 @@ public class StateGraph {
         }
     }
     
-    public PLATable ToPLATable(String[] mooreOutputs){
-        int stateVarCount = Math.max( (int) Math.ceil(Math.log(largestStateID) / Math.log(2)) , 1); 
+    // Construct a PLATable from the stateGraph taking into consideration both the ones and the zeroes of the functions
+    //u must provide stateBitCount at least large enough to accomodate the largest state ID
+    public PLATable ToPLATable(String[] mooreOutputs, int stateBitCount){
+        int stateVarCount = Math.max(stateBitCount, 1);  // to handle weird values
+        //and we can't just use the largestID  since it can ignore some stateBits
         int maxNumberOfStates = (int) Math.pow(2, stateVarCount);
         //to never have 0 bits even for 1 state and we choose number of state bits to accomodate the largest ID
 
@@ -93,9 +100,12 @@ public class StateGraph {
         return table;
     }
 
+    //Get the circular difference means get the ID difference irrelevent to  where are they in the array only where they are in the circular order
     private int GetCircularDiffBetStates(int stateID1, int stateID2){
         return (this.numberOfStates + stateID2 - stateID1)%this.numberOfStates;
     }
+    
+    //Gets the coordinate array of states that is used for "ToLaTexCircularGraph()""
     private Coordinate[] GetCircularPositionsOfStates(double radius){
         float angleBetStates = (float)(2*Math.PI)/this.numberOfStates; // angle in Radians
         
@@ -110,6 +120,8 @@ public class StateGraph {
         }
         return positions;
     }
+    
+    //Get the LaTex Code that represents this StateGraph where the states are aligned in a circular afashion
     public String ToLaTexCircularGraph(double radius){
         String headerData = "\\documentclass{article}\r\n" + //
                             "\\usepackage{tikz}\r\n" + //

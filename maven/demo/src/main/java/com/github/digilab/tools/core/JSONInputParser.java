@@ -24,6 +24,7 @@ public class JSONInputParser {
         // // System.err.println("Mismatching Value Type At Key");
         // return fallbackVal;
     }
+    
     public static String GetStrFromJSONOBJ(JSONObject jsonObj, String KeyForVar , String fallbackVal){
         if (!jsonObj.has(KeyForVar)) {
             // System.err.println("Invalid Key to obtain elements");
@@ -61,6 +62,7 @@ public class JSONInputParser {
         // System.err.println("Mismatching Value Type At " + KeyForVar);
         return null;
     }
+    
     public static int[] GetIntArrFromJSONOBJ(JSONObject jsonObj, String KeyForVar){
         if (!jsonObj.has(KeyForVar)) {
             // System.err.println("Invalid Key to obtain MinTerms");

@@ -41,6 +41,60 @@ class Term {
         return count;
     }
 
+    // Check if this term can be totally covered by another 
+    public boolean isCoveredBy(Term term){
+        if (term.minTerm.length() != this.minTerm.length()) return false;
+        for (int i = 0; i < term.minTerm.length(); i++) {
+            char c1 = term.minTerm.charAt(i);
+            char c2 = this.minTerm.charAt(i);
+            if (c1 != '-'  && c1 != c2) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    //Checks if this term implicitly has a term that'll help optimize another like
+    // '--10' and '0111' first one has  '0110' so it can minimize the second giving '011-'
+    public boolean ContainsTermToOptimize (Term term){
+        int diffCount = 0;
+        if (term.minTerm.length() != this.minTerm.length()) return false;
+        for (int i = 0; i < term.minTerm.length(); i++) {
+            char c1 = this.minTerm.charAt(i);
+            char c2 = term.minTerm.charAt(i);
+            if (c1 != '-' ) {
+                if(c2 == '-') 
+                    return false; //second is more general in a bit
+                else if (c2 != c1) 
+                    diffCount++;
+            }
+        }
+        return (diffCount <= 1);
+    }
+
+    // Gets a list of all terms collectively representing the complement of this term  
+    public LinkedList<Term> getComplement(){
+        LinkedList<Term> complementTerms = new LinkedList<Term>();
+        int length = this.minTerm.length();
+        for (int i = 0; i < length; i++) {
+            char c = this.minTerm.charAt(i);
+            String newTermStr;
+            switch (c) {
+                case '1':
+                    newTermStr = "-".repeat(i) + "0" + "-".repeat(length - i - 1);
+                    complementTerms.push(new Term(newTermStr));
+                    break;
+                case '0':
+                    newTermStr = "-".repeat(i) + "1" + "-".repeat(length - i - 1);
+                    complementTerms.push(new Term(newTermStr));
+                    break; 
+                default:
+                    break;
+            }
+        }
+        return complementTerms;
+    }
+    
     // Create a copy of a Term
     public static Term cpyTerm (Term term){
         Term newTerm = new Term(term.minTerm.toString());
@@ -74,33 +128,7 @@ class Term {
         return count;
     }
 
-    public boolean isCoveredBy(Term term){
-        if (term.minTerm.length() != this.minTerm.length()) return false;
-        for (int i = 0; i < term.minTerm.length(); i++) {
-            char c1 = term.minTerm.charAt(i);
-            char c2 = this.minTerm.charAt(i);
-            if (c1 != '-'  && c1 != c2) {
-                return false;
-            }
-        }
-        return true;
-    }
-    
-    public boolean ContainsTermToOptimize (Term term){
-        int diffCount = 0;
-        if (term.minTerm.length() != this.minTerm.length()) return false;
-        for (int i = 0; i < term.minTerm.length(); i++) {
-            char c1 = this.minTerm.charAt(i);
-            char c2 = term.minTerm.charAt(i);
-            if (c1 != '-' ) {
-                if(c2 == '-') 
-                    return false; //second is more general in a bit
-                else if (c2 != c1) 
-                    diffCount++;
-            }
-        }
-        return (diffCount <= 1);
-    }
+    // Gets the index of the first difference between two terms ignoring the dontCares in the covering term
     public static int findFirstMainBitsDiffBet(Term coveringTerm, Term coveredTerm) {
         if (coveringTerm.minTerm.length() != coveredTerm.minTerm.length()) {
             System.err.println("ComparingTwoTermsOfMismatchingLengths " + coveringTerm.minTerm + " " + coveredTerm.minTerm);
@@ -114,6 +142,8 @@ class Term {
         }
         return -1;
     }
+    
+    // Gets the more broad of two terms
     public static Term GetTheMoreCoveringTerm(Term term1, Term term2){
         if (term1.minTerm.length() != term2.minTerm.length()) return null;
         if (term1.countDontCareVars() > term2.countDontCareVars()) {
@@ -122,6 +152,7 @@ class Term {
             return term2;
         }
     }
+    
     // Recursively generate all minterms covered by a pattern with '-'
     public static void generateMinterms(String pattern, int idx, StringBuilder current, HashSet<String> result) {
         if (idx == pattern.length()) {
@@ -155,6 +186,8 @@ class Term {
         }
         return term;
     }
+    
+    // Checks the validity of this string as a boolean string
     public static boolean isBooleanString(String str){
         for (int i = 0; i < str.length(); i++) {
             char c = str.charAt(i);
@@ -164,6 +197,8 @@ class Term {
         }
         return true;
     }
+    
+    // Simply converts a boolean Expression to it's integer value
     public static int booleanToInt(String boolStr){
         int result = 0;
         int power = 1;
@@ -173,7 +208,8 @@ class Term {
         }
         return result;
     }
-
+    
+    // Gets the intersection between two terms ,That is : the more specific term of both if one belongs to the other or null if no intersection exists
     public static Term getIntersection(Term first, Term second){
         if (first.minTerm.toString().length() != second.minTerm.toString().length()) {
             return null;
@@ -198,27 +234,8 @@ class Term {
         // System.out.println(termStr + "\n\n\n");
         return new Term(termStr);
     }
-    public LinkedList<Term> getComplement(){
-        LinkedList<Term> complementTerms = new LinkedList<Term>();
-        int length = this.minTerm.length();
-        for (int i = 0; i < length; i++) {
-            char c = this.minTerm.charAt(i);
-            String newTermStr;
-            switch (c) {
-                case '1':
-                    newTermStr = "-".repeat(i) + "0" + "-".repeat(length - i - 1);
-                    complementTerms.push(new Term(newTermStr));
-                    break;
-                case '0':
-                    newTermStr = "-".repeat(i) + "1" + "-".repeat(length - i - 1);
-                    complementTerms.push(new Term(newTermStr));
-                    break; 
-                default:
-                    break;
-            }
-        }
-        return complementTerms;
-    }
+    
+    // Gets the intersection between two term lists
     public static LinkedList<Term> getIntersectionList(LinkedList<Term> firstList, LinkedList<Term> secondList){
         LinkedList<Term> intersection = new LinkedList<Term>();
         for (Term first : firstList) {
@@ -263,10 +280,12 @@ class Term {
 class Group {
     int numberOfOnes;
     LinkedList<Term> terms;
+    
     public Group(int number){
         numberOfOnes = number;
         terms = new LinkedList<Term>();
     }
+    
     public void insertTerm(Term term){
         terms.push(term);
     }
@@ -595,6 +614,7 @@ class OptimizationGrid {
 class OptimizationResult {
     public LinkedList<Term> terms;
     public boolean[][] piChart;
+    
     public OptimizationResult(LinkedList<Term> terms, boolean[][] piChart) {
         this.terms = terms;
         this.piChart = piChart;
@@ -759,7 +779,7 @@ public class QuineMckluskySolver {
     public static OptimizationResult getOptimalExpression(String[] CoveringTerms,String[] minTerms){
         OptimizationGrid optimizationGrid = new OptimizationGrid(CoveringTerms, minTerms);
         if (!optimizationGrid.isSolvable()) {
-            System.out.println("Unable to Cover All the Min Terms Using the Provided Terms");
+            // System.out.println("Unable to Cover All the Min Terms Using the Provided Terms");
             return null;
         }
         LinkedList<Term> result = optimizationGrid.Optimize();
@@ -773,7 +793,7 @@ public class QuineMckluskySolver {
         }
         OptimizationGrid optimizationGrid = new OptimizationGrid(CoveringTerms, minTerms_strs);
         if (!optimizationGrid.isSolvable()) {
-            System.out.println("Unable to Cover All the Min Terms Using the Provided Terms");
+            // System.out.println("Unable to Cover All the Min Terms Using the Provided Terms");
             return null;
         }
         LinkedList<Term> result = optimizationGrid.Optimize();
@@ -840,12 +860,10 @@ public class QuineMckluskySolver {
     // Example main method for testing
 
     public static void main(String [] args){
-        // String[] minTerms= {"0-00","--10","01-0","1-01","0101","1110"};
+
         int[] terms = {0,1,2,3};
-        // String[] minTerms= {"0010--00-","1000-----","1001-----","1010-0--0","1011-----"};
-        // String[] DontCares = {"110------","111------"};
         int[] DontCares = {};
-        // String[] DontCares = {"00--", "011-"};
+
         String[] Variables = {"A","B","C","Rb","Reset","D_7","D_711","D_2312","Eq"};
         SimplificationData simData = getPrimeImplicantsMinTerms(terms,DontCares,2);
         // System.out.println(GetExpression(simData.primeImplicants,Variables));
@@ -854,11 +872,6 @@ public class QuineMckluskySolver {
         }
         OptimizationResult optRes = getOptimalExpression(termListToStrArr(simData.primeImplicants), terms,2);
         System.out.println(GetExpression(optRes.terms, Variables));
-        Term term1 = new Term("0011");
-        Term term2 = new Term("--10");
-        // System.out.println(Term.GetTheMoreCoveringTerm(term1,term2 ));
-        // System.out.println(Term.findFirstMainBitsDiffBet(term2,term1));
-        // System.out.println(term2.ContainsTermToOptimize(term1));
         
 
     }

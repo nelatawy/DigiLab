@@ -261,7 +261,7 @@
                 states.push("S" + i);
                 }
 
-                return states.map(state => {
+                return states.map(state => { //arrow function to create option for every state 
                 const opt = document.createElement("option");
                 opt.value = state;
                 opt.textContent = state;

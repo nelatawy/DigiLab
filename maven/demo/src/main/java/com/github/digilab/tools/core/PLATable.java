@@ -2,6 +2,7 @@ package com.github.digilab.tools.core;
 
 import java.util.LinkedList;
 
+// This class represents a row in a PLATable having a fromState ,toState ,input and output
 class RelationRow {
     State currentState,nextState;
     String input,output;
@@ -12,30 +13,30 @@ class RelationRow {
         this.output = output;
     }
 }
+
+// This class is intended to contain all the solutionSteps that is "SimplificationData" which are the iterations and Prime Implicants
+// and "OptimizationResult" which has the Optimization Grid and the PIChart and Optimized final output
 class SolutionData {
     SimplificationData simplificationData;
     OptimizationResult optimizationResult;
+    
     public SolutionData(SimplificationData simplificationData, OptimizationResult optimizationResult){
         this.simplificationData = simplificationData;
         this.optimizationResult = optimizationResult;
     }
-    public static SolutionData CreateNoSolutionData(){
-        SimplificationData simplificationData = null;
-        LinkedList<Term> nullTermList = new LinkedList<Term>();
-        nullTermList.add(new Term("0"));
-        OptimizationResult optimizationResult = new OptimizationResult(nullTermList, null);
-        return new SolutionData(simplificationData, optimizationResult);
-    }
 }
+
+// This class represents the PLATable form in digital logic  and is used to get the solution of every output bit in an optimized way
 public class PLATable{
     final static int DONT_CARE = -1;
+    
     LinkedList<RelationRow> rows ;
     String[] inVars,outVars;//variable names excuding state vars
+    
     int numberOfRows;
     int inVarCount,outVarCount,stateVarCount; //variable count(Excluding state variables)
     int maxStateCount;
-    boolean InBooleanForm; 
-    //is True when we haven't yet substituted the var name for it's binary representation after state assignment
+    
     public PLATable(String[] inVars, String[] outVars ,int stateVarCount){ //input and output are excluding the state vars
         this.rows = new LinkedList<RelationRow>();
         this.numberOfRows  = 0;
@@ -51,6 +52,9 @@ public class PLATable{
 
         this.maxStateCount = (int)Math.pow(2,stateVarCount);
     }
+    
+    // Adds a new row to the table after checking it wasn't previously there 
+    // it checks in O(n) but that is accepted since the number of insertions isnt large enough for it to be extremely slow
     public void AddRow(RelationRow newRow){
         for (RelationRow currRow : rows) {
             if (currRow.currentState.stateID == newRow.currentState.stateID &&
@@ -62,17 +66,23 @@ public class PLATable{
         numberOfRows++;
     }
 
+    //Checks the validity of the stateAssignmentArray
+    //note that the array should have the assignments for all possible states that is 2^n assignments for n bits
     public boolean isValidAssignmentArr(String[] stateAssignments){
         if (stateAssignments == null || this.maxStateCount > stateAssignments.length) {
             return false;
         }
-        for (int i = 0; i < this.maxStateCount; i++) { //i only care about the first n assignments that'll cover all the states in the table
-            if (stateAssignments[i] == null || Term.isBooleanString(stateAssignments[i]) || stateAssignments[i].length() != this.stateVarCount) {
+        for (int i = 0; i < this.maxStateCount; i++) { 
+            // i only care about the first n assignments that'll cover all the states in the table
+            if (stateAssignments[i] == null || !Term.isBooleanString(stateAssignments[i]) || stateAssignments[i].length() != this.stateVarCount) {
                 return false;
             }
         }
         return true;
     }
+    
+
+    //Pretty Self Explanatory.. simply gets the assignment of this state 
     public String GetStateStrAssignment(State state, String[] stateAssignments){
         if (state.stateID == DONT_CARE) {
             return "-".repeat(this.stateVarCount);
@@ -80,7 +90,9 @@ public class PLATable{
         int stateIndex = state.stateID;
         return (stateAssignments == null)?Term.minTermToString(stateIndex, this.stateVarCount) : stateAssignments[stateIndex];
     }
-    public String GetStateStrAssignment(String stateStr, String[] stateAssignments){ //if state is given as a string with notation S0,S1,S2 etc and 'DC' for entire dontCare terms e.g '----''
+    
+    //if state is given as a string with notation S0,S1,S2 etc and 'DC' for entire dontCare terms e.g '----''
+    public String GetStateStrAssignment(String stateStr, String[] stateAssignments){ 
         if (stateStr == "DC") {
             return "-".repeat(this.stateVarCount);
         }
@@ -95,6 +107,8 @@ public class PLATable{
     }
 
     
+    //Gets all the terms defining the function..
+    //That is : the ones of the function from both transitional outputs (Mealy) and static outputs (Moore)
     public String[] GetTermsOf(boolean isStateVar , int index, String[] stateAssignments){
         LinkedList<String> tempList = new LinkedList<String>(); 
         //linked list is because we dont know how many terms we'll be having and having extra "null" terms will throw null pointer exception
@@ -111,6 +125,9 @@ public class PLATable{
         
         return tempList.toArray(new String[0]);
     }
+    
+    //Gets all the dontCares that helps optimize this function..
+    //That is : the ones of the function from both transitional outputs (Mealy) and static outputs (Moore)
     public String[] GetDontCaresOf(boolean isStateVar , int index, String[] stateAssignments){
         LinkedList<String> tempList = new LinkedList<String>();
 
@@ -126,6 +143,7 @@ public class PLATable{
         return tempList.toArray(new String[0]);
     }
     
+    //Gets a simple layout for the PLATable
     public String toString(){
         String result = "Table\n----------------";
         for (RelationRow row : this.rows) {
@@ -134,6 +152,7 @@ public class PLATable{
         return result;
     }
 
+    //Gets the SolutionData of this variable that you can later decompose into the solution Steps
     public SolutionData SolveVariableAt(boolean isStateVar, int index, String[] stateAssignments){ 
         //if stateAssignment is null the default assignment is used
         //index is relative to the type of variable e.g index 0 for isStateVar = true is the MostSignifactBit of stateVars
@@ -150,6 +169,7 @@ public class PLATable{
         return new SolutionData(data, res);
 
     }
+   
     public static void main(String[] args){
         // String[] inVars = {"Rb","Reset","D7","D711","D2312","Eq"};
         String[] inVars = {"a","b"};
@@ -182,10 +202,6 @@ public class PLATable{
         
         // System.out.println(table.toString());
         for(int i = 0; i < outVars.length; i++){
-            // String[] terms = table.GetTermsOf(false,i,null);
-            // String[] dontCares = table.GetDontCaresOf(false,i,null);
-            // SimplificationData data = QuineMckluskySolver.getPrimeImplicantsMixedTerms(terms,dontCares,inVars.length + stateVarCount);
-            // OptimizationResult res = QuineMckluskySolver.getOptimalExpression(QuineMckluskySolver.termListToStrArr(data.primeImplicants) , terms);
             SolutionData output = table.SolveVariableAt(false, i, null);
             System.out.println(outVars[i] + " : " + QuineMckluskySolver.GetExpression(output.optimizationResult.terms, null) );
         }
