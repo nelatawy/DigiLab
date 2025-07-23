@@ -8,7 +8,7 @@
 
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Caprasimo&family=Varela+Round&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Caprasimo&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Varela+Round&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     </head>
@@ -131,6 +131,8 @@
                 </div>
                 {%endfor%}
                 
+                {%if len(nullStateVars) != 0%}
+                <h2 class = "solutionStepTitle">Solution of Trivial State Variables</h2>
                 {%for nullVar in nullStateVars%}
                 <div class="VarSolution" id = "{{nullVar}}">
                     <h2 class="varTitle">Solution for "{{nullVar}}"</h2>
@@ -148,6 +150,7 @@
 
                 </div>
                 {%endfor%}
+                {%endif%}
                 
                     
 
@@ -216,6 +219,8 @@
                 </div>
                 {%endfor%}
 
+                {%if len(nullOutVars) != 0%}
+                <h2 class = "solutionStepTitle">Solution of Trivial Output Variables</h2>
                 {%for nullVar in nullOutVars%}
                 <div class="VarSolution" id = "{{nullVar}}">
                     <h2 class="varTitle">Solution for "{{nullVar}}"</h2>
@@ -234,6 +239,7 @@
 
                 </div>
                 {%endfor%}
+                {%endif%}
 
                 <h2 class = "solutionStepTitle">State Graph</h2>
                 

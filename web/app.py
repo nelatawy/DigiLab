@@ -18,6 +18,7 @@ curr_dir = os.path.dirname(os.path.abspath(__file__))
 # core_logic_dir = os.path.join(curr_dir, "..", "maven", "demo", "target", "classes")
 core_logic_dir = os.path.join(curr_dir, "..", "maven", "demo", "target","solver-tools.jar")
 webpath = os.path.abspath(os.path.join(curr_dir, "..","web"))
+ffconfigpath = os.path.abspath(os.path.join(webpath, "FFConfigs"))
 classpath = os.path.abspath(core_logic_dir)
 PDF_DIR_NAME = "generated_pdfs"
 # print(classpath)
@@ -292,5 +293,78 @@ def servePDF(pdf_name,folder_name):
         return "Couldn't find the file with the specified name"
     else:
         return send_file(pdf_path, mimetype="application/pdf")
+
+
+@app.route('/FFConfigAdder', methods = ['GET','POST'])
+def FFConfigAdder():
+    if request.method == 'GET' :
+        return render_template("FFConfigAdder.html")
+    elif request.method == 'POST' :
+        try:
+            ffName = request.form["flipflpName"]
+            varCount = request.form["controlLineCount"]
+            varNames = [item.strip() for item in request.form["VarNames"].split(',')]
+            if len(varNames) != varCount :
+                raise BaseException() 
+            data_dict = {}
+            for index in range(1,int(varCount) + 1):
+                data_dict["Var" + str(index)] = {}
+            for currentS in [0,1] :
+                for nextS in [0,1] :
+                    for index in range(1,int(varCount) + 1):
+                        data_dict["Var" + str(index)][str(currentS) + str(nextS)] = request.form["Var" + str(index) +"_Current" + str(currentS) + "_Next" + str(nextS)]
+            data_dict["VarNames"] = varNames
+            data_json = json.dumps(data_dict, indent=4)
+            os.makedirs(ffconfigpath, exist_ok=True)
+            
+            write_path = os.path.join(ffconfigpath, ffName + ".json")
+            with open(write_path, "w" if os.path.exists(write_path) else "x") as file :
+                file.write(data_json)
+
+            return render_template("FFConfigAdder.html")
+        except :
+            return render_template("FFConfigAdder.html", problem = "Invalid data .. please check that the number of control lines matches the number of names provided \n and that the table data is valid")
+    
+@app.route('/FFRealizer', methods = ['GET','POST'])
+def FFRealizer():
+    if request.method == 'GET' :
+        return render_template("FFRealizer.html", solutionPhase = False)
+    elif request.method == 'POST' :
+        varNames = [item.strip() for item in request.form["VarNames"].split(',')]
+        stateVarName = request.form["StateVarName"]
+        expression = request.form["Expression"]
+        ffName = request.form["FFName"]
+        with open(os.path.abspath(os.path.join( ffconfigpath , ffName + ".json") ), "r") as file:
+            ff_data_json = file.read()
+        
+        data = {
+            "VarNames"     : varNames,
+            "StateVarName" : stateVarName,
+            "Expression"   : expression
+        }
+        arguments_json = json.dumps(data)
+        arguments = [arguments_json, ff_data_json]
+
+        cmd = ["java", "-cp", classpath,"com.github.digilab.tools.core.FlipFlopRealizerWebHandler"]
+        process = subprocess.run(cmd + arguments, capture_output= True, text= True)
+        try:
+            result_json = json.loads(process.stdout)
+        except json.JSONDecodeError as e:
+            print("JSON decode error:", e)
+            print("Raw err:", process.stderr)
+            print("Raw output:", process.stdout)
+            optimized_expr = "Java did not return valid JSON. See server logs."
+            return render_template("FlipFlopRealizer.html", problem = "Java did not return valid JSON. See server logs.")
+        if "Problem" in result_json :
+            return render_template("FlipFlopRealizer.html",
+                                    solutionPhase = True,
+                                    problem = result_json["Problem"])
+        # no need to custom handle it .. it's already a dict-like structure which works properly for this
+        solutions = dict(result_json)
+        return render_template("FlipFlopRealizer.html",
+                                solutionPhase = True,
+                                solutions = solutions,
+                                len = len)
+
 
 app.run(debug=True, port=8080)

@@ -1,7 +1,11 @@
 :root {
   /* === Fonts === */
-  --font-sans: -apple-system, BlinkMacSystemFont, "San Francisco",
-               "Helvetica Neue", Helvetica, Arial, sans-serif;
+  /*Apple Font
+  /* --font-sans: -apple-system, BlinkMacSystemFont, "San Francisco",
+               "Helvetica Neue", Helvetica, Arial, sans-serif; */
+
+  /* Google Font */
+  --font-sans: "Montserrat", sans-serif;
 
   /* === Font Sizes (based on Apple HIG) === */
 

@@ -141,7 +141,7 @@ public class StateGraph {
             String xStr = String.format("%.3f", statePosX);
             String yStr = String.format("%.3f", statePosY);
             String stateOutStr = QuineMckluskySolver.ReplaceByVariables(new Term(state.stateOutput), outVars);
-            stateDeclaration += "\\node[state]" + "\t(S" + state.stateID + ")" + "\t at (" + xStr  + "," + yStr + ")" + "\t{\\resizebox{1.8cm}{!}{$" + "S_" + state.stateID + "$/" + stateOutStr + "}};\n";
+            stateDeclaration += "\\node[state]" + "\t(S" + state.stateID + ")" + "\t at (" + xStr  + "," + yStr + ")" + "\t{\\resizebox{1.8cm}{!}{$" + "S_{" + state.stateID + "}$/" + stateOutStr + "}};\n";
             for (Link link : state.links) {
                 String pathInStr = QuineMckluskySolver.ReplaceByVariables(new Term(link.inputStr), inVars);
                 String pathOutStr = QuineMckluskySolver.ReplaceByVariables(new Term(link.outputStr), outVars);
@@ -149,10 +149,10 @@ public class StateGraph {
                 String loopDir = ((statePosY < 0)? "below":"above" );
                 
                 if (link.fromState.stateID == link.toState.stateID) {
-                    pathDeclaration +=  "\\path[->] " +"(S" + state.stateID + ")" + "\t edge[loop "+ loopDir +"] node [pos=0.2]" + "{" + pathInStr + "/" + pathOutStr + "}" + "\t" +"(S" + link.toState.stateID + ");\n";
+                    pathDeclaration +=  "\\path[->] " +"(S" + state.stateID + ")" + "\t edge[loop "+ loopDir +"] node [pos=0.2]" + "{\\resizebox{2.2cm}{!}{$" + pathInStr + "/" + pathOutStr + "$}}" + "\t" +"(S" + link.toState.stateID + ");\n";
                 }
                 else{
-                    pathDeclaration +=  "\\path[->, bend left ="+ bendingAngle + "] " +"(S" + state.stateID + ")" + "\t edge node [pos=0.2]" + "{" + pathInStr + "/" + pathOutStr + "}" + "\t" +"(S" + link.toState.stateID + ");\n";
+                    pathDeclaration +=  "\\path[->, bend left ="+ bendingAngle + "] " +"(S" + state.stateID + ")" + "\t edge node [sloped, pos=0.2]" + "{\\resizebox{2.2cm}{!}{$" + pathInStr + "/" + pathOutStr + "$}}" + "\t" +"(S" + link.toState.stateID + ");\n";
                 }
 
             }

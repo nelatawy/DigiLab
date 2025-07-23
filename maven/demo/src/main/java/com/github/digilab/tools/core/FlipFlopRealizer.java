@@ -64,10 +64,9 @@ public class FlipFlopRealizer {
 
         for (RelationRow row : table.rows) {
             String currStateStr = table.GetStateStrAssignment(row.currentState,null);
-            String nextStateStr = table.GetStateStrAssignment(row.nextState,null);
-            
-            int currStateVal = Term.booleanToInt(currStateStr);
-            int nextStateVal = Term.booleanToInt(nextStateStr);
+
+            int currStateVal = row.currentState.stateID;
+            int nextStateVal = row.nextState.stateID;
 
             char val = targetLineRules.ruleGrid[currStateVal][nextStateVal];
 
@@ -162,6 +161,7 @@ public class FlipFlopRealizer {
     
     public static PLATable GetTableFromExpression(String expression, String[] varNameList, String stateVarName){ 
         //we need to have only one state variable other state variables should be considered as other inVars
+        //NOTE: The StateVarName shouldn't be in the VarNameList
         PLATable table = new PLATable(varNameList, null, 1);
         
         // Seperating the expression to it's terms

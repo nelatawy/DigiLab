@@ -89,8 +89,9 @@ public class LinkPathsSolverWebHandler {
         
 
         //Making a joint inVarNameList for the expressions
-        for (int i = stateVarCount - 1; i >= 0; i--) {
-            totalInVars[i] = "Q" + i;
+        for (int i = 0; i < stateVarCount; i++) {
+            totalInVars[i] = "Q" + (stateVarCount - i - 1); 
+            // to have the conventional order : MSB(most significant bit) has the highest number
         }
         for (int i = 0; i < inVarCount; i++) {
             totalInVars[i + stateVarCount] = inVars[i];
