@@ -304,8 +304,8 @@ def FFConfigAdder():
             ffName = request.form["flipflpName"]
             varCount = request.form["controlLineCount"]
             varNames = [item.strip() for item in request.form["VarNames"].split(',')]
-            if len(varNames) != varCount :
-                raise BaseException() 
+            if len(varNames) != int(varCount) :
+                raise RuntimeError("Something went wrong")
             data_dict = {}
             for index in range(1,int(varCount) + 1):
                 data_dict["Var" + str(index)] = {}
@@ -321,20 +321,24 @@ def FFConfigAdder():
             with open(write_path, "w" if os.path.exists(write_path) else "x") as file :
                 file.write(data_json)
 
-            return render_template("FFConfigAdder.html")
+            return render_template("FFConfigAdder.html", submit = True)
         except :
-            return render_template("FFConfigAdder.html", problem = "Invalid data .. please check that the number of control lines matches the number of names provided \n and that the table data is valid")
+            return render_template("FFConfigAdder.html", submit = True, problem = "Invalid data .. please check that the number of control lines matches the number of names provided \n and that the table data is valid")
     
 @app.route('/FFRealizer', methods = ['GET','POST'])
 def FFRealizer():
+    # Getting the possibleConfigs
+    flipflopNames = [f for f in os.listdir(ffconfigpath)]
+
     if request.method == 'GET' :
-        return render_template("FFRealizer.html", solutionPhase = False)
+        return render_template("FFRealizer.html", solutionPhase = False, configs = flipflopNames)
     elif request.method == 'POST' :
+
         varNames = [item.strip() for item in request.form["VarNames"].split(',')]
         stateVarName = request.form["StateVarName"]
         expression = request.form["Expression"]
-        ffName = request.form["FFName"]
-        with open(os.path.abspath(os.path.join( ffconfigpath , ffName + ".json") ), "r") as file:
+        ffName = request.form.get("FFName")
+        with open(os.path.abspath(os.path.join( ffconfigpath , ffName) ), "r") as file:
             ff_data_json = file.read()
         
         data = {
@@ -347,24 +351,26 @@ def FFRealizer():
 
         cmd = ["java", "-cp", classpath,"com.github.digilab.tools.core.FlipFlopRealizerWebHandler"]
         process = subprocess.run(cmd + arguments, capture_output= True, text= True)
+        print(process.stdout)
         try:
             result_json = json.loads(process.stdout)
         except json.JSONDecodeError as e:
             print("JSON decode error:", e)
             print("Raw err:", process.stderr)
             print("Raw output:", process.stdout)
-            optimized_expr = "Java did not return valid JSON. See server logs."
-            return render_template("FlipFlopRealizer.html", problem = "Java did not return valid JSON. See server logs.")
+            return render_template("FFRealizer.html", problem = "Java did not return valid JSON. See server logs.")
         if "Problem" in result_json :
-            return render_template("FlipFlopRealizer.html",
+            return render_template("FFRealizer.html",
                                     solutionPhase = True,
-                                    problem = result_json["Problem"])
+                                    problem = result_json["Problem"],
+                                    configs = flipflopNames)
         # no need to custom handle it .. it's already a dict-like structure which works properly for this
         solutions = dict(result_json)
-        return render_template("FlipFlopRealizer.html",
+        return render_template("FFRealizer.html",
                                 solutionPhase = True,
                                 solutions = solutions,
-                                len = len)
-
+                                len = len ,
+                                configs = flipflopNames)
+    
 
 app.run(debug=True, port=8080)

@@ -3,6 +3,13 @@
   "configurations": [
     {
       "type": "java",
+      "name": "FlipFlopRealizerWebHandler",
+      "request": "launch",
+      "mainClass": "com.github.digilab.tools.core.FlipFlopRealizerWebHandler",
+      "projectName": "demo"
+    },
+    {
+      "type": "java",
       "name": "QuineMckluskySolver",
       "request": "launch",
       "mainClass": "com.github.digilab.tools.core.QuineMckluskySolver",

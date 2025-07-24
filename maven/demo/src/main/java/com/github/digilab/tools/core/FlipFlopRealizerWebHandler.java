@@ -11,6 +11,9 @@ public class FlipFlopRealizerWebHandler {
 
         String[] varNames = JSONInputParser.GetStrArrFromJSONOBJ(jsonObj, "VarNames");
         String stateVar = JSONInputParser.GetStrFromJSONOBJ(jsonObj, "StateVarName", "");
+
+        // String[] varNames = {"A","B","C"};
+        // String stateVar = "Q";
         String[] totalInVars = new String[varNames.length + 1];
         
         totalInVars[0] = stateVar;
@@ -19,6 +22,7 @@ public class FlipFlopRealizerWebHandler {
         }
         
         String expression = JSONInputParser.GetStrFromJSONOBJ(jsonObj, "Expression", "");
+        // String expression = "QAB + BC'";
 
         //For Testing Default Assignment SR FlipFlop
         char[][] gridS = {{'0','1'},{'0','-'}}; //SR S FF grid
@@ -31,6 +35,7 @@ public class FlipFlopRealizerWebHandler {
         ffRuleSet.AddControlLine(controlLineRuleSet2);
 
         PLATable table = FlipFlopRealizer.GetTableFromExpression(expression, varNames, stateVar);
+        // System.out.println(table.toString());
         FlipFlopRealizer ffRealizer = new FlipFlopRealizer(ffRuleSet, table);
         for (int i = 0; i < ffRuleSet.numberOfControlLines; i++) {
             // JSONObject controlLineSol = new JSONObject();

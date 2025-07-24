@@ -4,32 +4,12 @@
 \begin{document}
 
 \begin{center}
-\begin{tikzpicture}[scale = 0.755, transform shape, shorten >=5pt, on grid, auto]
+\begin{tikzpicture}[scale = 0.830, transform shape, shorten >=5pt, on grid, auto]
 
-\node[state]	(S6)	 at (7.000,0.000)	{\resizebox{1.8cm}{!}{$S_{6}$/(Win)'(Lose)'(Roll)'(Sp)'}};
-\node[state]	(S5)	 at (4.364,5.473)	{\resizebox{1.8cm}{!}{$S_{5}$/(Win)'(Lose)'(Roll)'(Sp)'}};
-\node[state]	(S4)	 at (-1.558,6.824)	{\resizebox{1.8cm}{!}{$S_{4}$/(Win)'(Lose)'(Roll)'(Sp)'}};
-\node[state]	(S3)	 at (-6.307,3.037)	{\resizebox{1.8cm}{!}{$S_{3}$/(Win)'(Lose)'(Roll)'(Sp)'}};
-\node[state]	(S2)	 at (-6.307,-3.037)	{\resizebox{1.8cm}{!}{$S_{2}$/(Win)'(Lose)'(Roll)'(Sp)'}};
-\node[state]	(S1)	 at (-1.558,-6.824)	{\resizebox{1.8cm}{!}{$S_{1}$/(Win)'(Lose)'(Roll)'(Sp)'}};
-\node[state]	(S0)	 at (4.364,-5.473)	{\resizebox{1.8cm}{!}{$S_{0}$/(Win)'(Lose)'(Roll)'(Sp)'}};
+\node[state]	(S2)	 at (7.000,0.000)	{\resizebox{1.8cm}{!}{$S_{2}$/cd}};
+\node[state]	(S0)	 at (-7.000,-0.000)	{\resizebox{1.8cm}{!}{$S_{0}$/c'd'}};
 
-\path[->, bend left =5] (S5)	 edge node [sloped, pos=0.2]{\resizebox{2.2cm}{!}{$(Rb)/(Win)'(Lose)'(Roll)(Sp)'$}}	(S6);
-\path[->, bend left =20] (S5)	 edge node [sloped, pos=0.2]{\resizebox{2.2cm}{!}{$(Rb)'(Eq)/(Win)'(Lose)'(Roll)'(Sp)'$}}	(S2);
-\path[->, bend left =25] (S5)	 edge node [sloped, pos=0.2]{\resizebox{2.2cm}{!}{$(Rb)'(D7)(Eq)'/(Win)'(Lose)'(Roll)'(Sp)'$}}	(S3);
-\path[->, bend left =30] (S5)	 edge node [sloped, pos=0.2]{\resizebox{2.2cm}{!}{$(Rb)'(D7)'(Eq)'/(Win)'(Lose)'(Roll)'(Sp)'$}}	(S4);
-\path[->, bend left =5] (S4)	 edge node [sloped, pos=0.2]{\resizebox{2.2cm}{!}{$(Rb)/(Win)'(Lose)'(Roll)'(Sp)'$}}	(S5);
-\path[->] (S4)	 edge[loop above] node [pos=0.2]{\resizebox{2.2cm}{!}{$(Rb)'/(Win)'(Lose)'(Roll)'(Sp)'$}}	(S4);
-\path[->] (S3)	 edge[loop above] node [pos=0.2]{\resizebox{2.2cm}{!}{$(Reset)'/(Win)'(Lose)(Roll)'(Sp)'$}}	(S3);
-\path[->, bend left =20] (S3)	 edge node [sloped, pos=0.2]{\resizebox{2.2cm}{!}{$(Reset)/(Win)'(Lose)(Roll)'(Sp)'$}}	(S0);
-\path[->, bend left =25] (S2)	 edge node [sloped, pos=0.2]{\resizebox{2.2cm}{!}{$(Reset)/(Win)(Lose)'(Roll)'(Sp)'$}}	(S0);
-\path[->] (S2)	 edge[loop below] node [pos=0.2]{\resizebox{2.2cm}{!}{$(Reset)'/(Win)(Lose)'(Roll)'(Sp)'$}}	(S2);
-\path[->, bend left =5] (S1)	 edge node [sloped, pos=0.2]{\resizebox{2.2cm}{!}{$(Rb)'(D711)/(Win)'(Lose)'(Roll)'(Sp)'$}}	(S2);
-\path[->, bend left =10] (S1)	 edge node [sloped, pos=0.2]{\resizebox{2.2cm}{!}{$(Rb)'(D711)'(D2312)/(Win)'(Lose)'(Roll)'(Sp)'$}}	(S3);
-\path[->, bend left =15] (S1)	 edge node [sloped, pos=0.2]{\resizebox{2.2cm}{!}{$(Rb)'(D711)'(D2312)'/(Win)'(Lose)'(Roll)'(Sp)$}}	(S4);
-\path[->] (S1)	 edge[loop below] node [pos=0.2]{\resizebox{2.2cm}{!}{$(Rb)/(Win)'(Lose)'(Roll)(Sp)'$}}	(S1);
-\path[->, bend left =5] (S0)	 edge node [sloped, pos=0.2]{\resizebox{2.2cm}{!}{$(Rb)/(Win)'(Lose)'(Roll)'(Sp)'$}}	(S1);
-\path[->] (S0)	 edge[loop below] node [pos=0.2]{\resizebox{2.2cm}{!}{$(Rb)'/(Win)'(Lose)'(Roll)'(Sp)'$}}	(S0);
+\path[->, bend left =0] (S0)	 edge node [sloped, pos=0.2]{\resizebox{2.2cm}{!}{$a'b/cd$}}	(S2);
 
 \end{tikzpicture}
 \end{center}

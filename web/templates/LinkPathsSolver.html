@@ -23,7 +23,7 @@
         <form method = "POST" action = "/LinkPathsSolver">
             <h2 id = "VariableSetupTitle" class="stepTitle">Setting Up The Variables' Data</h2>
             <div id="stateCountBlock" class = "inputCard">
-                <h3 class="inputLabel">Enter Number of State Variables</h2>
+                <h3 class="inputLabel">Enter Number of State Variables</h3>
                 <input id = "stateBitsCount" class = "inputBar" name = "StateVarCount" type = "number" min = "1" max="5" placeholder = "..." onchange="generateMooreOutputAssignmentBlock(),cleanUpLinkPathBlock()">
             </div>
 
@@ -62,9 +62,187 @@
             <br>
             <button id ="submitButton" type = "submit">Solve</button>
         </form>
+        <!-- The PopUp Overlay -->
+        <div id = "overlay">
+            <div id="popup" data-problem="{{ problem }}" data-success = "Found the solutions for system variables !!" >
+                
+            </div>
+        </div>
+        <!-- Defining the popUp Function -->
+        <script>
+            let inputCount = 0;
+
+            function generateOptions() {
+                // Simulate generating state names like S0, S1, ..., S7 for 3-bit states
+                const numBits = parseInt(document.getElementById("stateBitsCount").value);
+                const numStates = Math.pow(2, numBits);
+                const states = [];
+                for (let i = 0; i < numStates; i++) {
+                states.push("S" + i);
+                }
+
+                return states.map(state => { //arrow function to create option for every state 
+                const opt = document.createElement("option");
+                opt.value = state;
+                opt.textContent = state;
+                return opt;
+                });
+            }
+
+            function generateMooreOutputAssignmentBlock(){
+                const num = parseInt(document.getElementById("stateBitsCount").value);
+                const inVarCount = parseInt(document.getElementById("InVarCount").value);
+                const outVarCount = parseInt(document.getElementById("OutVarCount").value);
+                const container = document.getElementById("mooreAssignmentInputs");
+                container.innerHTML = "";
+                if (!isNaN(num)  && !isNaN(inVarCount) && !isNaN(outVarCount)) {
+                    for (let i = 0; i <= Math.pow(2,num) - 1; i++) {
+                    const label = document.createElement("h2");
+                    label.htmlFor = "S" + i;
+                    label.textContent = "S" + i;
+
+                    const input = document.createElement("input");
+                    input.id = "S" + i;
+                    input.type = "text";
+                    input.name = "S" + i + "_MooreOutput";
+                    input.className = "mooreAssignmentInput";
+                    input.placeholder = "Enter output";
+                    input.defaultValue = "0".repeat(outVarCount);
+                    container.appendChild(label);
+                    container.appendChild(input);
+                    }
+                    
+                } else {
+                    container.innerHTML = "<h2>-- Invalid number --</h2>";
+                }
+
+            }
+        
+            function cleanUpLinkPathBlock(){
+                const container = document.getElementById("linkPathsContainer");
+                container.innerHTML = "";
+            }
+            
+            function addLinkPath() {
+                const num = parseInt(document.getElementById("stateBitsCount").value);
+                const inVarCount = parseInt(document.getElementById("InVarCount").value);
+                const outVarCount = parseInt(document.getElementById("OutVarCount").value);
+
+                const container = document.getElementById("linkPathsContainer");
+
+                if (!isNaN(num) && !isNaN(inVarCount) && !isNaN(outVarCount)) {
+                    // Remove the instruction
+
+                    const options = generateOptions();
+                    const linkPath = document.createElement("div");
+                    linkPath.style.padding = "10px";
+                    linkPath.className = "linkPath";
+                    linkPath.style.margin = "10px 0";
+
+                    // From State
+                    const fromState = document.createElement("select");
+                    fromState.name = `Link${inputCount}_fromState`;
+                    options.forEach(opt => fromState.appendChild(opt.cloneNode(true)));
+
+                    // Input String
+                    const inLabel = document.createElement("h3");
+                    inLabel.innerText = " Given Input:  ";
+                    const inStr = document.createElement("input");
+                    inStr.type = "text";
+                    inStr.name = `Link${inputCount}_inStr`;
+
+                    // Output String
+                    const outLabel = document.createElement("h3");
+                    outLabel.innerText = " Gives Output: ";
+                    const outStr = document.createElement("input");
+                    outStr.type = "text";
+                    outStr.name = `Link${inputCount}_outStr`;
+
+                    const goesToLabel = document.createElement("h3");
+                    goesToLabel.innerText = " And Goes To  "
+                    // To State
+                    const toState = document.createElement("select");
+                    toState.name = `Link${inputCount}_toState`;
+                    options.forEach(opt => toState.appendChild(opt.cloneNode(true)));
+                    
+                    // Add to linkPath block
+                    linkPath.appendChild(fromState);
+                    linkPath.appendChild(document.createElement("br"));
+                    linkPath.appendChild(inLabel);
+                    linkPath.appendChild(inStr);
+                    linkPath.appendChild(document.createElement("br"));
+                    linkPath.appendChild(outLabel);
+                    linkPath.appendChild(outStr);
+                    linkPath.appendChild(document.createElement("br"));
+                    linkPath.appendChild(goesToLabel);
+                    linkPath.appendChild(document.createElement("br"));
+                    linkPath.appendChild(toState);
+                    // Append to container
+                    container.appendChild(linkPath);
+
+                    // Update count
+                    inputCount++;
+                    document.getElementById("LinkCount").value = inputCount;
+                } else {
+                    container.innerHTML = "<h2>-- Invalid Inputs --</h2>";
+                }
+            }
+            
+            function expandSteps(id) {
+            const steps = document.getElementById("steps-" + id);
+            if (steps) {
+                steps.classList.toggle("activeVariable");
+            }
+            }
+            
+            document.addEventListener("scroll", function() {
+                const title = document.querySelector(".title");
+                if (window.scrollY > 45) {
+                    title.classList.add("shrink");
+                } else {
+                    title.classList.remove("shrink");
+                }
+            });
+            
+            function showPopUp(Type){
+                const overlay = document.getElementById("overlay");
+                overlay.classList.add("blurred");
+                const popup = document.getElementById("popup");
+                
+                const title = document.createElement("h2");
+                title.textContent = (Type == "problem")?"An Issue Occured ❌":"Success ✅";
+                popup.appendChild(title)
+
+                const details = document.createElement("h3");
+                let problemText = popup.dataset.problem;
+                let successText = popup.dataset.success;
+                if(Type == "problem"){
+                    title.style.color = "crimson" ;
+                    details.textContent = problemText;
+                }
+                else {
+                    title.style.color = "green";
+                    details.textContent = successText;
+                }
+                popup.appendChild(details);
+
+                popup.classList.add("visible");
+                setTimeout(() => {
+                                    popup.classList.remove("visible");
+                }, 2000); 
+                setTimeout(() => {
+                                    overlay.classList.remove("blurred");
+                }, 2500); 
+                
+            }
+        </script>
 
         {%if solutionPhase%}
+
             {%if not problem %}
+                <script>
+                    showPopUp("success");
+                </script>
                 <h1 id="sol_title">Solution</h1>
                 <h2 class = "solutionStepTitle">Solution of State Variables</h2>
                 
@@ -249,148 +427,12 @@
 
 
             {%else%}
-                <div id = "problem">
-                    <h2>An Issue Occured ❌</h2>
-                    <h3>{{problem}}</h3>
-                </div>
+                <script>
+                    showPopUp("problem");
+                </script>
             {%endif%}
         {%endif%}
-        <script>
-            let inputCount = 0;
 
-            function generateOptions() {
-                // Simulate generating state names like S0, S1, ..., S7 for 3-bit states
-                const numBits = parseInt(document.getElementById("stateBitsCount").value);
-                const numStates = Math.pow(2, numBits);
-                const states = [];
-                for (let i = 0; i < numStates; i++) {
-                states.push("S" + i);
-                }
-
-                return states.map(state => { //arrow function to create option for every state 
-                const opt = document.createElement("option");
-                opt.value = state;
-                opt.textContent = state;
-                return opt;
-                });
-            }
-
-            function generateMooreOutputAssignmentBlock(){
-                const num = parseInt(document.getElementById("stateBitsCount").value);
-                const inVarCount = parseInt(document.getElementById("InVarCount").value);
-                const outVarCount = parseInt(document.getElementById("OutVarCount").value);
-                const container = document.getElementById("mooreAssignmentInputs");
-                container.innerHTML = "";
-                if (!isNaN(num)  && !isNaN(inVarCount) && !isNaN(outVarCount)) {
-                    for (let i = 0; i <= Math.pow(2,num) - 1; i++) {
-                    const label = document.createElement("h2");
-                    label.htmlFor = "S" + i;
-                    label.textContent = "S" + i;
-
-                    const input = document.createElement("input");
-                    input.id = "S" + i;
-                    input.type = "text";
-                    input.name = "S" + i + "_MooreOutput";
-                    input.className = "mooreAssignmentInput";
-                    input.placeholder = "Enter output";
-                    input.defaultValue = "0".repeat(outVarCount);
-                    container.appendChild(label);
-                    container.appendChild(input);
-                    }
-                    
-                } else {
-                    container.innerHTML = "<h2>-- Invalid number --</h2>";
-                }
-
-            }
-        
-            function cleanUpLinkPathBlock(){
-                const container = document.getElementById("linkPathsContainer");
-                container.innerHTML = "";
-            }
-            
-            function addLinkPath() {
-                const num = parseInt(document.getElementById("stateBitsCount").value);
-                const inVarCount = parseInt(document.getElementById("InVarCount").value);
-                const outVarCount = parseInt(document.getElementById("OutVarCount").value);
-
-                const container = document.getElementById("linkPathsContainer");
-
-                if (!isNaN(num) && !isNaN(inVarCount) && !isNaN(outVarCount)) {
-                    // Remove the instruction
-
-                    const options = generateOptions();
-                    const linkPath = document.createElement("div");
-                    linkPath.style.padding = "10px";
-                    linkPath.className = "linkPath";
-                    linkPath.style.margin = "10px 0";
-
-                    // From State
-                    const fromState = document.createElement("select");
-                    fromState.name = `Link${inputCount}_fromState`;
-                    options.forEach(opt => fromState.appendChild(opt.cloneNode(true)));
-
-                    // Input String
-                    const inLabel = document.createElement("h3");
-                    inLabel.innerText = " Given Input:  ";
-                    const inStr = document.createElement("input");
-                    inStr.type = "text";
-                    inStr.name = `Link${inputCount}_inStr`;
-
-                    // Output String
-                    const outLabel = document.createElement("h3");
-                    outLabel.innerText = " Gives Output: ";
-                    const outStr = document.createElement("input");
-                    outStr.type = "text";
-                    outStr.name = `Link${inputCount}_outStr`;
-
-                    const goesToLabel = document.createElement("h3");
-                    goesToLabel.innerText = " And Goes To  "
-                    // To State
-                    const toState = document.createElement("select");
-                    toState.name = `Link${inputCount}_toState`;
-                    options.forEach(opt => toState.appendChild(opt.cloneNode(true)));
-                    
-                    // Add to linkPath block
-                    linkPath.appendChild(fromState);
-                    linkPath.appendChild(document.createElement("br"));
-                    linkPath.appendChild(inLabel);
-                    linkPath.appendChild(inStr);
-                    linkPath.appendChild(document.createElement("br"));
-                    linkPath.appendChild(outLabel);
-                    linkPath.appendChild(outStr);
-                    linkPath.appendChild(document.createElement("br"));
-                    linkPath.appendChild(goesToLabel);
-                    linkPath.appendChild(document.createElement("br"));
-                    linkPath.appendChild(toState);
-                    // Append to container
-                    container.appendChild(linkPath);
-
-                    // Update count
-                    inputCount++;
-                    document.getElementById("LinkCount").value = inputCount;
-                } else {
-                    container.innerHTML = "<h2>-- Invalid Inputs --</h2>";
-                }
-            }
-            
-            function expandSteps(id) {
-            const steps = document.getElementById("steps-" + id);
-            if (steps) {
-                steps.classList.toggle("activeVariable");
-            }
-            }
-
-
-            document.addEventListener("scroll", function() {
-                const title = document.querySelector(".title");
-                if (window.scrollY > 45) {
-                    title.classList.add("shrink");
-                } else {
-                    title.classList.remove("shrink");
-                }
-            });
-        </script>
 
     </body>
 </html>

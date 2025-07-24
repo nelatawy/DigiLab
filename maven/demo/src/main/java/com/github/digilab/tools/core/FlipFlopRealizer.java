@@ -23,6 +23,7 @@ class FFRuleSet {
     //and this allows you to solve the control line at that index
     public void AddControlLine(ControlLineRuleSet newRule){
         ruleSet.add(newRule);
+        numberOfControlLines++;
     }
 }
 
@@ -127,7 +128,7 @@ public class FlipFlopRealizer {
                 if (currVar.equals(stateVarName)) { //previous wasn't negated
                     stateStr = "1";
                 } else if (currVar != ""){
-                    System.out.println(currVar);
+                    // System.out.println(currVar);
                     inputRowStr[GetIndexOfVar(varNameList, currVar)] = '1';
                 }
                 currVar = "";//reset currVar

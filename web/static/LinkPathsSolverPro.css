@@ -477,24 +477,46 @@ form {
 
 
 
-
-#problem{
-    background-color: rgba(0, 0, 0, 0.7);
-    padding: var(--space-4);
-    backdrop-filter: var(--blur-bg);
+#overlay {
+    z-index: -1;
+    position: fixed;
+    top: 0px;
+    right: 0px;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.4s ease-in-out;
+}
+#overlay.blurred {
+    background-color: var(--color-overlay-bg);
     -webkit-backdrop-filter: var(--blur-bg);
+    backdrop-filter: var(--blur-bg);
+    z-index: 2000;
+
+}
+#popup {
+    transform: translateY(100vh);
+    background-color: var(--color-card-translucent);
     border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    padding: var(--space-4);
     width: 400px;
+    transition: all 0.7s ease-in-out;
 }
-#problem h2 {
-    font-size: var(--font-title1);
-    /* padding: var(--space-3); */
-    color: crimson;
+#popup.visible {
+    transform: translateY(0%);
+
 }
-#problem h3 {
-    font-size: var(--font-headline);
-    font-weight: var(--weight-regular);
-    color: whitesmoke;
+#popup h2 {
+    font-size: var(--font-larger);
+}
+#popup h3 {
+    font-size: var(--font-title2);
+    font-weight: var(--weight-semibold);
+    color: var(--color-secondary-text);
     margin-block-end: 30px;
 }
 

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="eng"></html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>FlipFlop Config Adder</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='FFRealizerPro.css') }}">
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Caprasimo&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Varela+Round&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    </head>
+    <body>
+        <h1 class="title">Flip-Flop Realizer</h1>
+        
+        <div class="about">
+            <h2>About</h2>
+            <h3>This Program intends to provide a method to solve a sequential system given by it's link paths <br> (i.e state A goes to state B when input xxxx is given and gives output xxxx)</h2>
+        </div>
+
+        <form method = "POST" action = "/FFRealizer">
+            <h2 id = "VariableSetupTitle" class="stepTitle">Setting Up The Variables' Data</h2>
+            <div class = "inputCard">
+                <h3 class="inputLabel">Enter the names of input variables (excluding  the state variable)</h3>
+                <input class = "inputBar" name = "VarNames" type = "text" placeholder = "Enter the comma seperated names" >
+                
+                <h3 class="inputLabel">Enter the name of the state variable</h3>
+                <input class = "inputBar" name = "StateVarName" type = "text" placeholder = "Enter name" >
+            </div>
+
+
+            <h2 id = "VariableSetupTitle" class="stepTitle">The Expression</h2>
+            <div class = "inputCard">
+
+                <h3 class="inputLabel">Enter the expression you want to realize</h3>
+                <input class = "inputBar" name = "Expression" type = "text" placeholder = "Enter expression" >
+            </div>
+
+            <h2 id = "VariableSetupTitle" class="stepTitle">Flip-Flop Choice</h2>
+            <div class = "inputCard">
+                <h3 class="inputLabel">Select the desired flip-flop</h3>
+                <select  id = "ffNameDropDown" name = "FFName">
+                    <!-- Configs are inserted here -->
+                </select>
+                <h3 class="help">Do you wanna add a configuration?</h3>
+                <a href="/FFConfigAdder">Click Here</a>
+            </div>
+
+            <button id ="submitButton" type = "submit">Solve</button>
+        </form>
+        <!-- The PopUp Overlay -->
+        <div id = "overlay">
+            <div id="popup" data-problem="{{ problem }}" data-success = "Found the solutions for system variables !!" >
+                
+            </div>
+        </div>
+        <!-- Defining the popUp Function -->
+        <script>
+                window.onload = () => {
+                let nameArr = {{ configs|tojson }};
+                const dropdown = document.getElementById("ffNameDropDown");
+                nameArr.forEach(name => {
+                    const ele = document.createElement("option");
+                    ele.value = name;
+                    ele.textContent = name.replaceAll(".json","");
+                    dropdown.appendChild(ele);
+                });
+            };
+
+            function expandSteps(id) {
+            const steps = document.getElementById("steps-" + id);
+            if (steps) {
+                steps.classList.toggle("activeVariable");
+            }
+            }
+            
+            document.addEventListener("scroll", function() {
+                const title = document.querySelector(".title");
+                if (window.scrollY > 45) {
+                    title.classList.add("shrink");
+                } else {
+                    title.classList.remove("shrink");
+                }
+            });
+            
+            function showPopUp(Type){
+                const overlay = document.getElementById("overlay");
+                overlay.classList.add("blurred");
+                const popup = document.getElementById("popup");
+                
+                const title = document.createElement("h2");
+                title.textContent = (Type == "problem")?"An Issue Occured ❌":"Success ✅";
+                popup.appendChild(title)
+
+                const details = document.createElement("h3");
+                let problemText = popup.dataset.problem;
+                let successText = popup.dataset.success;
+                if(Type == "problem"){
+                    title.style.color = "crimson" ;
+                    details.textContent = problemText;
+                }
+                else {
+                    title.style.color = "green";
+                    details.textContent = successText;
+                }
+                popup.appendChild(details);
+
+                popup.classList.add("visible");
+                setTimeout(() => {
+                                    popup.classList.remove("visible");
+                }, 2000); 
+                setTimeout(() => {
+                                    overlay.classList.remove("blurred");
+                }, 2500); 
+                
+            }
+        </script>
+
+    </body>
+</html>

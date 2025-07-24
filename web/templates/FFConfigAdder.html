@@ -40,73 +40,108 @@
         </form>
 
         <div id = "overlay">
-            <div id="popUp">
-
+            <div id="popup" data-problem="{{ problem }}" data-success = "Your creation was successfully added" >
+                
             </div>
         </div>
-        {%if problem%}
-        <div id = "problem">
-            <h2>An Issue Occured ❌</h2>
-            <h3>{{problem}}</h3>
-        </div>
+        
+        
+        <script>
+            function generateTable(){
+                const container = document.getElementById("configTableBlock");
+                const controlLineCount = parseInt(document.getElementById("controlLineCount").value);
+                container.innerHTML = "";
+                const table = document.createElement("table");
+                table.id = "configTable";
+                const header = document.createElement("tr");
+                let arr = ["Current", "Next"]
+                for(let i = 1; i <= controlLineCount; i++){
+                    arr.push(("Var" + i));
+                }
+                arr.forEach(label => {const labelEle = document.createElement("th");
+                                        labelEle.textContent = label;
+                                        header.appendChild(labelEle);
+                                        });
+
+                table.appendChild(header);
+
+                for(let current = 0; current <= 1; current++){
+                    for(let next = 0; next <= 1; next++){
+                        const row = document.createElement("tr");
+                        
+                        const currStateRowEle = document.createElement("td");
+                        currStateRowEle.textContent = current.toString();
+                        
+                        const nextSateRowEle = document.createElement("td");
+                        nextSateRowEle.textContent = next.toString();
+
+                        row.appendChild(currStateRowEle);
+                        row.appendChild(nextSateRowEle);
+
+                        for(let idx = 1; idx <= controlLineCount; idx++){
+                            const controlLineRowEle = document.createElement("td");
+                            const input = document.createElement("input");
+                            input.type = "text";
+                            input.maxLength = 1;
+                            input.name = "Var" + idx +"_Current" + current + "_Next" + next;
+                            input.defaultValue = "0";
+                            controlLineRowEle.appendChild(input);
+                            row.appendChild(controlLineRowEle);
+                        }
+
+
+                        table.appendChild(row);
+
+                    }
+                }
+                container.classList.add("generated");
+                container.appendChild(table);
+            }
+            let showPopUp = function(Type){
+                const overlay = document.getElementById("overlay");
+                overlay.classList.add("blurred");
+                const popup = document.getElementById("popup");
+                
+                const title = document.createElement("h2");
+                title.textContent = (Type == "problem")?"An Issue Occured ❌":"Success ✅";
+                popup.appendChild(title)
+
+                const details = document.createElement("h3");
+                let problemText = popup.dataset.problem;
+                let successText = popup.dataset.success;
+                if(Type == "problem"){
+                    title.style.color = "crimson" ;
+                    details.textContent = problemText;
+                }
+                else {
+                    title.style.color = "green";
+                    details.textContent = successText;
+                }
+                popup.appendChild(details);
+
+                popup.classList.add("visible");
+                setTimeout(() => {
+                                    popup.classList.remove("visible");
+                }, 2000); 
+                setTimeout(() => {
+                                    overlay.classList.remove("blurred");
+                }, 2500); 
+                
+            }
+        </script>
+
+        {%if submit%}  
+            {%if problem %}
+            <script>
+                showPopUp("problem");
+            </script>
+            {%else%}
+            <script>
+                showPopUp("success");
+            </script>
+            {%endif%}
         {%endif%}
 
-        <script>
-                function generateTable(){
-                    const container = document.getElementById("configTableBlock");
-                    const controlLineCount = parseInt(document.getElementById("controlLineCount").value);
-                    container.innerHTML = "";
-                    const table = document.createElement("table");
-                    table.id = "configTable";
-                    const header = document.createElement("tr");
-                    let arr = ["Current", "Next"]
-                    for(let i = 1; i <= controlLineCount; i++){
-                        arr.push(("Var" + i));
-                    }
-                    arr.forEach(label => {const labelEle = document.createElement("th");
-                                          labelEle.textContent = label;
-                                          header.appendChild(labelEle);
-                                         });
-
-                    table.appendChild(header);
-
-                    for(let current = 0; current <= 1; current++){
-                        for(let next = 0; next <= 1; next++){
-                            const row = document.createElement("tr");
-                            
-                            const currStateRowEle = document.createElement("td");
-                            currStateRowEle.textContent = current.toString();
-                            
-                            const nextSateRowEle = document.createElement("td");
-                            nextSateRowEle.textContent = next.toString();
-
-                            row.appendChild(currStateRowEle);
-                            row.appendChild(nextSateRowEle);
-
-                            for(let idx = 1; idx <= controlLineCount; idx++){
-                                const controlLineRowEle = document.createElement("td");
-                                const input = document.createElement("input");
-                                input.type = "text";
-                                input.maxLength = 1;
-                                input.name = "Var" + idx +"_Current" + current + "_Next" + next;
-                                input.defaultValue = "0";
-                                controlLineRowEle.appendChild(input);
-                                row.appendChild(controlLineRowEle);
-                            }
-
-
-                            table.appendChild(row);
-
-                        }
-                    }
-                    container.classList.add("generated");
-                    container.appendChild(table);
-                }
-                function showPopUp(Type, Text){
-                    const overlay = document.getElementById("overlay");
-                    
-                }
-            </script>
     </body>
 
 </html>
