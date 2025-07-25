@@ -368,7 +368,7 @@ def FFRealizer():
         solutions = dict(result_json)
         return render_template("FFRealizer.html",
                                 solutionPhase = True,
-                                solutions = solutions,
+                                varSolutions = solutions,
                                 len = len ,
                                 configs = flipflopNames)
     

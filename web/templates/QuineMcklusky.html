@@ -37,9 +37,60 @@
             
             <button type="submit">Submit</button>
         </form>
+        <div id = "overlay">
+            <div id="popup" data-problem="{{ problem }}" data-success = "Found the minimum expression !!" >
+                
+            </div>
+        </div>
+
+        <script>
+            document.addEventListener("scroll", function() {
+                const title = document.querySelector(".title");
+                if (window.scrollY > 45) {
+                    title.classList.add("shrink");
+                } else {
+                    title.classList.remove("shrink");
+                }
+            });
+                        
+            function showPopUp(Type){
+                const overlay = document.getElementById("overlay");
+                overlay.classList.add("blurred");
+                const popup = document.getElementById("popup");
+                
+                const title = document.createElement("h2");
+                title.textContent = (Type == "problem")?"An Issue Occured ❌":"Success ✅";
+                popup.appendChild(title)
+
+                const details = document.createElement("h3");
+                let problemText = popup.dataset.problem;
+                let successText = popup.dataset.success;
+                if(Type == "problem"){
+                    title.style.color = "crimson" ;
+                    details.textContent = problemText;
+                }
+                else {
+                    title.style.color = "green";
+                    details.textContent = successText;
+                }
+                popup.appendChild(details);
+
+                popup.classList.add("visible");
+                setTimeout(() => {
+                                    popup.classList.remove("visible");
+                }, 2000); 
+                setTimeout(() => {
+                                    overlay.classList.remove("blurred");
+                }, 2500); 
+                
+            }
+        </script>
 
         {%if solutionPhase%}
             {%if not problem %}
+                <script>
+                    showPopUp("success");
+                </script>
                 <h2 id="sol_title">Solution</h2>
 
                 {%for i,itr in enumerate(solutionData["ItrData"])%}
@@ -99,21 +150,11 @@
                 {%endif%}
 
             {%else%}
-                <div id = "problem">
-                    <h2>An Issue Occured ❌</h2>
-                    <h3>{{problem}}</h3>
-                </div>
+                <script>
+                    showPopUp("success");
+                </script>
             {%endif%}
         {%endif%}
-        <script>
-            document.addEventListener("scroll", function() {
-                const title = document.querySelector(".title");
-                if (window.scrollY > 45) {
-                    title.classList.add("shrink");
-                } else {
-                    title.classList.remove("shrink");
-                }
-            });
-        </script>
+
     </body>
 </html>

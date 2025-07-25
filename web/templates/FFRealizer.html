@@ -17,10 +17,10 @@
         
         <div class="about">
             <h2>About</h2>
-            <h3>This Program intends to provide a method to solve a sequential system given by it's link paths <br> (i.e state A goes to state B when input xxxx is given and gives output xxxx)</h2>
+            <h3>This Program intends to provide a method to realize any valid expression written in the form <br>" ABC' + (Dd)R' " <br> given the input data and the flip flop configuration <br> Note that : you can create your own flip flop config and use it</h2>
         </div>
 
-        <form method = "POST" action = "/FFRealizer">
+        <form class = "input" method = "post" action = "/FFRealizer#sol_title">
             <h2 id = "VariableSetupTitle" class="stepTitle">Setting Up The Variables' Data</h2>
             <div class = "inputCard">
                 <h3 class="inputLabel">Enter the names of input variables (excluding  the state variable)</h3>
@@ -52,7 +52,7 @@
         </form>
         <!-- The PopUp Overlay -->
         <div id = "overlay">
-            <div id="popup" data-problem="{{ problem }}" data-success = "Found the solutions for system variables !!" >
+            <div id="popup" data-problem="{{ problem }}" data-success = "Found the realization of the expression !!" >
                 
             </div>
         </div>
@@ -69,12 +69,6 @@
                 });
             };
 
-            function expandSteps(id) {
-            const steps = document.getElementById("steps-" + id);
-            if (steps) {
-                steps.classList.toggle("activeVariable");
-            }
-            }
             
             document.addEventListener("scroll", function() {
                 const title = document.querySelector(".title");
@@ -117,6 +111,27 @@
                 
             }
         </script>
+
+        {%if solutionPhase%} 
+            {%if not problem%}
+                <script>
+                    showPopUp("success");
+                </script>
+                <h1 id="sol_title">Solutions</h1>
+                {%for var in varSolutions%}
+                <div class="VarSolution">
+                    <h1 class="VarTitle">Solution for {{var}}</h1>
+                    <br>
+                    <h2>Minimum Expression</h2>
+                    <h3>{{varSolutions[var]}}</h3>
+                </div>
+                {%endfor%}
+            {%else%}
+                <script>
+                    showPopUp("problem");
+                </script>
+            {%endif%}
+        {%endif%}
 
     </body>
 </html>

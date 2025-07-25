@@ -52,7 +52,7 @@
   --color-bg-secondary: #f2f2f7;
   --color-bg-dark:rgba(0, 0, 0, 0.85);
   --color-bg-dark-mid:rgba(30, 30, 30, 0.85);
-  --color-label: rgba(0, 0, 0, 0.85);
+  --color-label: rgba(37, 37, 37, 0.85);
   --color-title: rgba(0, 0, 0, 0.85);
   --color-secondary-text: rgba(60, 60, 67, 0.8);
   --color-tertiary-text: rgba(60, 60, 67, 0.3);
@@ -253,7 +253,40 @@ form select:focus {
     transform: translateY(0px);
 }
 
+#sol_title{
+  background-color: var(--color-bar-translucent);
+  font-size: var(--font-larger);
+  width: 100%;
+  backdrop-filter: var(--blur-bg);
+  -webkit-backdrop-filter: var(--blur-bg);
+  padding: var(--space-5);
+  box-shadow: var(--shadow-md);
+}
 
+.VarSolution {
+    width: 400px;
+    padding: var(--space-2);
+    border-radius: var(--radius-lg);
+    background-color: var(--color-bg-dark-mid);
+    color: whitesmoke;
+    box-shadow: var(--shadow-md);
+}
+.VarSolution h2 {
+    font-size: var(--font-title1);
+}
+.VarSolution h3 {
+    font-size: var(--font-title2);
+    font-weight: var(--weight-medium);
+}
+.VarTitle {
+    font-size: var(--font-large-title);
+    font-weight: var(--weight-bold);
+    border-radius: var(--radius-md);
+    padding: var(--space-3);
+    background-color: var(--color-bg);
+    color: var(--color-label);
+    margin-inline: var(--space-4);
+}
 
 #overlay {
     z-index: -1;
