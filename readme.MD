@@ -5,23 +5,48 @@ DigiLab
 This Project offers a collection of tools that intend to ease the process of solving or dealing with certain problems in both  ***combinational/sequential logic design.***
 
 ## Installation
-1. ### Go to the "web" Directory in the project directory downloaded on your system
+## First Method
+1. ### Run the setup shell script using Git Bash  (PowerShell doesn't support it) or your native terminal if on a UNIX machine
+    If it didn't work then try to append to the script file the executable flag ..(From Your Bash Terminal type this at the root directory of the repo)
     ```bash
-    cd web
+    chmod +x setup.sh
     ```
 
-2. ### Install Flask MicroFrameWork for Python
+## Second Method (Manual -- If you don't have the Bash terminal)
+
+1. ### Install Flask MicroFrameWork for Python
 
     ```python
     pip3 install flask
     ```
-3. ### Install MikTex for LaTex Support to Generate PDFs
+2. ### Install MikTex for LaTex Support to Generate PDFs
+    - ### Windows
 
-    ```powershell
-    winget install --id=MiKTeX.MiKTeX --source=winget
-
-    ```
+        ```powershell
+        winget install --id=MiKTeX.MiKTeX --source=winget
+        ```
     
+    - ### Linux
+
+        ```bash
+        sudo apt update
+        sudo apt install -y miktex
+        ```
+        Then finish the setup
+        ```bash
+        miktexsetup finish
+        initexmf --admin --set-config-value [MPM]AutoInstall=1
+        ```
+   
+   - ### MacOS
+        ```bash
+        brew install  --cask miktex
+        ```
+        Then finish the setup
+        ```bash
+        miktexsetup finish
+        initexmf --admin --set-config-value [MPM]AutoInstall=1
+        ```
 
 
 ## Tools Included

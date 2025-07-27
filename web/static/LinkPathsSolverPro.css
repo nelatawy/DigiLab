@@ -78,7 +78,7 @@ html,body{
 }
 body{
     /* background-color: var(--color-bg); */
-    background-image: url("logicCircuitMain.jpeg");
+    background-image: url("minimalBlack.jpg");
     background-size: cover;
     background-attachment: fixed;
     background-position: fixed;
