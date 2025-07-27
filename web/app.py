@@ -181,7 +181,14 @@ def LinkPathSolver():
                 "outStr"   : request.form["Link" + str(i) + "_outStr"],
                 "toState"  : request.form["Link" + str(i) + "_toState"]
             }
-            linkPaths.append(currLink)
+
+        inVarString = ""
+        for name in inVarNames :
+            inVarString += name + ","
+        inVarString = inVarString.removesuffix(",")
+        print (inVarString)
+
+        linkPaths.append(currLink)
         logging.basicConfig(level=logging.DEBUG)
         logging.debug(request.form)
         data = {
@@ -278,6 +285,7 @@ def LinkPathSolver():
             stateVarSolutions = stateVarSolutions,
             nullStateVars = nullStateVars,
             outVarSolutions = outVarSolutions,
+            inVarNames = inVarString,
             nullOutVars = nullOutVars,
             pdfName = "stateGraph",
             folderName = PDF_DIR_NAME,
@@ -325,18 +333,86 @@ def FFConfigAdder():
         except :
             return render_template("FFConfigAdder.html", submit = True, problem = "Invalid data .. please check that the number of control lines matches the number of names provided \n and that the table data is valid")
     
-@app.route('/FFRealizer', methods = ['GET','POST'])
+# @app.route('/FFRealizer', methods = ['GET','POST'])
+# def FFRealizer():
+#     # Getting the possibleConfigs
+#     flipflopNames = [f for f in os.listdir(ffconfigpath)]
+
+#     if request.method == 'GET' :
+#         return render_template("FFRealizer.html", solutionPhase = False, configs = flipflopNames)
+#     elif request.method == 'POST' :
+
+#         varNames = [item.strip() for item in request.form["VarNames"].split(',')]
+#         stateVarName = request.form["StateVarName"]
+#         expression = request.form["Expression"]
+#         ffName = request.form.get("FFName")
+#         with open(os.path.abspath(os.path.join( ffconfigpath , ffName) ), "r") as file:
+#             ff_data_json = file.read()
+        
+#         data = {
+#             "VarNames"     : varNames,
+#             "StateVarName" : stateVarName,
+#             "Expression"   : expression
+#         }
+#         arguments_json = json.dumps(data)
+#         arguments = [arguments_json, ff_data_json]
+
+#         cmd = ["java", "-cp", classpath,"com.github.digilab.tools.core.FlipFlopRealizerWebHandler"]
+#         process = subprocess.run(cmd + arguments, capture_output= True, text= True)
+#         print(process.stdout)
+#         try:
+#             result_json = json.loads(process.stdout)
+#         except json.JSONDecodeError as e:
+#             print("JSON decode error:", e)
+#             print("Raw err:", process.stderr)
+#             print("Raw output:", process.stdout)
+#             return render_template("FFRealizer.html", problem = "Java did not return valid JSON. See server logs.")
+#         if "Problem" in result_json :
+#             return render_template("FFRealizer.html",
+#                                     solutionPhase = True,
+#                                     problem = result_json["Problem"],
+#                                     configs = flipflopNames)
+#         # no need to custom handle it .. it's already a dict-like structure which works properly for this
+#         solutions = dict(result_json)
+#         return render_template("FFRealizer.html",
+#                                 solutionPhase = True,
+#                                 varSolutions = solutions,
+#                                 len = len ,
+#                                 configs = flipflopNames)
+    
+@app.route('/FFRealizer', methods = ['GET' , 'POST'])
 def FFRealizer():
     # Getting the possibleConfigs
     flipflopNames = [f for f in os.listdir(ffconfigpath)]
-
     if request.method == 'GET' :
-        return render_template("FFRealizer.html", solutionPhase = False, configs = flipflopNames)
+        stateVar = ""
+        varNames = []
+        expression = ""
+        forwarded = False
+        if(request.args.__contains__("forwarded") and request.args.get("forwarded").lower() == 'true' ):
+            stateVar = request.args.get("state_var")
+            varNames = request.args.get("var_names")
+            expression = request.args.get("expression")
+            forwarded = True
+        # Providing values to handle the redirecting process and giving back the URL args
+        return render_template("FFRealizer.html",
+                                forwarded = forwarded ,
+                                stateVar = stateVar,
+                                varNames = varNames,
+                                expression = expression, 
+                                solutionPhase = False, 
+                                configs = flipflopNames)
+        
     elif request.method == 'POST' :
 
-        varNames = [item.strip() for item in request.form["VarNames"].split(',')]
-        stateVarName = request.form["StateVarName"]
-        expression = request.form["Expression"]
+        forwarded = (request.args.get("forwarded").lower() == "true")
+        if forwarded :
+            print(request.args.get("var_names"))
+        varNames = [name.strip() for name in request.args.get("var_names").split(",")] if forwarded else [item.strip() for item in request.form["VarNames"].split(',')]
+        stateVarName = request.args.get("state_var") if forwarded else request.form["StateVarName"]
+        expression = request.args.get("expression") if forwarded else request.form["Expression"]
+        print(expression)
+        print(varNames)
         ffName = request.form.get("FFName")
         with open(os.path.abspath(os.path.join( ffconfigpath , ffName) ), "r") as file:
             ff_data_json = file.read()
@@ -362,12 +438,15 @@ def FFRealizer():
         if "Problem" in result_json :
             return render_template("FFRealizer.html",
                                     solutionPhase = True,
+                                    forwarded = forwarded,
                                     problem = result_json["Problem"],
+                                    len = len,
                                     configs = flipflopNames)
         # no need to custom handle it .. it's already a dict-like structure which works properly for this
         solutions = dict(result_json)
         return render_template("FFRealizer.html",
                                 solutionPhase = True,
+                                forwarded = forwarded,
                                 varSolutions = solutions,
                                 len = len ,
                                 configs = flipflopNames)

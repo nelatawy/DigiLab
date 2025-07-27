@@ -303,6 +303,11 @@
 
                             <h3 class = "min_expr">{{varSolData["OptimizedVarOutput"]|safe}}</h3>
 
+
+                        </div>
+                        <div class ="RealizeHelpBox">
+                            <h3>Want to realize this expression using a Flip-Flop?</h3>
+                            <a href="{{ url_for('FFRealizer', forwarded = True, state_var = varSolData['Name'] , var_names = inVarNames, expression = varSolData["OptimizedVarOutput"])}}">Click Here</a>
                         </div>
                     </div>
                     {%endif%}

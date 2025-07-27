@@ -20,7 +20,10 @@
             <h3>This Program intends to provide a method to realize any valid expression written in the form <br>" ABC' + (Dd)R' " <br> given the input data and the flip flop configuration <br> Note that : you can create your own flip flop config and use it</h2>
         </div>
 
-        <form class = "input" method = "post" action = "/FFRealizer#sol_title">
+        <form class="input" method="post" action="{{ url_for('FFRealizer', forwarded=forwarded, state_var = stateVar, var_names = varNames, expression = expression) }}">
+            <!-- To Handle both standalone and redirected requests -->
+
+            {%if not forwarded%}
             <h2 id = "VariableSetupTitle" class="stepTitle">Setting Up The Variables' Data</h2>
             <div class = "inputCard">
                 <h3 class="inputLabel">Enter the names of input variables (excluding  the state variable)</h3>
@@ -37,7 +40,8 @@
                 <h3 class="inputLabel">Enter the expression you want to realize</h3>
                 <input class = "inputBar" name = "Expression" type = "text" placeholder = "Enter expression" >
             </div>
-
+            {%endif%}
+            
             <h2 id = "VariableSetupTitle" class="stepTitle">Flip-Flop Choice</h2>
             <div class = "inputCard">
                 <h3 class="inputLabel">Select the desired flip-flop</h3>
