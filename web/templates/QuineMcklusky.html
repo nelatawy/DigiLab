@@ -8,12 +8,24 @@
 
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Caprasimo&family=Varela+Round&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Caprasimo&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Varela+Round&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     </head>
     <body>
-        <h1 class="title">Quine Mcklusky Solver</h1>
+        <div class="topBar">
+            <div class="mainBar">
+                <a class = "home" href ="{{url_for('index')}}"></a>
+                <h1 class="title">Quine Mcklusky Solver</h1>
+                <button type = "button" onclick="showToolList()">Tools</button>
+                
+            </div>
+            <div id="toolList">
+                <a href ="{{url_for('LinkPathSolver')}}" target="_blank">Link Paths Solver</a>
+                <a href ="{{url_for('FFRealizer')}}" target="_blank">Flip-Flop Realizer</a>
+            </div>
+        </div>
+
         <div class="about">
             <h2>About</h2>
             <h3>This Program Intends To Provide The Simplest Boolean Expression Given The MinTerms Defining the Function Using the Widely-Known Method in Digital Logic</h2>
@@ -45,11 +57,17 @@
 
         <script>
             document.addEventListener("scroll", function() {
+                const topBar = document.querySelector(".topBar");
                 const title = document.querySelector(".title");
+                const dropDown = document.querySelector("#toolList")
                 if (window.scrollY > 45) {
+                    topBar.classList.add("shrink");
                     title.classList.add("shrink");
+                    dropDown.classList.add("shrink");
                 } else {
+                    topBar.classList.remove("shrink");
                     title.classList.remove("shrink");
+                    dropDown.classList.remove("shrink");
                 }
             });
                         
@@ -82,6 +100,12 @@
                 setTimeout(() => {
                                     overlay.classList.remove("blurred");
                 }, 2500); 
+                
+            }
+
+            function showToolList() {
+                const toolList = document.getElementById("toolList");
+                toolList.classList.toggle("show");
                 
             }
         </script>

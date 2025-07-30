@@ -3,7 +3,7 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>FlipFlop Config Adder</title>
+        <title>Flip-Flop Realizer</title>
         <link rel="stylesheet" href="{{ url_for('static', filename='FFRealizerPro.css') }}">
 
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -13,7 +13,19 @@
 
     </head>
     <body>
-        <h1 class="title">Flip-Flop Realizer</h1>
+        
+        <div class="topBar">
+            <div class="mainBar">
+                <a class = "home" href ="{{url_for('index')}}"></a>
+                <h1 class="title">Flip-Flop Realizer</h1>
+                <button type = "button" onclick="showToolList()">Tools</button>
+                
+            </div>
+            <div id="toolList">
+                <a href ="{{url_for('QuineMcklusky')}}" target="_blank">Quine Mcklusky Solver</a>
+                <a href ="{{url_for('LinkPathSolver')}}" target="_blank">Link Paths Solver</a>
+            </div>
+        </div>
         
         <div class="about">
             <h2>About</h2>
@@ -62,7 +74,7 @@
         </div>
         <!-- Defining the popUp Function -->
         <script>
-                window.onload = () => {
+            window.onload = () => {
                 let nameArr = {{ configs|tojson }};
                 const dropdown = document.getElementById("ffNameDropDown");
                 nameArr.forEach(name => {
@@ -75,11 +87,17 @@
 
             
             document.addEventListener("scroll", function() {
+                const topBar = document.querySelector(".topBar");
                 const title = document.querySelector(".title");
+                const dropDown = document.querySelector("#toolList")
                 if (window.scrollY > 45) {
+                    topBar.classList.add("shrink");
                     title.classList.add("shrink");
+                    dropDown.classList.add("shrink");
                 } else {
+                    topBar.classList.remove("shrink");
                     title.classList.remove("shrink");
+                    dropDown.classList.remove("shrink");
                 }
             });
             
@@ -114,6 +132,12 @@
                 }, 2500); 
                 
             }
+            function showToolList() {
+                const toolList = document.getElementById("toolList");
+                toolList.classList.toggle("show");
+                
+            }
+
         </script>
 
         {%if solutionPhase%} 

@@ -181,14 +181,20 @@ def LinkPathSolver():
                 "outStr"   : request.form["Link" + str(i) + "_outStr"],
                 "toState"  : request.form["Link" + str(i) + "_toState"]
             }
-
+            linkPaths.append(currLink)
         inVarString = ""
         for name in inVarNames :
             inVarString += name + ","
+        for name in stateVarNames :
+            inVarString += name + ","
+        # how come we can add all stateVariables along with the inVars as the total inVars
+        # Because in the java backend it checks if that variable is the stateVariable before searching for it in the inVars.. 
+        # so basically it will ignore it's presence in the inVar array if its the state var
+        # so this can be used as a universal inVarString for all state variables
         inVarString = inVarString.removesuffix(",")
         print (inVarString)
 
-        linkPaths.append(currLink)
+
         logging.basicConfig(level=logging.DEBUG)
         logging.debug(request.form)
         data = {

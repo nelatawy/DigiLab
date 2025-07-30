@@ -13,8 +13,19 @@
 
     </head>
     <body>
-        <h1 class="title">Link Paths Solver</h1>
-        
+        <div class="topBar">
+            <div class="mainBar">
+                <a class = "home" href ="{{url_for('index')}}" ></a>
+                <h1 class="title">Link Paths Solver</h1>
+                <button type = "button" onclick="showToolList()">Tools</button>
+                
+            </div>
+            <div id="toolList">
+                <a href ="{{url_for('QuineMcklusky')}}" target="_blank">Quine Mcklusky Solver</a>
+                <a href ="{{url_for('FFRealizer')}}" target="_blank">Flip-Flop Realizer</a>
+            </div>
+        </div>
+
         <div class="about">
             <h2>About</h2>
             <h3>This Program intends to provide a method to solve a sequential system given by it's link paths <br> (i.e state A goes to state B when input xxxx is given and gives output xxxx)</h2>
@@ -194,13 +205,25 @@
                 steps.classList.toggle("activeVariable");
             }
             }
-            
+          
+            function showToolList() {
+                const toolList = document.getElementById("toolList");
+                toolList.classList.toggle("show");
+                
+            }
+
             document.addEventListener("scroll", function() {
+                const topBar = document.querySelector(".topBar");
                 const title = document.querySelector(".title");
+                const dropDown = document.querySelector("#toolList")
                 if (window.scrollY > 45) {
+                    topBar.classList.add("shrink");
                     title.classList.add("shrink");
+                    dropDown.classList.add("shrink");
                 } else {
+                    topBar.classList.remove("shrink");
                     title.classList.remove("shrink");
+                    dropDown.classList.remove("shrink");
                 }
             });
             
@@ -307,7 +330,7 @@
                         </div>
                         <div class ="RealizeHelpBox">
                             <h3>Want to realize this expression using a Flip-Flop?</h3>
-                            <a href="{{ url_for('FFRealizer', forwarded = True, state_var = varSolData['Name'] , var_names = inVarNames, expression = varSolData["OptimizedVarOutput"])}}">Click Here</a>
+                            <a href="{{ url_for('FFRealizer', forwarded = True, state_var = varSolData['Name'] , var_names = inVarNames, expression = varSolData["OptimizedVarOutput"])}} " target="_blank">Click Here</a>
                         </div>
                     </div>
                     {%endif%}
