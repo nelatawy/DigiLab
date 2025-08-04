@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title> DigiLab - An all rounder digital logic design toolbox </title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Caprasimo&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Varela+Round&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    </head>
+
+    <body>
+        <div id="header">
+            <h1>DIGILAB</h1>
+            <h2 id="about">All Of Your Digital Logic Design Tools in One Package</h2>
+        </div>
+
+        <div id="about-me" class="scroll-based">
+            <h2>WHO AM I?</h2>
+            <p>I'm Nour El-Atawy, But you can call me RTR0<br>An Aspiring computer engineering student who simply wants to help<br>Let's Start Working pals!!</p>
+        </div>
+        
+        <div id="tools" class="scroll-based">
+            <h2>OFFERED TOOLS</h2>
+            <div class="tool-card">
+                <h3>Quine-Mcklusky Solver</h3>
+                <p> Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt, corrupti odit. Cumque, iusto placeat? Vero inventore, earum at magnam facere cumque quaerat, laborum eveniet pariatur aliquam quibusdam libero soluta eaque.</p>
+                <a href="{{url_for('QuineMcklusky')}}">Check it Out</a>
+            </div>
+
+            <div class="tool-card">
+                <h3>Link-Paths Solver</h3>
+                <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Alias, amet! Aliquam reiciendis rerum laboriosam non dicta aspernatur nostrum ex deleniti ullam sint! Pariatur veniam obcaecati ducimus debitis aperiam, enim necessitatibus?</p>
+                <a href="{{url_for('LinkPathSolver')}}">Check it Out</a>
+            </div>
+
+            <div class="tool-card">
+                <h3>Flip-Flip Realizer</h3>
+                <p> About ........</p>
+                <a href="{{url_for('FFRealizer')}}">Check it Out</a>
+            </div>
+
+
+        </div>
+    </body>
+
+    <script>
+        /*load things on window load for a smoth animation*/
+        window.onload = ()=> {
+            const header = document.getElementById("header");
+            const about = document.getElementById("about");
+            setTimeout(() => {
+                header.classList.add("shown");
+            },500);
+
+
+            setTimeout(() => {
+                about.classList.add("shown");
+            },1500);
+        };
+
+        addEventListener("scroll", ()=> {
+            const elements = document.querySelectorAll(".scroll-based").forEach((ele)=>{
+                const bounds = ele.getBoundingClientRect();
+                if(bounds.top < window.innerHeight/4 ){
+                    ele.classList.add("shown");
+                } else{
+                    ele.classList.remove("shown");
+                }
+            });
+        });
+    </script>
+</html>

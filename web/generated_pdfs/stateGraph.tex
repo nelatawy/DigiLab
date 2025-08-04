@@ -4,12 +4,14 @@
 \begin{document}
 
 \begin{center}
-\begin{tikzpicture}[scale = 0.830, transform shape, shorten >=5pt, on grid, auto]
+\begin{tikzpicture}[scale = 0.815, transform shape, shorten >=5pt, on grid, auto]
 
-\node[state]	(S2)	 at (7.000,0.000)	{\resizebox{1.8cm}{!}{$S_{2}$/cd}};
-\node[state]	(S0)	 at (-7.000,-0.000)	{\resizebox{1.8cm}{!}{$S_{0}$/c'd'}};
+\node[state]	(S2)	 at (7.000,0.000)	{\resizebox{1.8cm}{!}{$S_{2}$/c'd}};
+\node[state]	(S1)	 at (-3.500,6.062)	{\resizebox{1.8cm}{!}{$S_{1}$/cd}};
+\node[state]	(S0)	 at (-3.500,-6.062)	{\resizebox{1.8cm}{!}{$S_{0}$/c'd'}};
 
-\path[->, bend left =0] (S0)	 edge node [sloped, pos=0.2]{\resizebox{2.2cm}{!}{$a'b/cd$}}	(S2);
+\path[->, bend left =5] (S1)	 edge node [sloped, pos=0.2]{\resizebox{2.2cm}{!}{$a'b'/cd$}}	(S2);
+\path[->, bend left =5] (S0)	 edge node [sloped, pos=0.2]{\resizebox{2.2cm}{!}{$a'b/cd$}}	(S1);
 
 \end{tikzpicture}
 \end{center}
