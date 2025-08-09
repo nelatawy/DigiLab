@@ -94,8 +94,9 @@ body {
     background-position: center;
     background-attachment: fixed;
     background-size: cover;
-    gap: var(--space-5);
+    gap: 100px;
     padding-top: 40vh;
+    padding-bottom: 30vh;
 
 }
 #header {
@@ -276,7 +277,8 @@ body {
     border-radius: var(--radius-md);
     /* transform: rotate(-90deg); */
     height: 90%;
-    /* width: 100px; */
+    width: 100%;
+    max-width: 100px;
     text-decoration:none;
     color: whitesmoke;
     padding: var(--space-3);
@@ -308,6 +310,7 @@ body {
     flex-direction: column;
     text-align: center;
     background-color: var(--color-bg-dark-mid);
+    width: 100%;
 
  }
  #extras h3 {
