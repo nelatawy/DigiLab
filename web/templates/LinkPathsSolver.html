@@ -27,7 +27,13 @@
 
         <div class="about">
             <h2>About</h2>
-            <h3>This Program intends to provide a method to solve a sequential system given by it's link paths <br> (i.e state A goes to state B when input xxxx is given and gives output xxxx)</h2>
+            <h3>This Program intends to provide a method to solve a sequential system given by it's link paths <br>
+                (i.e state A goes to state B when input xxxx is given and gives output xxxx)<br><br>
+                Notes : <br>
+                 > the moore-output format is a 101-1 or something with the same form , that is .. a boolean expression with length equals to the number of output variables <br>
+                 > the input boolean string has a length equals to the number of input variables <br>
+                 > The ordering is the same as the order specified when providing the variable names <br>
+                 > Use a '-' to specify a dont-care</h2>
         </div>
 
         <form method = "POST" action = "/LinkPathsSolver#sol_title">

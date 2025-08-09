@@ -52,7 +52,11 @@ This Project offers a collection of tools that intend to ease the process of sol
 ## Tools Included
 
 > ### _Quine Mcklusky Solver_
- used to get the optimal expression of a function given the min-terms defining it
+ Helps you to get the optimal expression of a function given it's defining  min-terms and dont-cares
 
 > ### _Link Paths Solver_
- used to solve a sequential system in an SM chart way given it's defining link paths from one state to another
+ Helps you solve a sequential system (Finite State Machines) in an SM chart way given it's defining link paths from one state to another, and the Moore Outputs linked to every state
+ > ### _Flip-Flop Realizer_
+ Helps you realize a boolean expression given the state-variable name and input-variable names and the flip-flop type.
+ > ### _Flip-Flop Config Adder_
+ Considered a helping tool to the FFRealizer and it's main purpose is to help you add a custom Flip-Flop configuration for you to use later in Realization.
