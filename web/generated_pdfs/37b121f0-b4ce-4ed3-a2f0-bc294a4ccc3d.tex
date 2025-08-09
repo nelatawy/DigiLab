@@ -1,0 +1,20 @@
+\documentclass{article}
+\usepackage{tikz}
+\usetikzlibrary{automata, positioning}
+\begin{document}
+
+\begin{center}
+\begin{tikzpicture}[scale = 0.800, transform shape, shorten >=5pt, on grid, auto]
+
+\node[state]	(S5)	 at (7.000,0.000)	{\resizebox{1.8cm}{!}{$S_{5}$/c'd'}};
+\node[state]	(S3)	 at (-0.000,7.000)	{\resizebox{1.8cm}{!}{$S_{3}$/c'd'}};
+\node[state]	(S2)	 at (-7.000,-0.000)	{\resizebox{1.8cm}{!}{$S_{2}$/c'd'}};
+\node[state]	(S0)	 at (0.000,-7.000)	{\resizebox{1.8cm}{!}{$S_{0}$/c'd'}};
+
+\path[->, bend left =5] (S5)	 edge node [sloped, pos=0.2]{\resizebox{2.2cm}{!}{$ab/c'd$}}	(S2);
+\path[->, bend left =15] (S0)	 edge node [sloped, pos=0.2]{\resizebox{2.2cm}{!}{$a'b/cd$}}	(S3);
+
+\end{tikzpicture}
+\end{center}
+
+\end{document}

@@ -1,9 +1,9 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2025.7.10)  9 AUG 2025 13:39
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2025.7.10)  9 AUG 2025 14:19
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
-**./stateGraph.tex
-(stateGraph.tex
+**./37b121f0-b4ce-4ed3-a2f0-bc294a4ccc3d.tex
+(37b121f0-b4ce-4ed3-a2f0-bc294a4ccc3d.tex
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-01-04>
 (C:\Users\noura\AppData\Local\Programs\MiKTeX\tex/latex/base\article.cls
@@ -409,8 +409,9 @@ tex.def
 File: l3backend-pdftex.def 2024-01-04 L3 backend support: PDF output (pdfTeX)
 \l__color_backend_stack_int=\count282
 \l__pdf_internal_box=\box82
-) (stateGraph.aux)
-\openout1 = `stateGraph.aux'.
+)
+No file 37b121f0-b4ce-4ed3-a2f0-bc294a4ccc3d.aux.
+\openout1 = `37b121f0-b4ce-4ed3-a2f0-bc294a4ccc3d.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 6.
 LaTeX Font Info:    ... okay on input line 6.
@@ -457,33 +458,34 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <5> on input line 13.
 
-Overfull \hbox (7.39795pt too wide) in paragraph at lines 37--38
+Overfull \hbox (23.8811pt too wide) in paragraph at lines 21--22
  [] 
  []
 
 [1
 
 {C:/Users/noura/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}]
-(stateGraph.aux)
+(37b121f0-b4ce-4ed3-a2f0-bc294a4ccc3d.aux)
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-01-04>
  ***********
  ) 
 Here is how much of TeX's memory you used:
- 12531 strings out of 474486
- 274572 string characters out of 5743755
- 1940542 words of memory out of 5000000
- 34640 multiletter control sequences out of 15000+600000
+ 12468 strings out of 474486
+ 273624 string characters out of 5743755
+ 1928542 words of memory out of 5000000
+ 34579 multiletter control sequences out of 15000+600000
  558069 words of font info for 36 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 102i,8n,107p,393b,930s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 102i,8n,107p,419b,890s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <C:/Users/noura/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/
 cmmi10.pfb><C:/Users/noura/AppData/Local/Programs/MiKTeX/fonts/type1/public/ams
 fonts/cm/cmr10.pfb><C:/Users/noura/AppData/Local/Programs/MiKTeX/fonts/type1/pu
 blic/amsfonts/cm/cmr7.pfb><C:/Users/noura/AppData/Local/Programs/MiKTeX/fonts/t
 ype1/public/amsfonts/cm/cmsy7.pfb>
-Output written on stateGraph.pdf (1 page, 48417 bytes).
+Output written on 37b121f0-b4ce-4ed3-a2f0-bc294a4ccc3d.pdf (1 page, 40227 bytes
+).
 PDF statistics:
  29 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)

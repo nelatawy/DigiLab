@@ -233,7 +233,9 @@ def LinkPathSolver():
         outVarOutputs = result_json["OutVarOutputs"]
         nullOutVars = result_json["NullOutVars"]
 
-        graph = generatePDF(laTexCode,"stateGraph",PDF_DIR_NAME)
+        laTexCodeUUID = uuid.uuid4()
+
+        graph = generatePDF(laTexCode,laTexCodeUUID,PDF_DIR_NAME)
         if  graph == -1:
             problem = "Couldn't Generate the StateGraph.."
             return render_template(
@@ -293,7 +295,7 @@ def LinkPathSolver():
             outVarSolutions = outVarSolutions,
             inVarNames = inVarString,
             nullOutVars = nullOutVars,
-            pdfName = "stateGraph",
+            pdfName = laTexCodeUUID,
             folderName = PDF_DIR_NAME,
             enumerate = enumerate,
             raw = process.stdout,
