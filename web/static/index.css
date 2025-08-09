@@ -277,7 +277,7 @@ body {
     font-size: var(--font-button-larger);
     border-radius: var(--radius-md);
     /* transform: rotate(-90deg); */
-    height: 90%;
+    height: 200px;
     width: 100%;
     max-width: 100px;
     text-decoration:none;
@@ -312,6 +312,8 @@ body {
     text-align: center;
     background-color: var(--color-bg-dark-mid);
     width: 100%;
+    position: fixed;
+    bottom: 0px;
 
  }
  #extras h3 {
